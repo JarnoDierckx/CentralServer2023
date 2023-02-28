@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file type="web" url="file://$PROJECT_DIR$" />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/Login/pom.xml" />
+        <option value="$PROJECT_DIR$/AuthenticationService/pom.xml" />
+        <option value="$PROJECT_DIR$/APIService/pom.xml" />
+        <option value="$PROJECT_DIR$/Web/pom.xml" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectResources">
+    <resource url="core" location="$PROJECT_DIR$" />
+    <resource url="http://java.sun.com/jsf/composite" location="$APPLICATION_HOME_DIR$/lib/app.jar!/standardSchemas/" />
+    <resource url="http://primefaces.org/ui" location="$MAVEN_REPOSITORY$/org/primefaces/primefaces/12.0.0/primefaces-12.0.0.jar!/META-INF/primefaces-p.taglib.xml" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
+</project>
