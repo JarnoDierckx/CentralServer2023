@@ -1,4 +1,4 @@
-package com.example.web;
+package com.fooditsolutions.web;
 
 import java.io.BufferedReader;
 import java.io.IOException;

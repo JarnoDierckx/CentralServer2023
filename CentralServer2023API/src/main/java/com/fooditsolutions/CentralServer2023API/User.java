@@ -1,4 +1,5 @@
-package com.example.authenticationservice;
+package com.fooditsolutions.CentralServer2023API;
+
 
 /**
  * present in both AuthenticationService and CentralServer2023API, used to make user object to handle authentication.
@@ -22,8 +23,6 @@ public class User {
     }
     public User() {
     }
-
-
 
     public String getUserName() {
         return userName;

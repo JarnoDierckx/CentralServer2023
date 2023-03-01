@@ -6,7 +6,7 @@
 
     <managed-bean>
         <managed-bean-name>HandleLogin</managed-bean-name>
-        <managed-bean-class>com.example.web.HandleLogin</managed-bean-class>
+        <managed-bean-class>com.fooditsolutions.web.HandleLogin</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
     </managed-bean>
 </faces-config>

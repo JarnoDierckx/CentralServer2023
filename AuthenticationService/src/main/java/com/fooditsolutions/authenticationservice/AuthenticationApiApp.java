@@ -1,4 +1,4 @@
-package com.example.authenticationservice;
+package com.fooditsolutions.authenticationservice;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

@@ -1,4 +1,4 @@
-package com.example.CentralServer2023API;
+package com.fooditsolutions.CentralServer2023API;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

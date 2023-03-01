@@ -8,12 +8,12 @@
         <outputRelativeToContentRoot value="true" />
         <module name="AuthenticationService" />
         <module name="Web" />
+        <module name="CentralServer2023API" />
         <module name="CentralServer2023" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="Authentication" target="1.8" />
-      <module name="CentralServer2023API" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

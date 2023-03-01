@@ -1,4 +1,4 @@
-package com.example.CentralServer2023API;
+package com.fooditsolutions.CentralServer2023API;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.Consumes;
