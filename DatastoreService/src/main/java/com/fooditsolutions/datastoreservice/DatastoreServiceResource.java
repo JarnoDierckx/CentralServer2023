@@ -6,6 +6,7 @@ import com.fooditsolutions.datastoreservice.model.DatastoreObject;
 
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 
@@ -32,5 +33,29 @@ public class DatastoreServiceResource {
             }
         }
         return result;
+    }
+
+    @POST
+    @Produces("application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void addDatastoreResources(List<DatastoreObject> datastoreObjects) {
+        Datastores.addDatastores(datastoreObjects);
+        String s = "";
+    }
+    @DELETE
+    @Produces("application/json")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void deleteDatastoreResources(List<DatastoreObject> datastoreObjects) {
+        Datastores.deleteDatastores(datastoreObjects);
+        String s = "";
+    }
+
+    @DELETE
+    @Path("/{datastoreKey}")
+    @Produces("application/json")
+    public void delDatastoreRequestFrom(
+            @PathParam("datastoreKey") String datastoreKey) {
+        Datastores.deleteDatastore(datastoreKey);
+
     }
 }
