@@ -2,13 +2,20 @@ package com.fooditsolutions.authenticationservice;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fooditsolutions.authenticationservice.controller.SessionController;
+import com.fooditsolutions.authenticationservice.model.Session;
+import com.fooditsolutions.authenticationservice.model.User;
+import com.google.gson.Gson;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.KeyGenerator;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -38,33 +45,83 @@ public class Authenticate {
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
-    public String authenticateLogin(User loginUser) throws NoSuchAlgorithmException, ClassNotFoundException {
+    public String authenticateLogin(User loginUser) throws NoSuchAlgorithmException, ClassNotFoundException, IOException {
         Class.forName("org.firebirdsql.jdbc.FBDriver");
         System.out.println("API GET");
 
-        ResultSet resultSet;
+        URL url = new URL("http://localhost:8080/DatastoreService-1.0-SNAPSHOT/api/user?datastoreKey=C287746F288DF2CB7292DD2EE29CFECD");
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        int responseCode = connection.getResponseCode();
 
-        // Connect to db, try to get correct user
-        try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)) {
-            System.out.println("connection succeeded");
-            String sql = "SELECT USERID, EMAIL, PASSWORD FROM TEST_LOGIN where Email like ? AND PASSWORD like ?";
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setString(1, loginUser.getEmail());
-                statement.setString(2, loginUser.getPassword());
-                resultSet = statement.executeQuery();
+        if (responseCode == HttpURLConnection.HTTP_OK) { // success
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            System.out.println("in " + in);
 
-                //TODO uitvogelen of er iets word teruggegeven
+            StringBuilder response = new StringBuilder();
 
-                // Authentication successful, generate a session key and return it
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+
+            String responseString = String.valueOf(response);
+            System.out.println(responseString);
+
+            int loginUserID = 0;
+            Gson gson = new Gson();
+            User[] users = gson.fromJson(responseString, User[].class);
+            for (User user : users) {
+                if (user.getEmail().equals(loginUser.getEmail())) {
+                    loginUserID = user.getId();
+                }
+            }
+
+            url = new URL("http://localhost:8080/DatastoreService-1.0-SNAPSHOT/api/user/" + loginUserID + "/validate?datastoreKey=C287746F288DF2CB7292DD2EE29CFECD&pwd=" + loginUser.getPassword());
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            responseCode = connection.getResponseCode();
+
+            if (responseCode == HttpURLConnection.HTTP_OK) { // success
+                in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                System.out.println("in " + in);
+
+                response = new StringBuilder();
+
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+
+                responseString = String.valueOf(response);
+                System.out.println(responseString);
+            }
+            if (responseString.contains("true")){
                 String sessionKey = getKeyFromGenerator();
-                testUser.setSessionKey(sessionKey);//TODO Niet dit
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+
+                Session session = new Session(sessionKey,timestamp,loginUserID);
+
+                SessionController.AddSession(session);
+
                 System.out.println("Session key:" + sessionKey);
+
                 return sessionKey;
             }
-        } catch (SQLException e) {
-            System.out.println("connection failed");
+
+            // print result
+        } else {
+            System.out.println("GET request did not work.");
         }
         return null;
+    }
+
+    @DELETE
+    @Path("/{sessionKey}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void AuthenticateLogout(@PathParam("sessionKey") String sessionKey){
+        SessionController.DeleteSession(sessionKey);
     }
 
 

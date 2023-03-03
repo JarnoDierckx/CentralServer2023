@@ -5,11 +5,18 @@ package com.fooditsolutions.CentralServer2023API;
  * present in both AuthenticationService and CentralServer2023API, used to make user object to handle authentication.
  */
 public class User {
+    private int id;
     private String userName;
     private String email;
     private String password;
     private String role;
     private String sessionKey;
+    public User(int id,String userName, String email, String password) {
+        this.id=id;
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+    }
 
     public User(String userName, String email, String password) {
         this.userName = userName;
@@ -62,5 +69,13 @@ public class User {
 
     public void setSessionKey(String sessionKey) {
         this.sessionKey = sessionKey;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
