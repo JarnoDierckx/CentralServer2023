@@ -5,7 +5,11 @@ import com.fooditsolutions.datastoreservice.controller.Datastores;
 import com.fooditsolutions.datastoreservice.model.DatastoreObject;
 
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -15,7 +19,8 @@ public class DatastoreServiceResource {
 
     @GET
     @Produces("application/json")
-    public List<DatastoreObject> getDatastoreResources() {
+    public List<DatastoreObject> getDatastoreResources(@Context HttpServletRequest request, @Context HttpServletResponse response) {
+        response.addCookie(new Cookie("SessionKey","QWERDCD151515151551"));
         return Datastores.getDatastores();
     }
 
