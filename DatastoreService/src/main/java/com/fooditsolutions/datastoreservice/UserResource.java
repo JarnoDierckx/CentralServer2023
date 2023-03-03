@@ -38,7 +38,7 @@ public class UserResource {
     @GET
     @Produces("application/json")
     @Path("/{userId}")
-    public List<User> getUser(@QueryParam("userId") String userId,@QueryParam("datastoreKey") String datastoreKey) {
+    public List<User> getUser(@PathParam("userId") String userId,@QueryParam("datastoreKey") String datastoreKey) {
         JSONArray jsonUsers = new JSONArray();
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
