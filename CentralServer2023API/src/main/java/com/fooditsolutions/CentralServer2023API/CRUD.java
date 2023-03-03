@@ -1,9 +1,14 @@
 package com.fooditsolutions.CentralServer2023API;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,7 +34,7 @@ public class CRUD {
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
-    public String Read(User loginUser) throws IOException {
+    public void Read(User loginUser, HttpServletRequest request, @Context HttpServletResponse response) throws IOException, ServletException {
         String POST_PARAMS = String.format("{\"email\": \"%s\",\"password\": \"%s\"}", loginUser.getEmail(), loginUser.getPassword());
         System.out.println(POST_PARAMS);
 
@@ -51,13 +56,21 @@ public class CRUD {
         if (responseCode == HttpURLConnection.HTTP_OK) {
             // Authentication successful, retrieve the session key from the API response
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String response = in.readLine();
+            String apiResponse = in.readLine();
             in.close();
-            System.out.println(response);
-            return response;
+            String name="Login";
+            //System.out.println(response);
+            Cookie cookie=new Cookie(name, apiResponse);
+            cookie.setDomain("localhost");
+            cookie.setMaxAge(60*60);
+            System.out.println("Cookie " + cookie);
+
+            response.addCookie(cookie);
+
+            //return response;
         } else {
             // Authentication failed, return null
-            return null;
+            //return null;
         }
 
     }

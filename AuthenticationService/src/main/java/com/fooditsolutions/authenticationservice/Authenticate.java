@@ -21,9 +21,9 @@ import java.time.Instant;
  */
 @Path("auth")
 public class Authenticate {
-    private final String DB_URL="jdbc:firebirdsql:localhost:/data/CENTRALSERVER.FDB";
-    private final String USER="sysdba";
-    private final String PASS="masterkey";
+    private final String DB_URL = "jdbc:firebirdsql:localhost:/data/CENTRALSERVER.FDB";
+    private final String USER = "sysdba";
+    private final String PASS = "masterkey";
     User testUser = new User("Jarno", "jarno@mail.com", "ww");
     //private List<User> users;
 
@@ -47,28 +47,20 @@ public class Authenticate {
         // Connect to db, try to get correct user
         try (Connection connection = DriverManager.getConnection(DB_URL, USER, PASS)) {
             System.out.println("connection succeeded");
-            String sql = "SELECT USERID, EMAIL, PASSWORD FROM TEST_LOGIN where Email like ?";
+            String sql = "SELECT USERID, EMAIL, PASSWORD FROM TEST_LOGIN where Email like ? AND PASSWORD like ?";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, loginUser.getEmail());
+                statement.setString(2, loginUser.getPassword());
                 resultSet = statement.executeQuery();
-                String ww = "";
-                String un = "";
-                String id = "";
-                while (resultSet.next()) {
-                    ww = resultSet.getString("PASSWORD");
-                    un = resultSet.getString("EMAIL");
-                    id = resultSet.getString("USERID");
-                }
-                // Check if loginUser matches the user from the query
-                if (loginUser.getEmail().equals(un) && loginUser.getPassword().equals(resultSet.getString(ww))) {
-                    // Authentication successful, generate a session key and return it
-                    String sessionKey = getKeyFromGenerator();
-                    testUser.setSessionKey(sessionKey);//TODO Niet dit
-                    System.out.println("Session key:" + sessionKey);
-                    return sessionKey;
-                }
+
+                //TODO uitvogelen of er iets word teruggegeven
+
+                // Authentication successful, generate a session key and return it
+                String sessionKey = getKeyFromGenerator();
+                testUser.setSessionKey(sessionKey);//TODO Niet dit
+                System.out.println("Session key:" + sessionKey);
+                return sessionKey;
             }
-            connection.close();
         } catch (SQLException e) {
             System.out.println("connection failed");
         }
@@ -79,9 +71,9 @@ public class Authenticate {
     /**
      * generates a json web token that is viable for an hour to authenticate users trying to log in
      */
-    public String GenerateJWT(String id){
-        Instant now=Instant.now();
-        Instant expirationTime=now.plus(Duration.ofHours(1));
+    public String GenerateJWT(String id) {
+        Instant now = Instant.now();
+        Instant expirationTime = now.plus(Duration.ofHours(1));
 
         String jws = JWT.create()
                 .withIssuer("FIT")
