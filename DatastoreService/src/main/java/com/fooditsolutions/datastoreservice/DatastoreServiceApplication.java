@@ -18,5 +18,12 @@ public class DatastoreServiceApplication  extends Application {
         datastoreObject.setConnectionString("jdbc:firebirdsql:localhost:/data/CENTRALSERVER.FDB");
         datastoreObject.setPassword("masterkey");
         Datastores.addDatastore(datastoreObject);
+        DatastoreObject datastoreObject3 = new DatastoreObject();
+        datastoreObject3.setName("MATT: Central Server Thunderbird");
+        datastoreObject3.setDatamodelType(DatamodelType.DATABASE);
+        datastoreObject3.setUserName("SYSDBA");
+        datastoreObject3.setConnectionString("jdbc:firebirdsql://localhost:3050/c:/data/CENTRALSERVER.fdb");
+        datastoreObject3.setPassword("Test1234");
+        Datastores.addDatastore(datastoreObject3);
     }
 }

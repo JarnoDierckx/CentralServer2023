@@ -17,6 +17,7 @@
         <option value="$PROJECT_DIR$/Web/pom.xml" />
         <option value="$PROJECT_DIR$/CentralServer2023API/pom.xml" />
         <option value="$PROJECT_DIR$/DatastoreService/pom.xml" />
+        <option value="$PROJECT_DIR$/ContractService/pom.xml" />
       </list>
     </option>
   </component>
