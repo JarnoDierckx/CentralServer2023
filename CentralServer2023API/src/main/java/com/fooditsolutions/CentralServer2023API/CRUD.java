@@ -5,9 +5,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import java.io.BufferedReader;
@@ -34,7 +32,7 @@ public class CRUD {
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void Read(User loginUser, HttpServletRequest request, @Context HttpServletResponse response) throws IOException, ServletException {
+    public void Login(User loginUser, HttpServletRequest request, @Context HttpServletResponse response) throws IOException, ServletException {
         String POST_PARAMS = String.format("{\"email\": \"%s\",\"password\": \"%s\"}", loginUser.getEmail(), loginUser.getPassword());
         System.out.println(POST_PARAMS);
 
@@ -74,4 +72,19 @@ public class CRUD {
         }
 
     }
+
+    @DELETE
+    @Path("/logout/{sessionKey}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void logout(@PathParam("sessionKey")String sessionKey) throws IOException {
+        System.out.println("Starting Logout");
+        URL url=new URL("http://localhost:8080/AuthenticationService-1.0-SNAPSHOT/authapi/auth/" + sessionKey);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("DELETE");
+
+        int responseCode = connection.getResponseCode();
+        System.out.println("Delete" + responseCode);
+    }
+
+
 }
