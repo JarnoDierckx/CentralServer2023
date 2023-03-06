@@ -31,63 +31,64 @@ public class HandleLogin {
      * credentials given match that of a registered user.
      */
     public void PassCredentials() throws IOException {
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
+        if (!isTimedOut){
+            FacesContext context = FacesContext.getCurrentInstance();
+            HttpServletResponse response = (HttpServletResponse) context.getExternalContext().getResponse();
 
-        if (email.trim().equals("") || password.trim().equals("")){
-            responseString="Please provide username and password";
-            return;
-        }
-
-        String POST_PARAMS = String.format("{\"email\": \"%s\",\"password\": \"%s\"}", email, password);
-
-        URL url=new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crud/");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/json");
-
-        connection.setDoOutput(true);
-        OutputStream os = connection.getOutputStream();
-        os.write(POST_PARAMS.getBytes());
-        os.flush();
-        os.close();
-
-        int responseCode = connection.getResponseCode();
-        System.out.println("POST Response Code :  " + responseCode);
-        System.out.println("POST Response Message : " + connection.getResponseMessage());
-
-
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            // Authentication successful, retrieve the session key from the API response
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String apiResponse = in.readLine();
-            in.close();
-
-            if (!apiResponse.contains("Error")){
-                String name="Login";
-                //System.out.println(response);
-                Cookie cookie=new Cookie(name, apiResponse);
-                cookie.setDomain("localhost");
-                cookie.setMaxAge(60*60);
-                System.out.println("Cookie " + cookie);
-                response.addCookie(cookie);
-                responseString=connection.getResponseMessage();
-            }else{
-                errorCount++;
-                responseString=apiResponse;
-                if (errorCount==3){
-                    responseString="Too many failed attempts, login will be blocked for 1 minute";
-                    TimeOut(1);
-                } else if (errorCount>3) {
-                    responseString="Too many failed attempts, login will be blocked for " + timeOut + " minutes";
-                    TimeOut(timeOut);
-                    timeOut*=2;
-                }
+            if (email.trim().equals("") || password.trim().equals("")){
+                responseString="Please provide username/email and password";
+                return;
             }
 
+            String POST_PARAMS = String.format("{\"email\": \"%s\",\"password\": \"%s\"}", email, password);
 
-        } else {
-            responseString=connection.getResponseMessage();
+            URL url=new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crud/");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+
+            connection.setDoOutput(true);
+            OutputStream os = connection.getOutputStream();
+            os.write(POST_PARAMS.getBytes());
+            os.flush();
+            os.close();
+
+            int responseCode = connection.getResponseCode();
+            System.out.println("POST Response Code :  " + responseCode);
+            System.out.println("POST Response Message : " + connection.getResponseMessage());
+
+
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // Authentication successful, retrieve the session key from the API response
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String apiResponse = in.readLine();
+                in.close();
+
+                if (!apiResponse.contains("Error")){
+                    String name="Login";
+                    //System.out.println(response);
+                    Cookie cookie=new Cookie(name, apiResponse);
+                    cookie.setDomain("localhost");
+                    cookie.setMaxAge(60*60);
+                    System.out.println("Cookie " + cookie);
+                    response.addCookie(cookie);
+                    responseString=connection.getResponseMessage();
+                }else{
+                    errorCount++;
+                    responseString=apiResponse;
+                    if (errorCount==3){
+                        responseString="Too many failed attempts, login will be blocked for 1 minute";
+                        TimeOut(1);
+                    } else if (errorCount>3) {
+                        responseString="Too many failed attempts, login will be blocked for " + timeOut + " minutes";
+                        TimeOut(timeOut);
+                        timeOut*=2;
+                    }
+                }
+
+            } else {
+                responseString=connection.getResponseMessage();
+            }
         }
     }
 
