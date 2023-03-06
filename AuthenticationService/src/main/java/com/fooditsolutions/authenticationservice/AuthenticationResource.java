@@ -63,12 +63,13 @@ public class AuthenticationResource {
             Gson gson = new Gson();
             User[] users = gson.fromJson(responseString, User[].class);
             for (User user : users) {
-                if (user.getEmail().equals(loginUser.getEmail())) {
+                if (user.getEmail().equals(loginUser.getEmail()) || user.getName().equals(loginUser.getEmail())) {
                     loginUserID = user.getId();
+                    System.out.println(loginUserID);
                 }
             }
             if (loginUserID==0){
-                return "Error: Email and Password are incorrect!";
+                return "Error: Username/Email and Password are incorrect!";
             }
             /*
             url = new URL("http://localhost:8080/DatastoreService-1.0-SNAPSHOT/api/user/" + loginUserID + "/validate?datastoreKey="+ PropertiesController.getProperty().getDatastore()+"&pwd=" + loginUser.getPassword());
@@ -105,7 +106,7 @@ public class AuthenticationResource {
 
                 return sessionKey;
             }else{
-                return "Error: Email and Password are incorrect!";
+                return "Error: Username/Email and Password are incorrect!";
             }
 
             // print result

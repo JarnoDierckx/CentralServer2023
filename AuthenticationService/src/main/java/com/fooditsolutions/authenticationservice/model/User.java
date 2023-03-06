@@ -6,20 +6,20 @@ package com.fooditsolutions.authenticationservice.model;
  */
 public class User {
     private int id;
-    private String userName;
+    private String name;
     private String email;
     private String password;
     private String role;
     private String sessionKey;
     public User(int id,String userName, String email, String password) {
         this.id=id;
-        this.userName = userName;
+        this.name = userName;
         this.email = email;
         this.password = password;
     }
 
     public User(String userName, String email, String password) {
-        this.userName = userName;
+        this.name = userName;
         this.email = email;
         this.password = password;
     }
@@ -31,12 +31,12 @@ public class User {
     public User() {
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String userName) {
+        this.name = userName;
     }
 
     public String getEmail() {
