@@ -67,6 +67,9 @@ public class AuthenticationResource {
                     loginUserID = user.getId();
                 }
             }
+            if (loginUserID==0){
+                return "Error: Email and Password are incorrect!";
+            }
             /*
             url = new URL("http://localhost:8080/DatastoreService-1.0-SNAPSHOT/api/user/" + loginUserID + "/validate?datastoreKey="+ PropertiesController.getProperty().getDatastore()+"&pwd=" + loginUser.getPassword());
             connection = (HttpURLConnection) url.openConnection();
@@ -101,13 +104,15 @@ public class AuthenticationResource {
                 System.out.println("Session key:" + sessionKey);
 
                 return sessionKey;
+            }else{
+                return "Error: Email and Password are incorrect!";
             }
 
             // print result
         /*} else {
             System.out.println("GET request did not work.");
         }*/
-        return null;
+        //return null;
     }
 
     @DELETE

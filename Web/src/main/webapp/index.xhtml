@@ -12,14 +12,15 @@
 <h:body>
     <h:form>
         <h:outputLabel value="Email" />
-        <h:inputText value="#{HandleLogin.email}" />
+        <h:inputText id="email" value="#{HandleLogin.email}"/><br/>
 
         <h:outputLabel value="Password" />
-        <h:inputText value="#{HandleLogin.password}" />
+        <h:inputSecret id="password" value="#{HandleLogin.password}"/><br/>
 
-    <h:commandButton value="Log in" action="#{HandleLogin.PassCredentials}" >
-        <f:ajax execute="@form"/>
+    <h:commandButton value="Log in" action="#{HandleLogin.PassCredentials}" disabled="#{HandleLogin.timedOut}">
+        <f:ajax execute="@form" render="error"/>
     </h:commandButton><br/>
     </h:form>
+    <h:outputLabel id="error" value="#{HandleLogin.responseString}"/>
 </h:body>
 </html>

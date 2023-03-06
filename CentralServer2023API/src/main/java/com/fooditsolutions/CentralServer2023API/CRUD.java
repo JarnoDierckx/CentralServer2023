@@ -32,7 +32,7 @@ public class CRUD {
     @POST
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void Login(User loginUser, HttpServletRequest request, @Context HttpServletResponse response) throws IOException, ServletException {
+    public String Login(User loginUser, HttpServletRequest request, @Context HttpServletResponse response) throws IOException, ServletException {
         String POST_PARAMS = String.format("{\"email\": \"%s\",\"password\": \"%s\"}", loginUser.getEmail(), loginUser.getPassword());
         System.out.println(POST_PARAMS);
 
@@ -56,19 +56,20 @@ public class CRUD {
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String apiResponse = in.readLine();
             in.close();
-            String name="Login";
+            return apiResponse;
+            /*String name="Login";
             //System.out.println(response);
             Cookie cookie=new Cookie(name, apiResponse);
             cookie.setDomain("localhost");
             cookie.setMaxAge(60*60);
             System.out.println("Cookie " + cookie);
 
-            response.addCookie(cookie);
+            response.addCookie(cookie);*/
 
             //return response;
         } else {
             // Authentication failed, return null
-            //return null;
+            return null;
         }
 
     }
