@@ -2,7 +2,6 @@ package com.fooditsolutions.CentralServer2023API;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -19,7 +18,7 @@ import java.net.URL;
  * Receives api calls from the front end and passes them to the correct Service.
  */
 @Path("/crud")
-public class CRUD {
+public class CRUD_Login {
 
     @PostConstruct
     public void init(){
@@ -57,14 +56,6 @@ public class CRUD {
             String apiResponse = in.readLine();
             in.close();
             return apiResponse;
-            /*String name="Login";
-            //System.out.println(response);
-            Cookie cookie=new Cookie(name, apiResponse);
-            cookie.setDomain("localhost");
-            cookie.setMaxAge(60*60);
-            System.out.println("Cookie " + cookie);
-
-            response.addCookie(cookie);*/
 
             //return response;
         } else {
