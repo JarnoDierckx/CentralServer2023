@@ -1,16 +1,25 @@
 package com.fooditsolutions.contractservice;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import com.fooditsolutions.contractservice.controller.HttpController;
+import com.fooditsolutions.contractservice.controller.PropertiesController;
+
+import javax.annotation.PostConstruct;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 
 @Path("/contract")
 public class ContractResource {
+    @PostConstruct
+    public void init(){
+        System.out.println("ContractService");
+    }
     @GET
-    @Produces("application/json")
-    public String hello() {
-        return "Hello, World!";
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String getContracts() {
+        String responseString = HttpController.httpGet("http://localhost:8080/DatastoreService-1.0-SNAPSHOT/api"+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore());
+        System.out.println(responseString);
+
+        return responseString;
     }
 
     @GET

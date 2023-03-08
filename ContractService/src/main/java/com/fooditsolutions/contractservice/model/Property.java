@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Property {
-    private  String datastore;
+    private  String datastore,base_url_datastoreservice;
 }
