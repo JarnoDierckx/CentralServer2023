@@ -3,6 +3,7 @@ package com.fooditsolutions.contractservice;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.util.controller.HttpController;
 
+
 import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
