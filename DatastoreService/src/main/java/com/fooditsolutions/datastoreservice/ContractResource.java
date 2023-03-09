@@ -2,9 +2,8 @@ package com.fooditsolutions.datastoreservice;
 
 import com.fooditsolutions.datastoreservice.controller.DBThunderbird;
 import com.fooditsolutions.datastoreservice.controller.Datastores;
-import com.fooditsolutions.datastoreservice.model.Contract;
+import com.fooditsolutions.datastoreservice.model.centralserver.Contract;
 import com.fooditsolutions.datastoreservice.model.DatastoreObject;
-import com.fooditsolutions.datastoreservice.model.User;
 import org.json.JSONArray;
 
 import javax.ws.rs.GET;

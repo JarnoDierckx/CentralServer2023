@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static com.sun.deploy.security.DeployManifestChecker.verify;
+//import static com.sun.deploy.security.DeployManifestChecker.verify;
 import static javafx.beans.binding.Bindings.when;
 import static org.hamcrest.CoreMatchers.any;
 import static org.junit.Assert.assertEquals;

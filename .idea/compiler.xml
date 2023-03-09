@@ -8,10 +8,10 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ContractService" />
+        <module name="Util" />
         <module name="AuthenticationService" />
         <module name="Web" />
         <module name="CentralServer2023API" />
-        <module name="CentralServer2023" />
         <module name="DatastoreService" />
       </profile>
     </annotationProcessing>

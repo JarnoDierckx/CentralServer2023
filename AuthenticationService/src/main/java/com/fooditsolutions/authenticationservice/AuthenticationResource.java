@@ -1,7 +1,6 @@
 package com.fooditsolutions.authenticationservice;
-
-import com.fooditsolutions.authenticationservice.controller.HttpController;
-import com.fooditsolutions.authenticationservice.controller.PropertiesController;
+import com.fooditsolutions.util.controller.HttpController;
+import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.authenticationservice.controller.Security;
 import com.fooditsolutions.authenticationservice.controller.SessionController;
 import com.fooditsolutions.authenticationservice.model.Session;
