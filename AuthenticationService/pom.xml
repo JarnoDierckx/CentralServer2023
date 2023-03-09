@@ -19,8 +19,8 @@
 
     <repositories>
         <repository>
-            <id>FIT_REPO-mvn-repo</id>
-            <url>https://github.com/matt-OWN-IT/FIT_REPO/raw/mvn-repo/</url>
+            <id>github</id>
+            <url>https://raw.githubusercontent.com/matt-OWN-IT/FIT_REPO/mvn-repo/</url>
             <snapshots>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
@@ -89,7 +89,7 @@
         <dependency>
             <groupId>com.fooditsolutions</groupId>
             <artifactId>Util</artifactId>
-            <version>1.1</version>
+            <version>1.1.1</version>
         </dependency>
     </dependencies>
 

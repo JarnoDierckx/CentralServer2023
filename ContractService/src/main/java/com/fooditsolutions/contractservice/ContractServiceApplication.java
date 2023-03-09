@@ -1,6 +1,6 @@
 package com.fooditsolutions.contractservice;
+import com.fooditsolutions.util.controller.PropertiesController;
 
-import com.fooditsolutions.contractservice.controller.PropertiesController;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;

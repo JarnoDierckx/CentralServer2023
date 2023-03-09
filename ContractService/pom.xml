@@ -17,6 +17,17 @@
         <junit.version>5.9.1</junit.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://raw.githubusercontent.com/matt-OWN-IT/FIT_REPO/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>javax.enterprise</groupId>
@@ -53,6 +64,12 @@
             <artifactId>lombok</artifactId>
             <version>1.18.26</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fooditsolutions</groupId>
+            <artifactId>Util</artifactId>
+            <version>1.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
