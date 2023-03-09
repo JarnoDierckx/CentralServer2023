@@ -65,6 +65,9 @@ public class CRUD_Login {
 
     }
 
+    /**
+     * Sends forward a request to delete a users sessionkey.
+     */
     @DELETE
     @Path("/logout/{sessionKey}")
     @Consumes(MediaType.APPLICATION_JSON)

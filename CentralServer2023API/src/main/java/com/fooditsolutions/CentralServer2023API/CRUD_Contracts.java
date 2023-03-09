@@ -25,6 +25,10 @@ public class CRUD_Contracts {
         System.out.println("Api Service started");
     }
 
+    /**
+     * sends forward GET request for all contracts.
+     * The recieved value is then returned back.
+     */
     @GET
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)

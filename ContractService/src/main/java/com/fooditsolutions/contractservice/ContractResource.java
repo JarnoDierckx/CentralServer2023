@@ -13,6 +13,10 @@ public class ContractResource {
     public void init(){
         System.out.println("ContractService");
     }
+
+    /**
+     * Simply sends the recieved request forward and the then returned value to where it recieved the initial request from.
+     */
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public String getContracts() {
