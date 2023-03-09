@@ -72,6 +72,9 @@ public class AuthenticationResource {
 
     }
 
+    /**
+     * revieves a sessionkey to delete from the list of running sessions preventing a user from accessing any other pages unless they log back in.
+     */
     @DELETE
     @Path("/{sessionKey}")
     @Consumes(MediaType.APPLICATION_JSON)

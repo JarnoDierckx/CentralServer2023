@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Details</title>
+    <h:link type="css" rel="stylesheet" hreflang="css/myStyles.css"/>
+</h:head>
+<h:body>
+    <h:form>
+        <div class="card">
+            <p:dataTable var="detail" value="#{ManageContracts.details}">
+                <p:column headerText="Module id">
+                    #{detail.module_DBB_ID}
+                </p:column>
+                <p:column headerText="purchase date">
+                    #{detail.purchase_price}
+                </p:column>
+                <p:column headerText="amount">
+                    #{detail.amount}
+                </p:column>
+                <p:column headerText="purchase price">
+                    #{detail.purchase_price}
+                </p:column>
+                <p:column headerText="index start">
+                    #{detail.index_Start}
+                </p:column>
+                <p:column headerText="renewal">
+                    #{detail.renewal}
+                </p:column>
+            </p:dataTable>
+        </div>
+    </h:form>
+</h:body>
+</html>

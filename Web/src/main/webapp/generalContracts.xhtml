@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Contracts</title>
+    <h:link type="css" rel="stylesheet" hreflang="css/myStyles.css"/>
+</h:head>
+
+<h:body>
+
+    <h:form target="_blank">
+        <div class="card">
+            <p:dataTable var="contract" value="#{ManageContracts.contracts2}" paginator="true" rows="5" widgetVar="contractTable" globalFilterFunction="#{ManageContracts.globalFilterFunction}">
+                <f:facet name="header">
+                    <div class="flex justify-content-end">
+                        <p:inputText id="globalFilter" onkeyup="PF('contractTable').filter()" style="width:300px"
+                                     placeholder="Search using global function" />
+                    </div>
+                </f:facet>
+
+                <p:column style="width:3rem;text-align: center">
+                    <p:commandButton icon="pi pi-search" title="View" action="#{ManageContracts.getContractDetails}" ajax="false" emptyMessage="No contracts found with given criteria">
+                        <f:setPropertyActionListener value="#{contract}" target="#{ManageContracts.selectedItem}"/>
+                    </p:commandButton >
+                </p:column>
+
+                <p:column headerText="contract number">
+                    #{contract.contract_number}
+                </p:column>
+                <p:column headerText="Client">
+                    #{contract.CLIENT_ID}
+                </p:column>
+                <p:column headerText="BJR">
+                    #{contract.BJR_ID}
+                </p:column>
+                <p:column headerText="start date">
+                    #{contract.start_date}
+                </p:column>
+                <p:column headerText="end date">
+                    #{contract.end_date}
+                </p:column>
+                <p:column headerText="source">
+                    #{contract.source}
+                </p:column>
+                <p:column headerText="invoice frequency">
+                    #{contract.invoice_frequency}
+                </p:column>
+                <p:column headerText="index frequency">
+                    #{contract.index_frequency}
+                </p:column>
+                <p:column headerText="base index year">
+                    #{contract.base_index_year}
+                </p:column>
+                <p:column headerText="index start">
+                    #{contract.index_start}
+                </p:column>
+                <p:column headerText="index last invoice">
+                    #{contract.index_last_invoice}
+                </p:column>
+                <p:column headerText="amount last invoice">
+                    #{contract.amount_last_invoice}
+                </p:column>
+                <p:column headerText="last invoice number">
+                    #{contract.last_invoice_number}
+                </p:column>
+                <p:column headerText="last invoice date">
+                    #{contract.last_invoice_date}
+                </p:column>
+                <p:column headerText="last invoice period start">
+                    #{contract.last_invoice_period_start}
+                </p:column>
+                <p:column headerText="last invoice period end">
+                    #{contract.last_invoice_period_end}
+                </p:column>
+                <p:column headerText="jgr">
+                    #{contract.jgr}
+                </p:column>
+
+            </p:dataTable>
+        </div>
+    </h:form>
+
+</h:body>
+</html>

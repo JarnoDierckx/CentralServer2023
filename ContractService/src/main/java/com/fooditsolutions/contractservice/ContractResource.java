@@ -14,11 +14,15 @@ public class ContractResource {
     public void init(){
         System.out.println("ContractService");
     }
+
+    /**
+     * Simply sends the recieved request forward and the then returned value to where it recieved the initial request from.
+     */
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public String getContracts() {
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore());
-        System.out.println(responseString);
+        System.out.println("getContracts: "+responseString);
 
         return responseString;
     }

@@ -1,5 +1,6 @@
 package com.fooditsolutions.web;
 
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,7 @@ public class HandleLogin {
     /**
     *This function takes the credentials and puts them in a json string. That string gets send to CentralServer2023API, and after that PassCredentials recieves the session key provided the
      * credentials given match that of a registered user.
+     * The session key is put into a cookie that is passed to the user after which the user gets redirected.
      */
     public void PassCredentials() throws IOException {
         if (!isTimedOut){
@@ -73,6 +75,9 @@ public class HandleLogin {
                     System.out.println("Cookie " + cookie);
                     response.addCookie(cookie);
                     responseString=connection.getResponseMessage();
+                    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+                    externalContext.redirect(externalContext.getRequestContextPath() + "/generalContracts.xhtml?faces-redirect=true");
+
                 }else{
                     errorCount++;
                     responseString=apiResponse;
@@ -92,6 +97,12 @@ public class HandleLogin {
         }
     }
 
+
+    /**
+     * Once a user has had at least 3 login attempts with invalid credentials, this function is called to put said user in time out.
+     * The isTimedOut variable is set to true, disabling the login button and the entire function it calls.
+     * after x minutes, the variable is once again set to false allowing the user another attempt.
+     */
     public void TimeOut(int minutes){
         isTimedOut=true;
         System.out.println("Timed out for " + minutes + " minutes.");
