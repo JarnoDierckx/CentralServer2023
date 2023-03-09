@@ -1,6 +1,7 @@
 package com.fooditsolutions.web;
 
 import com.fooditsolutions.web.model.Contract;
+import com.fooditsolutions.web.model.ContractDetail;
 import com.google.gson.Gson;
 import org.primefaces.util.LangUtils;
 
@@ -14,6 +15,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +29,7 @@ public class ManageContracts extends HttpServlet {
     private List<Contract> contracts;
     private Contract[] contracts2;
     private Contract selectedItem;
+    private ContractDetail[] details;
 
     /**
      * executes getContracts when generalContracts.xhtml is loaded.
@@ -44,9 +48,8 @@ public class ManageContracts extends HttpServlet {
      * The returned value is put into a string before it is turned into an array of Contract objects to be used by the datatable in generalContracts.xhtml
      */
     public void getContracts() throws IOException, ServletException {
-
         System.out.println("Starting read in ManageContracts");
-        URL url = new URL("http://localhost:8080/ContractService-1.0-SNAPSHOT/api/contract");
+        URL url = new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crudContract/");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         int responseCode = connection.getResponseCode();
@@ -81,6 +84,39 @@ public class ManageContracts extends HttpServlet {
     }
 
     /**
+     * Gets called when a user presses the button next to a contract entry.
+     * It uses the id of the relevent contract to send a request forward for said contracts details.
+     * When it gets those details back, they are put in an array and the user gets redirected to a page where the details are put into a datatable.
+     */
+    public String getContractDetails() throws IOException {
+        URL url = new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crudContract/"+selectedItem.getID());
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        int responseCode = connection.getResponseCode();
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            System.out.println("in " + in);
+
+            StringBuilder response = new StringBuilder();
+
+            //put return in a string
+            String inputLine;
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            String responseString = String.valueOf(response);
+            System.out.println("ResponseString: "+responseString);
+            Gson gson = new Gson();
+            details=gson.fromJson(responseString,ContractDetail[].class);
+            return "contractDetails.xhtml?faces-redirect=true&includeViewParams=true";
+        }else {
+            return null;
+        }
+    }
+
+    /**
      * Takes the value in the search bar on generalContracts.xhtml and checks it against the values of several variables.
      * If any values match the searched string, the entire object will then be shown in the datatable.
      */
@@ -93,10 +129,6 @@ public class ManageContracts extends HttpServlet {
         Contract filterContract = (Contract) value;
         return filterContract.getContract_number().toLowerCase().contains(filterText)
                 || String.valueOf(filterContract.getCLIENT_ID()).contains(filterText);
-    }
-
-    public String viewContract() {
-        return "selected.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
     public void setContracts(List<Contract> contracts) {
@@ -118,5 +150,13 @@ public class ManageContracts extends HttpServlet {
 
     public void setContracts2(Contract[] contracts2) {
         this.contracts2 = contracts2;
+    }
+
+    public ContractDetail[] getDetails() {
+        return details;
+    }
+
+    public void setDetails(ContractDetail[] details) {
+        this.details = details;
     }
 }

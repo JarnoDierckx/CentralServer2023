@@ -12,6 +12,7 @@
 </h:head>
 
 <h:body>
+
     <h:form target="_blank">
         <div class="card">
             <p:dataTable var="contract" value="#{ManageContracts.contracts2}" paginator="true" rows="5" widgetVar="contractTable" globalFilterFunction="#{ManageContracts.globalFilterFunction}">
@@ -23,7 +24,7 @@
                 </f:facet>
 
                 <p:column style="width:3rem;text-align: center">
-                    <p:commandButton icon="pi pi-search" title="View" action="#{ManageContracts.viewContract()}" ajax="false" emptyMessage="No contracts found with given criteria">
+                    <p:commandButton icon="pi pi-search" title="View" action="#{ManageContracts.getContractDetails}" ajax="false" emptyMessage="No contracts found with given criteria">
                         <f:setPropertyActionListener value="#{contract}" target="#{ManageContracts.selectedItem}"/>
                     </p:commandButton >
                 </p:column>

@@ -1,4 +1,4 @@
-package com.fooditsolutions.contractservice.model;
+package com.fooditsolutions.web.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
