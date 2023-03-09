@@ -1,7 +1,7 @@
 package com.fooditsolutions.contractservice;
 
-import com.fooditsolutions.contractservice.controller.HttpController;
-import com.fooditsolutions.contractservice.controller.PropertiesController;
+import com.fooditsolutions.util.controller.PropertiesController;
+import com.fooditsolutions.util.controller.HttpController;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
@@ -16,7 +16,6 @@ public class ContractResource {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public String getContracts() {
-        System.out.println(PropertiesController.getProperty().getBase_url_datastoreservice());
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         System.out.println(responseString);
 

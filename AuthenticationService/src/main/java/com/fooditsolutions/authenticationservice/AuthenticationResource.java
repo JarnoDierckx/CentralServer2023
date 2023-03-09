@@ -1,7 +1,6 @@
 package com.fooditsolutions.authenticationservice;
-
-import com.fooditsolutions.authenticationservice.controller.HttpController;
-import com.fooditsolutions.authenticationservice.controller.PropertiesController;
+import com.fooditsolutions.util.controller.HttpController;
+import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.authenticationservice.controller.Security;
 import com.fooditsolutions.authenticationservice.controller.SessionController;
 import com.fooditsolutions.authenticationservice.model.Session;
@@ -35,27 +34,7 @@ public class AuthenticationResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public String authenticateLogin(User loginUser) throws NoSuchAlgorithmException {
           System.out.println("API GET");
-        /*
-        URL url = new URL("http://localhost:8080/DatastoreService-1.0-SNAPSHOT/api/user?datastoreKey="+ PropertiesController.getProperty().getDatastore());
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        int responseCode = connection.getResponseCode();
 
-        if (responseCode == HttpURLConnection.HTTP_OK) { // success
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            System.out.println("in " + in);
-
-            StringBuilder response = new StringBuilder();
-
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            String responseString = String.valueOf(response);
-
-         */
             String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/user?datastoreKey="+ PropertiesController.getProperty().getDatastore());
             System.out.println(responseString);
 
@@ -71,26 +50,7 @@ public class AuthenticationResource {
             if (loginUserID==0){
                 return "Error: Username/Email and Password are incorrect!";
             }
-            /*
-            url = new URL("http://localhost:8080/DatastoreService-1.0-SNAPSHOT/api/user/" + loginUserID + "/validate?datastoreKey="+ PropertiesController.getProperty().getDatastore()+"&pwd=" + loginUser.getPassword());
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            responseCode = connection.getResponseCode();
 
-            if (responseCode == HttpURLConnection.HTTP_OK) { // success
-                in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                System.out.println("in " + in);
-
-                response = new StringBuilder();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                responseString = String.valueOf(response);
-
-             */
                 responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/user/" + loginUserID + "/validate?datastoreKey="+ PropertiesController.getProperty().getDatastore()+"&pwd=" + loginUser.getPassword());
                 System.out.println(responseString);
 
@@ -109,11 +69,7 @@ public class AuthenticationResource {
                 return "Error: Username/Email and Password are incorrect!";
             }
 
-            // print result
-        /*} else {
-            System.out.println("GET request did not work.");
-        }*/
-        //return null;
+
     }
 
     @DELETE

@@ -18,6 +18,7 @@
         <option value="$PROJECT_DIR$/CentralServer2023API/pom.xml" />
         <option value="$PROJECT_DIR$/DatastoreService/pom.xml" />
         <option value="$PROJECT_DIR$/ContractService/pom.xml" />
+        <option value="$PROJECT_DIR$/Util/pom.xml" />
       </list>
     </option>
   </component>
@@ -26,7 +27,7 @@
     <resource url="http://java.sun.com/jsf/composite" location="$APPLICATION_HOME_DIR$/lib/app.jar!/standardSchemas/" />
     <resource url="http://primefaces.org/ui" location="$MAVEN_REPOSITORY$/org/primefaces/primefaces/12.0.0/primefaces-12.0.0.jar!/META-INF/primefaces-p.taglib.xml" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
