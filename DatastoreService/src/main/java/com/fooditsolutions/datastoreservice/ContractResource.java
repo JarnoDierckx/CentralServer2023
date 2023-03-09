@@ -6,6 +6,7 @@ import com.fooditsolutions.datastoreservice.model.centralserver.Contract;
 import com.fooditsolutions.datastoreservice.model.DatastoreObject;
 import org.json.JSONArray;
 
+import javax.annotation.PostConstruct;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -17,6 +18,10 @@ import java.util.List;
 
 @Path("/contract")
 public class ContractResource {
+    @PostConstruct
+    public void init(){
+        System.out.println("DataStoreService");
+    }
 
     @GET
     @Produces("application/json")

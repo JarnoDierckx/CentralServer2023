@@ -30,7 +30,7 @@ public class CRUD_Contracts {
     @Consumes(MediaType.APPLICATION_JSON)
     public String getContract() throws IOException, ServletException {
 
-        System.out.println("Starting read");
+        System.out.println("Starting read in CRUD_Contracts");
         URL url = new URL("http://localhost:8080/ContractService-1.0-SNAPSHOT/api/contract");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
