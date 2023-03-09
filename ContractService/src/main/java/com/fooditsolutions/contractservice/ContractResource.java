@@ -16,7 +16,8 @@ public class ContractResource {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     public String getContracts() {
-        String responseString = HttpController.httpGet("http://localhost:8080/DatastoreService-1.0-SNAPSHOT/api"+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore());
+        System.out.println(PropertiesController.getProperty().getBase_url_datastoreservice());
+        String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         System.out.println(responseString);
 
         return responseString;
