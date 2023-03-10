@@ -2,6 +2,7 @@ package com.fooditsolutions.datastoreservice;
 
 import com.fooditsolutions.datastoreservice.controller.DBThunderbird;
 import com.fooditsolutions.datastoreservice.controller.Datastores;
+import com.fooditsolutions.datastoreservice.controller.Util;
 import com.fooditsolutions.datastoreservice.model.centralserver.Contract;
 import com.fooditsolutions.datastoreservice.model.DatastoreObject;
 import org.json.JSONArray;
@@ -35,11 +36,15 @@ public class ContractResource {
         List<Contract> contracts = new ArrayList<>();
         for (int i = 0; i < jsonContracts.length(); i++) {
             Contract contract = new Contract();
+
             contract.setID((int) jsonContracts.getJSONObject(i).opt("ID"));
             contract.setContract_number((String) jsonContracts.getJSONObject(i).opt("CONTRACT_NUMBER"));
             contract.setCLIENT_ID((BigDecimal) jsonContracts.getJSONObject(i).opt("CLIENT_ID"));
+
+
             contract.setBJR_ID((int) jsonContracts.getJSONObject(i).opt("BJR_ID"));
             contract.setStart_date((Date) jsonContracts.getJSONObject(i).opt("START_DATE"));
+            Util.structureSQL(contract.getStart_date());
             contract.setEnd_date((Date) jsonContracts.getJSONObject(i).opt("END_DATE"));
             contract.setSource((String) jsonContracts.getJSONObject(i).opt("SOURCE"));
             contract.setInvoice_frequency((String) jsonContracts.getJSONObject(i).opt("INVOICE_FREQUENCY"));

@@ -20,7 +20,7 @@ public class DatastoreServiceResource {
     @GET
     @Produces("application/json")
     public List<DatastoreObject> getDatastoreResources(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-        response.addCookie(new Cookie("SessionKey","QWERDCD151515151551"));
+        //response.addCookie(new Cookie("SessionKey","QWERDCD151515151551"));
         return Datastores.getDatastores();
     }
 

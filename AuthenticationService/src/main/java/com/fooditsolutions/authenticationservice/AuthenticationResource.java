@@ -6,6 +6,7 @@ import com.fooditsolutions.authenticationservice.controller.SessionController;
 import com.fooditsolutions.authenticationservice.model.Session;
 import com.fooditsolutions.authenticationservice.model.User;
 import com.google.gson.Gson;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
@@ -51,7 +52,7 @@ public class AuthenticationResource {
                 return "Error: Username/Email and Password are incorrect!";
             }
 
-                responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/user/" + loginUserID + "/validate?datastoreKey="+ PropertiesController.getProperty().getDatastore()+"&pwd=" + loginUser.getPassword());
+                responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/user/" + loginUserID + "/validate?datastoreKey="+ PropertiesController.getProperty().getDatastore()+"&pwd=" + DigestUtils.md5Hex(loginUser.getPassword()));
                 System.out.println(responseString);
 
             if (responseString.contains("true")){

@@ -193,4 +193,34 @@ public class Contract {
     public void setUpdated(Date updated) {
         this.updated = updated;
     }
+
+    public String getInsertStatement(){
+        String result = "INSTERT INTO CONTRACT () VALUES (" +
+                "CONTRACT_NUMBER, CLIENT_ID, BJR_ID, START_DATE," +
+                "END_DATE, SOURCE, INVOICE_FREQUENCY, INDEX_FREQUENCY, BASE_INDEX_YEAR," +
+                "INDEX_START, INDEX_LAST_INVOICE, AMOUNT_LAST_INVOICE, LAST_INVOICE_NUMBER," +
+                "LAST_INVOICE_DATE, LAST_INVOICE_PERIOD_START, LAST_INVOICE_PERIOD_END, JGR," +
+                "COMMENTS)";
+        result += "'"+contract_number+"',"+
+                CLIENT_ID+","+
+                BJR_ID+","+
+                start_date+","+
+                end_date+","+
+                "'"+source+"',"+
+                "'"+invoice_frequency+"',"+
+                "'"+index_frequency+"',"+
+                "'"+base_index_year+"',"+
+                index_start+","+
+                index_last_invoice+","+
+                amount_last_invoice+","+
+                last_invoice_number+","+
+                last_invoice_date+","+
+                last_invoice_period_start+","+
+                last_invoice_period_end+","+
+                jgr+","+
+                "'"+comments+"'";
+        result += ");";
+
+        return result ;
+    }
 }
