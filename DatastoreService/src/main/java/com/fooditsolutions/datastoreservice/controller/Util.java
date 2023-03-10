@@ -1,5 +1,7 @@
 package com.fooditsolutions.datastoreservice.controller;
 
+import java.text.SimpleDateFormat;
+
 public class Util {
     public static String structureSQL(Object o){
         String result = "";
@@ -16,7 +18,9 @@ public class Util {
                 break;
             case"java.sql.Date":
                 //date needs to be structured
-                result = "'" + o.toString() + "'";
+                SimpleDateFormat sdf = new SimpleDateFormat(
+                        "dd.MM.yyyy");
+                result = "'" + sdf.format(o) + "'";
                 break;
         }
 

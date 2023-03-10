@@ -40,8 +40,6 @@ public class ContractResource {
             contract.setID((int) jsonContracts.getJSONObject(i).opt("ID"));
             contract.setContract_number((String) jsonContracts.getJSONObject(i).opt("CONTRACT_NUMBER"));
             contract.setCLIENT_ID((BigDecimal) jsonContracts.getJSONObject(i).opt("CLIENT_ID"));
-
-
             contract.setBJR_ID((int) jsonContracts.getJSONObject(i).opt("BJR_ID"));
             contract.setStart_date((Date) jsonContracts.getJSONObject(i).opt("START_DATE"));
             Util.structureSQL(contract.getStart_date());
@@ -49,21 +47,44 @@ public class ContractResource {
             contract.setSource((String) jsonContracts.getJSONObject(i).opt("SOURCE"));
             contract.setInvoice_frequency((String) jsonContracts.getJSONObject(i).opt("INVOICE_FREQUENCY"));
             contract.setIndex_frequency((String) jsonContracts.getJSONObject(i).opt("INDEX_FREQUENCY"));
-            contract.setBase_index_year((int) jsonContracts.getJSONObject(i).opt("BASE_INDEX_YEAR"));
-            contract.setIndex_start((BigDecimal) jsonContracts.getJSONObject(i).opt("INDEX_START"));
-            contract.setIndex_last_invoice((BigDecimal) jsonContracts.getJSONObject(i).opt("INDEX_LAST_INVOICE"));
-            contract.setAmount_last_invoice((BigDecimal) jsonContracts.getJSONObject(i).opt("AMOUNT_LAST_INVOICE"));
-            contract.setLast_invoice_number((int) jsonContracts.getJSONObject(i).opt("LAST_INVOICE_NUMBER"));
-            contract.setLast_invoice_date((Date) jsonContracts.getJSONObject(i).opt("LAST_INVOICE_DATE"));
-            contract.setLast_invoice_period_start((Date) jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_START"));
-            contract.setLast_invoice_period_end((Date) jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_END"));
-            contract.setJgr((int) jsonContracts.getJSONObject(i).opt("JGR"));
+            if(jsonContracts.getJSONObject(i).opt("BASE_INDEX_YEAR")!=null) {
+                contract.setBase_index_year((int) jsonContracts.getJSONObject(i).opt("BASE_INDEX_YEAR"));
+            }
+            if(jsonContracts.getJSONObject(i).opt("INDEX_START")!=null) {
+                contract.setIndex_start((BigDecimal) jsonContracts.getJSONObject(i).opt("INDEX_START"));
+            }
+            if(jsonContracts.getJSONObject(i).opt("INDEX_LAST_INVOICE")!=null) {
+                contract.setIndex_last_invoice((BigDecimal) jsonContracts.getJSONObject(i).opt("INDEX_LAST_INVOICE"));
+            }
+            if(jsonContracts.getJSONObject(i).opt("AMOUNT_LAST_INVOICE")!=null) {
+                contract.setAmount_last_invoice((BigDecimal) jsonContracts.getJSONObject(i).opt("AMOUNT_LAST_INVOICE"));
+            }
+            if(jsonContracts.getJSONObject(i).opt("LAST_INVOICE_NUMBER")!=null) {
+                contract.setLast_invoice_number((int) jsonContracts.getJSONObject(i).opt("LAST_INVOICE_NUMBER"));
+            }
+            if(jsonContracts.getJSONObject(i).opt("LAST_INVOICE_DATE")!=null) {
+                contract.setLast_invoice_date((Date) jsonContracts.getJSONObject(i).opt("LAST_INVOICE_DATE"));
+            }
+            if(jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_START")!=null) {
+                contract.setLast_invoice_period_start((Date) jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_START"));
+            }
+            if(jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_END")!=null) {
+                contract.setLast_invoice_period_end((Date) jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_END"));
+            }
+            if(jsonContracts.getJSONObject(i).opt("JGR")!=null) {
+                contract.setJgr((int) jsonContracts.getJSONObject(i).opt("JGR"));
+            }
             contract.setComments((String) jsonContracts.getJSONObject(i).opt("COMMENTS"));
-            contract.setCreated((Date) jsonContracts.getJSONObject(i).opt("CREATED"));
-            contract.setUpdated((Date) jsonContracts.getJSONObject(i).opt("UPDATED"));
+            if(jsonContracts.getJSONObject(i).opt("CREATED")!=null) {
+                contract.setCreated((Date) jsonContracts.getJSONObject(i).opt("CREATED"));
+            }
+            if(jsonContracts.getJSONObject(i).opt("UPDATED")!=null) {
+                    contract.setUpdated((Date) jsonContracts.getJSONObject(i).opt("UPDATED"));
+            }
 
             contracts.add(contract);
         }
+
         return contracts;
     }
 }

@@ -11,7 +11,7 @@ import javax.json.bind.annotation.JsonbProperty;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User{
+public class User extends Sqlmodel{
 
     @JsonbProperty("id")
     int ID = 0;

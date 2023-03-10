@@ -1,9 +1,11 @@
 package com.fooditsolutions.datastoreservice.model.centralserver;
 
+import com.fooditsolutions.datastoreservice.model.Sqlmodel;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class ContractDetail {
+public class ContractDetail extends Sqlmodel {
     private int ID;
     private int contract_ID;
     private BigDecimal module_DBB_ID;
