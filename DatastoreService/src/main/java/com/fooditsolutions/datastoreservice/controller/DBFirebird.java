@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class DBThunderbird {
+public class DBFirebird {
 
     public static JSONArray executeSQL(DatastoreObject ds, String query){
         JSONArray jsonResult = new JSONArray();

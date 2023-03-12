@@ -1,6 +1,6 @@
 package com.fooditsolutions.datastoreservice;
 
-import com.fooditsolutions.datastoreservice.controller.DBThunderbird;
+import com.fooditsolutions.datastoreservice.controller.DBFirebird;
 import com.fooditsolutions.datastoreservice.controller.Datastores;
 import com.fooditsolutions.datastoreservice.model.DatastoreObject;
 import com.fooditsolutions.datastoreservice.model.User;
@@ -20,7 +20,7 @@ public class UserResource {
             JSONArray jsonUsers = new JSONArray();
             for (DatastoreObject ds : Datastores.getDatastores()) {
                 if (datastoreKey.equals(ds.getKey())) {
-                    jsonUsers = DBThunderbird.executeSQL(ds, "SELECT * FROM CS_USER");
+                    jsonUsers = DBFirebird.executeSQL(ds, "SELECT * FROM CS_USER");
                 }
             }
             List<User> users = new ArrayList<>();
@@ -42,7 +42,7 @@ public class UserResource {
         JSONArray jsonUsers = new JSONArray();
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
-                jsonUsers = DBThunderbird.executeSQL(ds, "SELECT * FROM CS_USER WHERE ID = '"+userId+"';");
+                jsonUsers = DBFirebird.executeSQL(ds, "SELECT * FROM CS_USER WHERE ID = '"+userId+"';");
             }
         }
         List<User> users = new ArrayList<>();
@@ -66,7 +66,7 @@ public class UserResource {
         JSONArray jsonUsers = new JSONArray();
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
-                jsonUsers = DBThunderbird.executeSQL(ds, "SELECT * FROM CS_USER WHERE USER_ID = "+userId+" AND PASSWD = '"+pwd+"';");
+                jsonUsers = DBFirebird.executeSQL(ds, "SELECT * FROM CS_USER WHERE USER_ID = "+userId+" AND PASSWD = '"+pwd+"';");
             }
         }
         if(jsonUsers.length()==1){

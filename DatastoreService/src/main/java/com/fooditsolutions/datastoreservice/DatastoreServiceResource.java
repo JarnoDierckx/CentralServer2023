@@ -1,11 +1,10 @@
 package com.fooditsolutions.datastoreservice;
 
-import com.fooditsolutions.datastoreservice.controller.DBThunderbird;
+import com.fooditsolutions.datastoreservice.controller.DBFirebird;
 import com.fooditsolutions.datastoreservice.controller.Datastores;
 import com.fooditsolutions.datastoreservice.model.DatastoreObject;
 
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
@@ -34,7 +33,7 @@ public class DatastoreServiceResource {
 
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
-                result = DBThunderbird.executeSQL(ds, query).toString();
+                result = DBFirebird.executeSQL(ds, query).toString();
             }
         }
         return result;

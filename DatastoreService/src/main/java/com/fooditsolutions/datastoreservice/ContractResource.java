@@ -1,6 +1,6 @@
 package com.fooditsolutions.datastoreservice;
 
-import com.fooditsolutions.datastoreservice.controller.DBThunderbird;
+import com.fooditsolutions.datastoreservice.controller.DBFirebird;
 import com.fooditsolutions.datastoreservice.controller.Datastores;
 import com.fooditsolutions.datastoreservice.controller.Util;
 import com.fooditsolutions.datastoreservice.model.centralserver.Contract;
@@ -30,7 +30,7 @@ public class ContractResource {
         JSONArray jsonContracts = new JSONArray();
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
-                jsonContracts = DBThunderbird.executeSQL(ds, "SELECT * FROM CONTRACT");
+                jsonContracts = DBFirebird.executeSQL(ds, "SELECT * FROM CONTRACT");
             }
         }
         List<Contract> contracts = new ArrayList<>();
@@ -79,7 +79,7 @@ public class ContractResource {
                 contract.setCreated((Date) jsonContracts.getJSONObject(i).opt("CREATED"));
             }
             if(jsonContracts.getJSONObject(i).opt("UPDATED")!=null) {
-                    contract.setUpdated((Date) jsonContracts.getJSONObject(i).opt("UPDATED"));
+                contract.setUpdated((Date) jsonContracts.getJSONObject(i).opt("UPDATED"));
             }
 
             contracts.add(contract);

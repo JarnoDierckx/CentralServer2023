@@ -1,13 +1,18 @@
 package com.fooditsolutions.datastoreservice.model.centralserver;
 
+import com.fooditsolutions.datastoreservice.annotation.DatabaseTable;
+import com.fooditsolutions.datastoreservice.annotation.Identifier;
 import com.fooditsolutions.datastoreservice.controller.Util;
 import com.fooditsolutions.datastoreservice.model.Sqlmodel;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Date;
-
+@Table(name = "CONTRACT")
 public class Contract extends Sqlmodel {
+    @Id
     private int ID;
     private String contract_number;
     private BigDecimal CLIENT_ID;

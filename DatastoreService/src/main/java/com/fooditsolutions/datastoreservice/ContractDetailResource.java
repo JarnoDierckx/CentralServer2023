@@ -1,9 +1,8 @@
 package com.fooditsolutions.datastoreservice;
 
-import com.fooditsolutions.datastoreservice.controller.DBThunderbird;
+import com.fooditsolutions.datastoreservice.controller.DBFirebird;
 import com.fooditsolutions.datastoreservice.controller.Datastores;
 import com.fooditsolutions.datastoreservice.model.DatastoreObject;
-import com.fooditsolutions.datastoreservice.model.centralserver.Contract;
 import com.fooditsolutions.datastoreservice.model.centralserver.ContractDetail;
 import org.json.JSONArray;
 
@@ -27,7 +26,7 @@ public class ContractDetailResource {
         JSONArray jsonContracts = new JSONArray();
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
-                jsonContracts = DBThunderbird.executeSQL(ds, "SELECT * FROM CONTRACT_DETAIL WHERE CONTRACT_ID = '"+contractID+"'");
+                jsonContracts = DBFirebird.executeSQL(ds, "SELECT * FROM CONTRACT_DETAIL WHERE CONTRACT_ID = '"+contractID+"'");
             }
         }
         List<ContractDetail> contractDetails = new ArrayList<>();
