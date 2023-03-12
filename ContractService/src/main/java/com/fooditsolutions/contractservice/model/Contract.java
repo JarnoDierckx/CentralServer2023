@@ -1,15 +1,25 @@
 package com.fooditsolutions.contractservice.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.math.BigDecimal;
 import java.util.Date;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Contract {
     private Client client;
     private int contractId;
 
-    private int ID;
+    private int id;
     private String contract_number;
-    private int CLIENT_ID;
-    private int BJR_ID;
+    private BigDecimal client_id;
+    private BigDecimal bjr_id;
     private Date start_date;
     private Date end_date;
     private String source;

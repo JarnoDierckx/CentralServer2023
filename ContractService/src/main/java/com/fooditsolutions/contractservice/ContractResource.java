@@ -1,5 +1,9 @@
 package com.fooditsolutions.contractservice;
 
+import com.fooditsolutions.contractservice.controller.ClientController;
+import com.fooditsolutions.contractservice.controller.ContractController;
+import com.fooditsolutions.contractservice.model.Client;
+import com.fooditsolutions.contractservice.model.Contract;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.util.controller.HttpController;
 
@@ -7,6 +11,10 @@ import com.fooditsolutions.util.controller.HttpController;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Dictionary;
+import java.util.List;
 
 @Path("/contract")
 public class ContractResource {
@@ -20,11 +28,16 @@ public class ContractResource {
      */
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
-    public String getContracts() {
+    @Produces("application/json")
+    public List<Contract> getContracts() {
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         System.out.println("getContracts: "+responseString);
 
-        return responseString;
+        List<Contract> contracts = ContractController.createContractInformation(responseString);
+
+
+
+        return contracts;
     }
 
     @GET

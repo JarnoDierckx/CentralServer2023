@@ -1,4 +1,4 @@
-package com.fooditsolutions.datastoreservice;
+package com.fooditsolutions.datastoreservice.centralsserverresource;
 
 import com.fooditsolutions.datastoreservice.controller.DBFirebird;
 import com.fooditsolutions.datastoreservice.controller.Datastores;

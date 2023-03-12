@@ -2,7 +2,7 @@ package com.fooditsolutions.web;
 
 import com.fooditsolutions.web.model.Contract;
 import com.fooditsolutions.web.model.ContractDetail;
-import com.google.gson.Gson;
+import com.google.gson.*;
 import org.primefaces.util.LangUtils;
 
 import javax.annotation.PostConstruct;
@@ -14,14 +14,12 @@ import javax.servlet.http.HttpServlet;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Named
 @SessionScoped
@@ -70,10 +68,20 @@ public class ManageContracts extends HttpServlet {
             System.out.println("ResponseString: "+responseString);
 
             //turn string into array of objects
+            /* had to add the GsonBuilder() as there was an issue wiht the epoch date conversion
+            * https://itecnote.com/tecnote/java-convert-string-date-to-object-yields-invalid-time-zone-indicator-0/
+             */
+            /*Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+                        public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
+                            return new Date(jsonElement.getAsJsonPrimitive().getAsLong());
+                        }
+                    })
+                    .create();*/
             Gson gson = new Gson();
             //Contract[] contracts1=gson.fromJson(responseString,Contract[].class);
             contracts2=gson.fromJson(responseString,Contract[].class);
-
+            String s = "";
             /*System.out.println("Contracts in array: "+ Arrays.toString(contracts1));
             contracts=Arrays.asList(contracts1);
             System.out.println("Contracts: "+contracts.toString());*/
@@ -89,7 +97,7 @@ public class ManageContracts extends HttpServlet {
      * When it gets those details back, they are put in an array and the user gets redirected to a page where the details are put into a datatable.
      */
     public String getContractDetails() throws IOException {
-        URL url = new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crudContract/"+selectedItem.getID());
+        URL url = new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crudContract/"+selectedItem.getId());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         int responseCode = connection.getResponseCode();
@@ -128,7 +136,7 @@ public class ManageContracts extends HttpServlet {
 
         Contract filterContract = (Contract) value;
         return filterContract.getContract_number().toLowerCase().contains(filterText)
-                || String.valueOf(filterContract.getCLIENT_ID()).contains(filterText);
+                || String.valueOf(filterContract.getClient_id()).contains(filterText);
     }
 
     public void setContracts(List<Contract> contracts) {

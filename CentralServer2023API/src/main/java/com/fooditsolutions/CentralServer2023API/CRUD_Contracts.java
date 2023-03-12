@@ -29,6 +29,7 @@ public class CRUD_Contracts {
     @GET
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
     public String getContract() throws IOException, ServletException {
 
         System.out.println("Starting read in CRUD_Contracts");
@@ -63,6 +64,7 @@ public class CRUD_Contracts {
     @GET
     @Path("/{ContractID}")
     @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
     public String getContractDetails(@PathParam("ContractID") String contractID) throws IOException, ServletException {
 
         System.out.println("Starting read in CRUD_Contracts");

@@ -1,4 +1,4 @@
-package com.fooditsolutions.datastoreservice;
+package com.fooditsolutions.datastoreservice.centralsserverresource;
 
 import com.fooditsolutions.datastoreservice.controller.DBFirebird;
 import com.fooditsolutions.datastoreservice.controller.Datastores;
@@ -37,10 +37,10 @@ public class ContractResource {
         for (int i = 0; i < jsonContracts.length(); i++) {
             Contract contract = new Contract();
 
-            contract.setID((int) jsonContracts.getJSONObject(i).opt("ID"));
+            contract.setId((int) jsonContracts.getJSONObject(i).opt("ID"));
             contract.setContract_number((String) jsonContracts.getJSONObject(i).opt("CONTRACT_NUMBER"));
-            contract.setCLIENT_ID((BigDecimal) jsonContracts.getJSONObject(i).opt("CLIENT_ID"));
-            contract.setBJR_ID((int) jsonContracts.getJSONObject(i).opt("BJR_ID"));
+            contract.setClient_id((BigDecimal) jsonContracts.getJSONObject(i).opt("CLIENT_ID"));
+            contract.setBjr_id((int) jsonContracts.getJSONObject(i).opt("BJR_ID"));
             contract.setStart_date((Date) jsonContracts.getJSONObject(i).opt("START_DATE"));
             Util.structureSQL(contract.getStart_date());
             contract.setEnd_date((Date) jsonContracts.getJSONObject(i).opt("END_DATE"));
