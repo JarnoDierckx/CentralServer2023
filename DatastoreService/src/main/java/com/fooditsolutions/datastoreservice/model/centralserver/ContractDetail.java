@@ -3,11 +3,13 @@ package com.fooditsolutions.datastoreservice.model.centralserver;
 import com.fooditsolutions.datastoreservice.annotation.Identifier;
 import com.fooditsolutions.datastoreservice.model.Sqlmodel;
 
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
-
+@Table(name = "CONTRACT_DETAIL")
 public class ContractDetail extends Sqlmodel {
-    @Identifier
+    @Id
     private int ID;
     private int contract_ID;
     private BigDecimal module_DBB_ID;

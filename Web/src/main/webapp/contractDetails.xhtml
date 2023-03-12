@@ -15,10 +15,10 @@
         <div class="card">
             <p:dataTable var="detail" value="#{ManageContracts.details}">
                 <p:column headerText="Module id">
-                    #{detail.module_DBB_ID}
+                    #{detail.moduleId.name}
                 </p:column>
                 <p:column headerText="purchase date">
-                    #{detail.purchase_price}
+                    #{detail.purchase_Date}
                 </p:column>
                 <p:column headerText="amount">
                     #{detail.amount}

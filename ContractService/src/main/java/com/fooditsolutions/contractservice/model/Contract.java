@@ -19,7 +19,8 @@ public class Contract {
     private int id;
     private String contract_number;
     private BigDecimal client_id;
-    private BigDecimal bjr_id;
+    private int bjr_id;
+    private Bjr bjr;
     private Date start_date;
     private Date end_date;
     private String source;

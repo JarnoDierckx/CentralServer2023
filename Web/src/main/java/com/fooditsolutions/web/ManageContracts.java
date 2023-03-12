@@ -68,16 +68,7 @@ public class ManageContracts extends HttpServlet {
             System.out.println("ResponseString: "+responseString);
 
             //turn string into array of objects
-            /* had to add the GsonBuilder() as there was an issue wiht the epoch date conversion
-            * https://itecnote.com/tecnote/java-convert-string-date-to-object-yields-invalid-time-zone-indicator-0/
-             */
-            /*Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-                        public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
-                            return new Date(jsonElement.getAsJsonPrimitive().getAsLong());
-                        }
-                    })
-                    .create();*/
+
             Gson gson = new Gson();
             //Contract[] contracts1=gson.fromJson(responseString,Contract[].class);
             contracts2=gson.fromJson(responseString,Contract[].class);

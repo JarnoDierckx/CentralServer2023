@@ -1,5 +1,6 @@
 package com.fooditsolutions.contractservice.controller;
 
+import com.fooditsolutions.contractservice.model.Bjr;
 import com.fooditsolutions.contractservice.model.Client;
 import com.fooditsolutions.contractservice.model.Contract;
 import com.fooditsolutions.util.controller.HttpController;
@@ -21,7 +22,13 @@ public class ContractController {
         Contract[] contracts2;
         String jsonClient = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/client?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         Dictionary<BigDecimal, Client> clients = ClientController.getClientDictionaryFromJson(jsonClient);
-        Gson gson = new GsonBuilder()
+        String jsonBjr = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/bjr?datastoreKey="+ PropertiesController.getProperty().getDatastore());
+        Dictionary<Integer, Bjr> bjrs = BjrController.getBjrDictionaryFromJson(jsonBjr);
+
+        /* had to add the GsonBuilder() as there was an issue wiht the epoch date conversion
+         * https://itecnote.com/tecnote/java-convert-string-date-to-object-yields-invalid-time-zone-indicator-0/
+         */
+         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
                     public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
                         return new Date(jsonElement.getAsJsonPrimitive().getAsLong());
@@ -35,6 +42,7 @@ public class ContractController {
 
 
             contracts2[i].setClient(clients.get(contracts2[i].getClient_id()));
+            contracts2[i].setBjr(bjrs.get(contracts2[i].getBjr_id()));
             //contract.setName((String) jsonArray.getJSONObject(i).get("name"));
             contracts.add(contracts2[i]);
         }

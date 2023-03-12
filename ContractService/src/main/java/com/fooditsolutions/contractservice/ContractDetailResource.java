@@ -1,13 +1,14 @@
 package com.fooditsolutions.contractservice;
 
+import com.fooditsolutions.contractservice.controller.ContractDetailController;
+import com.fooditsolutions.contractservice.model.Contract;
+import com.fooditsolutions.contractservice.model.ContractDetail;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @Path("/contractDetail")
 public class ContractDetailResource {
@@ -20,10 +21,14 @@ public class ContractDetailResource {
     @GET
     @Path("/{ContractID}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public String getContractDetails(@PathParam("ContractID") String contractID) {
+    @Produces("application/json")
+    public List<ContractDetail> getContractDetails(@PathParam("ContractID") String contractID) {
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail/"+ contractID +"?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         System.out.println("getContractDetails: "+responseString);
 
-        return responseString;
+        List<ContractDetail> contractDetails = ContractDetailController.createContractDetailInformation(responseString);
+
+
+        return contractDetails;
     }
 }
