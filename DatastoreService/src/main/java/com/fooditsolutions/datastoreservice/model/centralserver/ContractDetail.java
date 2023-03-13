@@ -1,6 +1,5 @@
 package com.fooditsolutions.datastoreservice.model.centralserver;
 
-import com.fooditsolutions.datastoreservice.annotation.Identifier;
 import com.fooditsolutions.datastoreservice.model.Sqlmodel;
 
 import javax.persistence.Id;

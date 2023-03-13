@@ -1,17 +1,12 @@
 package com.fooditsolutions.datastoreservice.model.centralserver;
 
-import com.fooditsolutions.datastoreservice.annotation.DatabaseTable;
-import com.fooditsolutions.datastoreservice.annotation.Identifier;
-import com.fooditsolutions.datastoreservice.controller.Util;
 import com.fooditsolutions.datastoreservice.model.Sqlmodel;
 import lombok.Getter;
 import lombok.Setter;
-import org.json.JSONObject;
 
 import javax.json.bind.annotation.JsonbProperty;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Date;
 @Table(name = "CONTRACT")

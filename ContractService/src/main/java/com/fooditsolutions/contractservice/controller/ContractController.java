@@ -37,7 +37,7 @@ public class ContractController {
                 .create();
         //Contract[] contracts1=gson.fromJson(responseString,Contract[].class);
         contracts2=gson.fromJson(jsonContracts,Contract[].class);
-        JSONArray jsonArray = new JSONArray(jsonContracts);
+        //JSONArray jsonArray = new JSONArray(jsonContracts);
         for(int i=0; i < contracts2.length; i++){
 
 
