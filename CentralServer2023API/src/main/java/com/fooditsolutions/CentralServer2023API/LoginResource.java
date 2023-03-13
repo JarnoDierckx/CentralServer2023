@@ -1,5 +1,7 @@
 package com.fooditsolutions.CentralServer2023API;
 
+import com.fooditsolutions.CentralServer2023API.model.User;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +20,7 @@ import java.net.URL;
  * Receives api calls from the front end and passes them to the correct Service.
  */
 @Path("/crud")
-public class CRUD_Login {
+public class LoginResource {
 
     @PostConstruct
     public void init(){

@@ -1,4 +1,4 @@
-package com.fooditsolutions.CentralServer2023API;
+package com.fooditsolutions.CentralServer2023API.model;
 
 
 /**
