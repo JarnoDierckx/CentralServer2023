@@ -8,14 +8,13 @@ import com.fooditsolutions.datastoreservice.model.DatastoreObject;
 import org.json.JSONArray;
 
 import javax.annotation.PostConstruct;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Path("/contract")
 public class ContractResource {
@@ -86,5 +85,25 @@ public class ContractResource {
         }
 
         return contracts;
+    }
+
+    @PUT
+    @Path("/update")
+    public void updateContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract) throws IllegalAccessException {
+        Class<?> klas=contract.getClass();
+        Field[] fields= klas.getDeclaredFields();
+        StringBuilder sql = new StringBuilder("UPDATE CONTRACT SET ");
+        for (Field field: fields){
+            if (field.get(contract) != null && !Objects.equals(field.get(contract), 0) && field.get(contract) != ""){
+                sql.append(field.getName()).append(" = ").append(field.get(contract)).append(", ");
+            }
+        }
+        sql= new StringBuilder(sql.substring(0, sql.length() - 2));
+        sql.append(" WHERE id = ").append(contract.getId());
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                DBFirebird.executeSQL(ds, String.valueOf(sql));
+            }
+        }
     }
 }

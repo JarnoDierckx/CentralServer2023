@@ -6,6 +6,7 @@ import com.fooditsolutions.contractservice.model.Client;
 import com.fooditsolutions.contractservice.model.Contract;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.util.controller.HttpController;
+import com.google.gson.Gson;
 
 
 import javax.annotation.PostConstruct;
@@ -46,4 +47,15 @@ public class ContractResource {
     public String hello(@PathParam("contractId") int contractId) {
         return "Hello, World!";
     }
+
+    @PUT
+    @Path("/update")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
+    public void updateContract(Contract contract){
+        Gson gson =new Gson();
+        String contractString=gson.toJson(contract);
+        HttpController.httpPost(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract/update?datastoreKey="+ PropertiesController.getProperty().getDatastore(), contractString);
+    }
+
 }

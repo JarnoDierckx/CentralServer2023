@@ -1,18 +1,23 @@
 package com.fooditsolutions.web;
 
+import com.fooditsolutions.web.model.Contract;
+
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,6 +31,11 @@ public class HandleLogin {
     int errorCount=0;
     int timeOut=5;
     boolean isTimedOut=false;
+
+    private String contract_number;
+    private String source;
+    private String invoice_frequency;
+    private String index_frequency;
 
     /**
     *This function takes the credentials and puts them in a json string. That string gets send to CentralServer2023API, and after that PassCredentials recieves the session key provided the
@@ -117,6 +127,22 @@ public class HandleLogin {
         timer.schedule(task,(long) minutes *60*1000);
     }
 
+    public void createContract() throws IllegalAccessException {
+        Contract contract=new Contract();
+        if(contract_number != null && !contract_number.equals("")){
+            contract.setContract_number(contract_number);
+        }
+        if (source != null && !source.equals("")){
+            contract.setSource(source);
+        }
+        if (invoice_frequency != null && !invoice_frequency.equals("")){
+            contract.setInvoice_frequency(invoice_frequency);
+        }
+        if (index_frequency != null && !index_frequency.equals("")){
+            contract.setIndex_frequency(index_frequency);
+        }
+    }
+
 
     public String getEmail() {
         return email;
@@ -148,5 +174,38 @@ public class HandleLogin {
 
     public void setTimedOut(boolean timedOut) {
         isTimedOut = timedOut;
+    }
+
+
+    public String getContract_number() {
+        return contract_number;
+    }
+
+    public void setContract_number(String contract_number) {
+        this.contract_number = contract_number;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getInvoice_frequency() {
+        return invoice_frequency;
+    }
+
+    public void setInvoice_frequency(String invoice_frequency) {
+        this.invoice_frequency = invoice_frequency;
+    }
+
+    public String getIndex_frequency() {
+        return index_frequency;
+    }
+
+    public void setIndex_frequency(String index_frequency) {
+        this.index_frequency = index_frequency;
     }
 }

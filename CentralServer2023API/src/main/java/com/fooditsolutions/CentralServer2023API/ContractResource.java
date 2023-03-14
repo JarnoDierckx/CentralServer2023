@@ -1,5 +1,10 @@
 package com.fooditsolutions.CentralServer2023API;
 
+import com.fooditsolutions.CentralServer2023API.model.Contract;
+import com.fooditsolutions.util.controller.HttpController;
+import com.fooditsolutions.util.controller.PropertiesController;
+import com.google.gson.Gson;
+
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
 import javax.ws.rs.*;
@@ -85,5 +90,14 @@ public class ContractResource {
         }else {
             return null;
         }
+    }
+    @PUT
+    @Path("/update")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
+    public void updateContract(Contract contract){
+        Gson gson =new Gson();
+        String contractString=gson.toJson(contract);
+        HttpController.httpPost(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract/update?datastoreKey="+ PropertiesController.getProperty().getDatastore(), contractString);
     }
 }

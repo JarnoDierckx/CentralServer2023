@@ -1,4 +1,5 @@
 package com.fooditsolutions.authenticationservice;
+
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.authenticationservice.controller.Security;
@@ -34,41 +35,43 @@ public class AuthenticationResource {
     @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     public String authenticateLogin(User loginUser) throws NoSuchAlgorithmException {
-          System.out.println("API GET");
+        System.out.println("API GET");
+        //PropertiesController.getProperty().setDatastore("C287746F288DF2CB7292DD2EE29CFECD");
+        System.out.println(PropertiesController.getProperty().getDatastore());
+        String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice() + "/user?datastoreKey=" + PropertiesController.getProperty().getDatastore());
 
-            String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/user?datastoreKey="+ PropertiesController.getProperty().getDatastore());
-            System.out.println(responseString);
+        System.out.println(responseString);
 
-            int loginUserID = 0;
-            Gson gson = new Gson();
-            User[] users = gson.fromJson(responseString, User[].class);
-            for (User user : users) {
-                if (user.getEmail().equals(loginUser.getEmail()) || user.getName().equals(loginUser.getEmail())) {
-                    loginUserID = user.getId();
-                    System.out.println(loginUserID);
-                }
+        int loginUserID = 0;
+        Gson gson = new Gson();
+        User[] users = gson.fromJson(responseString, User[].class);
+        for (User user : users) {
+            if (user.getEmail().equals(loginUser.getEmail()) || user.getName().equals(loginUser.getEmail())) {
+                loginUserID = user.getId();
+                System.out.println(loginUserID);
             }
-            if (loginUserID==0){
-                return "Error: Username/Email and Password are incorrect!";
-            }
+        }
+        if (loginUserID == 0) {
+            return "Error: Username/Email and Password are incorrect!";
+        }
 
-                responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/user/" + loginUserID + "/validate?datastoreKey="+ PropertiesController.getProperty().getDatastore()+"&pwd=" + DigestUtils.md5Hex(loginUser.getPassword()));
-                System.out.println(responseString);
+        responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice() + "/user/" + loginUserID + "/validate?datastoreKey=" + PropertiesController.getProperty().getDatastore() + "&pwd=" + DigestUtils.md5Hex(loginUser.getPassword()));
+        System.out.println(responseString);
 
-            if (responseString.contains("true")){
-                String sessionKey = Security.getKeyFromGenerator();
-                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        if (responseString.contains("true")) {
+            String sessionKey = Security.getKeyFromGenerator();
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-                Session session = new Session(sessionKey,timestamp,loginUserID);
+            Session session = new Session(sessionKey, timestamp, loginUserID);
 
-                SessionController.AddSession(session);
+            SessionController.AddSession(session);
 
-                System.out.println("Session key:" + sessionKey);
+            System.out.println("Session key:" + sessionKey);
 
-                return sessionKey;
-            }else{
-                return "Error: Username/Email and Password are incorrect!";
-            }
+            return sessionKey;
+        } else {
+            return "Error: Username/Email and Password are incorrect!";
+        }
 
 
     }
@@ -79,14 +82,9 @@ public class AuthenticationResource {
     @DELETE
     @Path("/{sessionKey}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void AuthenticateLogout(@PathParam("sessionKey") String sessionKey){
+    public void AuthenticateLogout(@PathParam("sessionKey") String sessionKey) {
         SessionController.DeleteSession(sessionKey);
     }
-
-
-
-
-
 
 
 }

@@ -1,6 +1,5 @@
-package com.fooditsolutions.datastoreservice.model.centralserver;
+package com.fooditsolutions.CentralServer2023API.model;
 
-import com.fooditsolutions.datastoreservice.model.Sqlmodel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,10 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
+
 @Table(name = "CONTRACT")
 @Getter
 @Setter
-public class Contract extends Sqlmodel {
+public class Contract{
     @Id
     @JsonbProperty("id")
     public int id;
