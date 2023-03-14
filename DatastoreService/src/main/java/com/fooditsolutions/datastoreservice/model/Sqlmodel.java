@@ -9,6 +9,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 public class Sqlmodel{
     public String getInsertStatement(){
@@ -82,12 +83,12 @@ public class Sqlmodel{
                 Annotation annotation = f.getAnnotation(Id.class);
                 if((annotation instanceof Id)) {
                     Object o = runGetter(f, this);
-                    if (o != null) {
+                    if (o != null && !Objects.equals(o,0)) {
                         sqlWhere += f.getName() + "=" + Util.structureSQL(o);
                     }
                 } else {
                     Object o = runGetter(f, this);
-                    if (o != null) {
+                    if (o != null && !Objects.equals(o,0)) {
                         if (sqlSet != "") {
                             sqlSet += ",";
 

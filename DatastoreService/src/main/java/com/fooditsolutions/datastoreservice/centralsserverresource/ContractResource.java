@@ -90,19 +90,29 @@ public class ContractResource {
     @PUT
     @Path("/update")
     public void updateContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract) throws IllegalAccessException {
-        Class<?> klas=contract.getClass();
+        /*Class<?> klas=contract.getClass();
         Field[] fields= klas.getDeclaredFields();
         StringBuilder sql = new StringBuilder("UPDATE CONTRACT SET ");
         for (Field field: fields){
-            if (field.get(contract) != null && !Objects.equals(field.get(contract), 0) && field.get(contract) != ""){
-                sql.append(field.getName()).append(" = ").append(field.get(contract)).append(", ");
+            if (field.get(contract) != null && !Objects.equals(field.get(contract), 0) && !field.getName().equals("id")){
+                if(field.get(contract) == ""){
+                    sql.append(field.getName()).append(" = ''").append(field.get(contract)).append(", ");
+                } else if (field.get(contract) instanceof String) {
+                    sql.append(field.getName()).append(" = '").append(field.get(contract)).append("', ");
+                } else{
+                    sql.append(field.getName()).append(" = ").append(field.get(contract)).append(", ");
+                }
             }
         }
         sql= new StringBuilder(sql.substring(0, sql.length() - 2));
         sql.append(" WHERE id = ").append(contract.getId());
+
+        System.out.println(sql);*/
+        String sql=contract.getUpdateStatement();
+
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
-                DBFirebird.executeSQL(ds, String.valueOf(sql));
+                DBFirebird.executeSQLUpdate(ds, sql);
             }
         }
     }

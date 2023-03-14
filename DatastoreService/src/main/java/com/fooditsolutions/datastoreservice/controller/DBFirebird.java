@@ -70,4 +70,31 @@ public class DBFirebird {
 
         return jsonResult;
     }
+
+    public static void executeSQLUpdate(DatastoreObject ds, String query){
+        JSONArray jsonResult = new JSONArray();
+        try {
+            Class.forName("org.firebirdsql.jdbc.FBDriver");
+
+            Connection connection = null;
+
+            connection = DriverManager.getConnection(
+                    ds.getConnectionString(),
+                    ds.getUserName(), ds.getPassword());
+
+
+            Statement stmt = connection.createStatement();
+
+            try {
+                stmt.executeUpdate(query);
+
+            } finally {
+                stmt.close();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -48,7 +48,7 @@ public class ContractResource {
         return "Hello, World!";
     }
 
-    @PUT
+    @POST
     @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
@@ -57,5 +57,4 @@ public class ContractResource {
         String contractString=gson.toJson(contract);
         HttpController.httpPost(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract/update?datastoreKey="+ PropertiesController.getProperty().getDatastore(), contractString);
     }
-
 }
