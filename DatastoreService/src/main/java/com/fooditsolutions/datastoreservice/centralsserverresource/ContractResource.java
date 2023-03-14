@@ -9,6 +9,7 @@ import org.json.JSONArray;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -88,8 +89,8 @@ public class ContractResource {
     }
 
     @PUT
-    @Path("/update")
-    public void updateContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract) throws IllegalAccessException {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void updateContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract){
         /*Class<?> klas=contract.getClass();
         Field[] fields= klas.getDeclaredFields();
         StringBuilder sql = new StringBuilder("UPDATE CONTRACT SET ");

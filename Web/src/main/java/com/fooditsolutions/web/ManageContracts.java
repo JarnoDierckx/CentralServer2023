@@ -82,12 +82,17 @@ public class ManageContracts extends HttpServlet {
         }
     }
 
+    public String ContractDetails() throws IOException {
+        getContractDetails();
+        return "contractDetails.xhtml?faces-redirect=true&includeViewParams=true";
+    }
+
     /**
      * Gets called when a user presses the button next to a contract entry.
      * It uses the id of the relevent contract to send a request forward for said contracts details.
      * When it gets those details back, they are put in an array and the user gets redirected to a page where the details are put into a datatable.
      */
-    public String getContractDetails() throws IOException {
+    public void getContractDetails() throws IOException {
         URL url = new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crudContract/"+selectedItem.getId());
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
@@ -109,10 +114,13 @@ public class ManageContracts extends HttpServlet {
             System.out.println("ResponseString: "+responseString);
             Gson gson = new Gson();
             details=gson.fromJson(responseString,ContractDetail[].class);
-            return "contractDetails.xhtml?faces-redirect=true&includeViewParams=true";
-        }else {
-            return null;
         }
+    }
+
+    public String editContract() throws IOException {
+        getContractDetails();
+        System.out.println(selectedItem.contract_number);
+        return "editContract.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
     /**

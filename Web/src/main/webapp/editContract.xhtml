@@ -10,6 +10,112 @@
   <title>Edit</title>
 </h:head>
 <h:body>
+  <h:form>
+    <div class="card">
+      <p:dataTable var="contract" value="#{ManageContracts.selectedItem}">
+        <f:facet name="header">
 
+        </f:facet>
+          <p:column headerText="contract number">
+            <h:inputText value="#{contract.contract_number}" />
+          </p:column>
+          <p:column headerText="Client">
+            <h:inputText value="#{contract.client.name}" />
+
+          </p:column>
+          <p:column headerText="BJR">
+            <h:inputText value="#{contract.bjr.name}" />
+
+          </p:column>
+          <p:column headerText="start date">
+            <h:inputText value="#{contract.start_date}" />
+
+          </p:column>
+          <p:column headerText="end date">
+            <h:inputText value="#{contract.end_date}" />
+
+          </p:column>
+          <p:column headerText="source">
+            <h:inputText value="#{contract.source}" />
+
+          </p:column>
+          <p:column headerText="invoice frequency">
+            <h:inputText value="#{contract.invoice_frequency}" />
+
+          </p:column>
+          <p:column headerText="index frequency">
+            <h:inputText value="#{contract.index_frequency}" />
+
+          </p:column>
+          <p:column headerText="base index year">
+            <h:inputText value="#{contract.base_index_year}" />
+
+          </p:column>
+          <p:column headerText="index start">
+            <h:inputText value="#{contract.index_start}" />
+
+          </p:column>
+          <p:column headerText="index last invoice">
+            <h:inputText value="#{contract.index_last_invoice}" />
+
+          </p:column>
+          <p:column headerText="amount last invoice">
+            <h:inputText value="#{contract.amount_last_invoice}" />
+
+          </p:column>
+          <p:column headerText="last invoice number">
+            <h:inputText value="#{contract.last_invoice_number}" />
+
+          </p:column>
+          <p:column headerText="last invoice date">
+            <h:inputText value="#{contract.last_invoice_date}" />
+
+          </p:column>
+          <p:column headerText="last invoice period start">
+            <h:inputText value="#{contract.last_invoice_period_start}" />
+
+          </p:column>
+          <p:column headerText="last invoice period end">
+            <h:inputText value="#{contract.last_invoice_period_end}" />
+
+          </p:column>
+          <p:column headerText="jgr">
+            <h:inputText value="#{contract.jgr}" />
+
+          </p:column>
+      </p:dataTable>
+    </div>
+    <div class="card">
+      <p:dataTable var="detail" value="#{ManageContracts.details}">
+        <p:column headerText="Module id">
+          <h:inputText value="#{detail.moduleId.name}" />
+
+        </p:column>
+        <p:column headerText="purchase date">
+          <h:inputText value="#{detail.purchase_Date}" />
+
+        </p:column>
+        <p:column headerText="amount">
+          <h:inputText value="#{detail.amount}" />
+
+        </p:column>
+        <p:column headerText="purchase price">
+          <h:inputText value="#{detail.purchase_price}" />
+
+        </p:column>
+        <p:column headerText="index start">
+          <h:inputText value="#{detail.index_Start}" />
+
+        </p:column>
+        <p:column headerText="renewal">
+          <h:inputText value="#{detail.renewal}" />
+
+        </p:column>
+      </p:dataTable>
+    </div>
+  </h:form>
+  <p:commandButton title="Save Changes" ajax="false">
+
+  </p:commandButton >
 </h:body>
 </html>

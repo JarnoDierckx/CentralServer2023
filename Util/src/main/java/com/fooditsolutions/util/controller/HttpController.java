@@ -78,4 +78,20 @@ public class HttpController {
         return result;
     }
 
+    public static void httpPut(String urlString, String json) throws IOException {
+        URL url = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("PUT");
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        connection.setDoOutput(true);
+        OutputStream os = connection.getOutputStream();
+        os.write(json.getBytes());
+        os.flush();
+        os.close();
+
+        System.out.println("POST Response Code :  " + connection.getResponseCode());
+        System.out.println("POST Response Message : " + connection.getResponseMessage());
+    }
+
 }

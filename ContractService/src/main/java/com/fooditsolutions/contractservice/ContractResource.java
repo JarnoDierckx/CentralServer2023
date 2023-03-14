@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Dictionary;
@@ -34,11 +35,8 @@ public class ContractResource {
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         System.out.println("getContracts: "+responseString);
 
-        List<Contract> contracts = ContractController.createContractInformation(responseString);
 
-
-
-        return contracts;
+        return ContractController.createContractInformation(responseString);
     }
 
     @GET
@@ -48,13 +46,13 @@ public class ContractResource {
         return "Hello, World!";
     }
 
-    @POST
-    @Path("/update")
+    @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public void updateContract(Contract contract){
+    public void updateContract(Contract contract) throws IOException {
         Gson gson =new Gson();
         String contractString=gson.toJson(contract);
-        HttpController.httpPost(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract/update?datastoreKey="+ PropertiesController.getProperty().getDatastore(), contractString);
+        System.out.println(contractString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore(), contractString);
     }
 }

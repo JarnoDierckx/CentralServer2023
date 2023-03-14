@@ -92,12 +92,12 @@ public class ContractResource {
         }
     }
     @PUT
-    @Path("/update")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public void updateContract(Contract contract){
+    public void updateContract(Contract contract) throws IOException {
         Gson gson =new Gson();
         String contractString=gson.toJson(contract);
-        HttpController.httpPost(PropertiesController.getProperty().getBase_url_contractservice()+"/contract/update?datastoreKey="+ PropertiesController.getProperty().getDatastore(), contractString);
+        System.out.println(contractString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore(), contractString);
     }
 }

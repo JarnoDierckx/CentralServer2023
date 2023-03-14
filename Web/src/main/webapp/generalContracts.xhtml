@@ -24,7 +24,7 @@
                 </f:facet>
 
                 <p:column style="width:3rem;text-align: center">
-                    <p:commandButton icon="pi pi-search" title="View" action="#{ManageContracts.getContractDetails}" ajax="false" emptyMessage="No contracts found with given criteria">
+                    <p:commandButton icon="pi pi-search" title="View" action="#{ManageContracts.ContractDetails()}" ajax="false" emptyMessage="No contracts found with given criteria">
                         <f:setPropertyActionListener value="#{contract}" target="#{ManageContracts.selectedItem}"/>
                     </p:commandButton >
                 </p:column>
@@ -79,6 +79,12 @@
                 </p:column>
                 <p:column headerText="jgr">
                     #{contract.jgr}
+                </p:column>
+
+                <p:column style="width:3rem;text-align: center">
+                    <p:commandButton title="Edit" action="#{ManageContracts.editContract}" ajax="false">
+                        <f:setPropertyActionListener value="#{contract}" target="#{ManageContracts.selectedItem}"/>
+                    </p:commandButton >
                 </p:column>
 
             </p:dataTable>
