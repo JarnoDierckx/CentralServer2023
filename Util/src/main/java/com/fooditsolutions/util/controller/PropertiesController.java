@@ -26,6 +26,7 @@ public class PropertiesController {
 
             property.setDatastore(prop.getProperty("datastore"));
             property.setBase_url_datastoreservice(prop.getProperty("BASE_URL_DATASTORESERVICE"));
+            property.setBase_url_contractservice(prop.getProperty("BASE_URL_CONTRACTSERVICE"));
 
         }catch (Exception ex){
             System.out.println("Exception: " + ex);
