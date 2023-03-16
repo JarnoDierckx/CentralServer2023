@@ -83,6 +83,7 @@ public class ManageContracts extends HttpServlet {
             contracts2=gson.fromJson(responseString,Contract[].class);
 
             for (Contract contract : contracts2) {
+                System.out.println(contract.start_date);
                 contract.start_date= new Date(contract.start_date.getTime());
                 contract.last_invoice_date= new Date(contract.last_invoice_date.getTime());
                 contract.last_invoice_period_start= new Date(contract.last_invoice_period_start.getTime());
@@ -133,10 +134,12 @@ public class ManageContracts extends HttpServlet {
     }
 
     public void updateContract() throws IOException {
+        selectedItem.start_date= new java.util.Date(selectedItem.start_date.getTime());
+        System.out.println(selectedItem.start_date);
         //long time=selectedItem.start_date.getTime();
 
 
-        Gson gson =new Gson();
+        Gson gson = new Gson();
         String contractString=gson.toJson(selectedItem);
         //String detailString=gson.toJson(details);
         System.out.println("update: "+contractString);
