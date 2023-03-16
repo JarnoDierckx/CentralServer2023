@@ -85,37 +85,11 @@
           </p:column>
       </p:dataTable>
     </div>
-    <div class="card">
-      <p:dataTable var="detail" value="#{ManageContracts.details}">
-        <p:column headerText="Module id">
-          <h:inputText value="#{detail.moduleId.name}" />
 
-        </p:column>
-        <p:column headerText="purchase date">
-          <h:inputText value="#{detail.purchase_Date}" />
+    <p:commandButton title="Save Changes" action="#{ManageContracts.updateContract()}">
 
-        </p:column>
-        <p:column headerText="amount">
-          <h:inputText value="#{detail.amount}" />
-
-        </p:column>
-        <p:column headerText="purchase price">
-          <h:inputText value="#{detail.purchase_price}" />
-
-        </p:column>
-        <p:column headerText="index start">
-          <h:inputText value="#{detail.index_Start}" />
-
-        </p:column>
-        <p:column headerText="renewal">
-          <h:inputText value="#{detail.renewal}" />
-
-        </p:column>
-      </p:dataTable>
-    </div>
+    </p:commandButton >
   </h:form>
-  <p:commandButton title="Save Changes" ajax="false">
 
-  </p:commandButton >
 </h:body>
 </html>

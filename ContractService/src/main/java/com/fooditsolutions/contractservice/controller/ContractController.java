@@ -26,7 +26,7 @@ public class ContractController {
         String jsonBjr = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/bjr?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         Dictionary<Integer, Bjr> bjrs = BjrController.getBjrDictionaryFromJson(jsonBjr);
 
-        /* had to add the GsonBuilder() as there was an issue wiht the epoch date conversion
+        /* had to add the GsonBuilder() as there was an issue with the epoch date conversion
          * https://itecnote.com/tecnote/java-convert-string-date-to-object-yields-invalid-time-zone-indicator-0/
          */
          Gson gson = new GsonBuilder()

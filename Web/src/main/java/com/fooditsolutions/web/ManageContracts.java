@@ -1,10 +1,13 @@
 package com.fooditsolutions.web;
 
+import com.fooditsolutions.util.controller.HttpController;
+import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.web.model.Contract;
 import com.fooditsolutions.web.model.ContractDetail;
 import com.google.gson.*;
 import org.primefaces.util.LangUtils;
 
+import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.view.ViewScoped;
@@ -21,7 +24,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.*;
 
-@Named
+@ManagedBean
 @SessionScoped
 public class ManageContracts extends HttpServlet {
     private List<Contract> contracts;
@@ -121,6 +124,16 @@ public class ManageContracts extends HttpServlet {
         getContractDetails();
         System.out.println(selectedItem.contract_number);
         return "editContract.xhtml?faces-redirect=true&includeViewParams=true";
+    }
+
+    public void updateContract() throws IOException {
+        Gson gson =new Gson();
+        String contractString=gson.toJson(selectedItem);
+        //String detailString=gson.toJson(details);
+        System.out.println(contractString);
+        //System.out.println(detailString);
+
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/contract", contractString);
     }
 
     /**

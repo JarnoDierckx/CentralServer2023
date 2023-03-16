@@ -98,6 +98,6 @@ public class ContractResource {
         Gson gson =new Gson();
         String contractString=gson.toJson(contract);
         System.out.println(contractString);
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore(), contractString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice()+"/contract", contractString);
     }
 }
