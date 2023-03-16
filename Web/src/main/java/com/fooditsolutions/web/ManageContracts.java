@@ -5,6 +5,8 @@ import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.web.model.Contract;
 import com.fooditsolutions.web.model.ContractDetail;
 import com.google.gson.*;
+import javafx.scene.control.TableColumn;
+import org.primefaces.event.CellEditEvent;
 import org.primefaces.util.LangUtils;
 
 import javax.annotation.ManagedBean;
@@ -30,6 +32,7 @@ public class ManageContracts extends HttpServlet {
     private List<Contract> contracts;
     private Contract[] contracts2;
     private Contract selectedItem;
+    private Contract updatedContract;
     private ContractDetail[] details;
 
     /**
@@ -39,6 +42,7 @@ public class ManageContracts extends HttpServlet {
     public void init(){
         try {
             getContracts();
+            PropertiesController.init();
         } catch (IOException | ServletException e) {
             throw new RuntimeException(e);
         }
@@ -127,13 +131,20 @@ public class ManageContracts extends HttpServlet {
     }
 
     public void updateContract() throws IOException {
+
         Gson gson =new Gson();
         String contractString=gson.toJson(selectedItem);
         //String detailString=gson.toJson(details);
-        System.out.println(contractString);
+        System.out.println("update: "+contractString);
         //System.out.println(detailString);
 
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/contract", contractString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract", contractString);
+    }
+
+    public void onCellEdit(CellEditEvent event){
+        Object oldValue=event.getOldValue();
+        Object newValue=event.getNewValue();
+        System.out.println(newValue);
     }
 
     /**
@@ -178,5 +189,13 @@ public class ManageContracts extends HttpServlet {
 
     public void setDetails(ContractDetail[] details) {
         this.details = details;
+    }
+
+    public Contract getUpdatedContract() {
+        return updatedContract;
+    }
+
+    public void setUpdatedContract(Contract updatedContract) {
+        this.updatedContract = updatedContract;
     }
 }

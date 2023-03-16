@@ -88,7 +88,7 @@ public class Sqlmodel{
                     }
                 } else {
                     Object o = runGetter(f, this);
-                    if (o != null && !Objects.equals(o,0)) {
+                    if (o != null && !Objects.equals(o,0) && !Objects.equals(o,0.00)) {
                         if (sqlSet != "") {
                             sqlSet += ",";
 
