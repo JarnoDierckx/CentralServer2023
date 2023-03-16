@@ -25,6 +25,7 @@
         <f:facet name="header">
 
         </f:facet>
+
         <p:column headerText="contract number">
           <p:cellEditor>
             <f:facet name="output">
@@ -61,10 +62,14 @@
         <p:column headerText="start date">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.start_date}"/>
+              <h:outputText value="#{contract.start_date}">
+                <f:convertDateTime pattern = "YYYY-MM-dd" />
+              </h:outputText>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.start_date}" style="width:100%"/>
+              <p:inputText value="#{contract.start_date}" style="width:100%">
+                <f:convertDateTime pattern = "YYYY-MM-dd" />
+              </p:inputText>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -72,10 +77,14 @@
         <p:column headerText="end date">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.end_date}"/>
+              <h:outputText value="#{contract.end_date}">
+                <f:convertDateTime pattern = "YYYY-MM-DD" />
+              </h:outputText>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.end_date}" style="width:100%"/>
+              <p:inputText value="#{contract.end_date}" style="width:100%">
+                <f:convertDateTime pattern = "YYYY-MM-DD" />
+              </p:inputText>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -171,10 +180,14 @@
         <p:column headerText="last invoice date">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.last_invoice_date}"/>
+              <h:outputText value="#{contract.last_invoice_date}">
+                <f:convertDateTime pattern = "YYYY-MM-DD" />
+              </h:outputText>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.last_invoice_date}" style="width:100%"/>
+              <p:inputText value="#{contract.last_invoice_date}" style="width:100%">
+                <f:convertDateTime pattern = "YYYY-MM-DD" />
+              </p:inputText>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -182,10 +195,14 @@
         <p:column headerText="last invoice period start">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.last_invoice_period_start}"/>
+              <h:outputText value="#{contract.last_invoice_period_start}">
+                <f:convertDateTime pattern = "YYYY-MM-DD" />
+              </h:outputText>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.last_invoice_period_start}" style="width:100%"/>
+              <p:inputText value="#{contract.last_invoice_period_start}" style="width:100%">
+                <f:convertDateTime pattern = "YYYY-MM-DD" />
+              </p:inputText>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -193,10 +210,14 @@
         <p:column headerText="last invoice period end">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.last_invoice_period_end}"/>
+              <h:outputText value="#{contract.last_invoice_period_end}">
+                <f:convertDateTime pattern = "YYYY-MM-DD" />
+              </h:outputText>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.last_invoice_period_end}" style="width:100%"/>
+              <p:inputText value="#{contract.last_invoice_period_end}" style="width:100%">
+                <f:convertDateTime pattern = "YYYY-MM-DD" />
+              </p:inputText>
             </f:facet>
           </p:cellEditor>
         </p:column>

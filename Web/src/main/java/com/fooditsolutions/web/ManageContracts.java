@@ -24,6 +24,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.sql.Date;
+import java.sql.Time;
 import java.util.*;
 
 @ManagedBean
@@ -79,13 +81,13 @@ public class ManageContracts extends HttpServlet {
             Gson gson = new Gson();
             //Contract[] contracts1=gson.fromJson(responseString,Contract[].class);
             contracts2=gson.fromJson(responseString,Contract[].class);
-            String s = "";
-            /*System.out.println("Contracts in array: "+ Arrays.toString(contracts1));
-            contracts=Arrays.asList(contracts1);
-            System.out.println("Contracts: "+contracts.toString());*/
-            //return Arrays.asList(contracts1);
-        }else {
-            //return null;
+
+            for (Contract contract : contracts2) {
+                contract.start_date= new Date(contract.start_date.getTime());
+                contract.last_invoice_date= new Date(contract.last_invoice_date.getTime());
+                contract.last_invoice_period_start= new Date(contract.last_invoice_period_start.getTime());
+                contract.last_invoice_period_end= new Date(contract.last_invoice_period_end.getTime());
+            }
         }
     }
 
@@ -125,12 +127,14 @@ public class ManageContracts extends HttpServlet {
     }
 
     public String editContract() throws IOException {
-        getContractDetails();
+        //getContractDetails();
         System.out.println(selectedItem.contract_number);
         return "editContract.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
     public void updateContract() throws IOException {
+        //long time=selectedItem.start_date.getTime();
+
 
         Gson gson =new Gson();
         String contractString=gson.toJson(selectedItem);
