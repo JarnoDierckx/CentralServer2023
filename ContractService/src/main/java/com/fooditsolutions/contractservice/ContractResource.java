@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.List;
 
@@ -31,12 +32,12 @@ public class ContractResource {
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public List<Contract> getContracts() {
+    public List<Contract> getContracts() throws IOException {
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         System.out.println("getContracts: "+responseString);
-
-
-        return ContractController.createContractInformation(responseString);
+        List<Contract> response = new ArrayList<>();
+        response = ContractController.createContractInformation(responseString);
+        return response;
     }
 
     @GET

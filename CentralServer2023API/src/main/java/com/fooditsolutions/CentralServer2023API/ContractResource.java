@@ -32,29 +32,15 @@ public class ContractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     public String getContract() throws IOException, ServletException {
-
+        String response = "";
         System.out.println("Starting read in ContractResource");
-        URL url = new URL("http://localhost:8080/ContractService-1.0-SNAPSHOT/api/contract");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        int responseCode = connection.getResponseCode();
 
-        if (responseCode == HttpURLConnection.HTTP_OK) { // success
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            System.out.println("in " + in);
+        response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice()+"/contract");
+        System.out.println("getContracts: "+response);
 
-            StringBuilder response = new StringBuilder();
 
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
 
-            return String.valueOf(response);
-        }else {
-            return null;
-        }
+            return response;
 
     }
 

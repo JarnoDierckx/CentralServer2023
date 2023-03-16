@@ -1,5 +1,7 @@
 package com.fooditsolutions.web;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.web.model.Contract;
@@ -43,8 +45,9 @@ public class ManageContracts extends HttpServlet {
     @PostConstruct
     public void init(){
         try {
-            getContracts();
             PropertiesController.init();
+            getContracts();
+
         } catch (IOException | ServletException e) {
             throw new RuntimeException(e);
         }
@@ -56,7 +59,10 @@ public class ManageContracts extends HttpServlet {
      */
     public void getContracts() throws IOException, ServletException {
         System.out.println("Starting read in ManageContracts");
-        URL url = new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crudContract/");
+        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract");
+        System.out.println("getContracts: "+response);
+
+        /*URL url = new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crudContract/");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         int responseCode = connection.getResponseCode();
@@ -88,6 +94,32 @@ public class ManageContracts extends HttpServlet {
                 contract.last_invoice_date= new Date(contract.last_invoice_date.getTime());
                 contract.last_invoice_period_start= new Date(contract.last_invoice_period_start.getTime());
                 contract.last_invoice_period_end= new Date(contract.last_invoice_period_end.getTime());
+            }
+        }*/
+
+        /*Gson gson = new Gson();
+        //Contract[] contracts1=gson.fromJson(responseString,Contract[].class);
+        contracts2=gson.fromJson(response,Contract[].class);*/
+
+        byte[] jsonData = response.getBytes();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        contracts2 = mapper.readValue(jsonData, Contract[].class);
+
+        for (Contract contract : contracts2) {
+            System.out.println(contract.start_date);
+            if (contract.start_date != null) {
+                contract.start_date = new Date(contract.start_date.getTime());
+            }
+            if (contract.last_invoice_date != null) {
+                contract.last_invoice_date = new Date(contract.last_invoice_date.getTime());
+            }
+            if (contract.last_invoice_period_start != null) {
+                contract.last_invoice_period_start = new Date(contract.last_invoice_period_start.getTime());
+            }
+            if (contract.last_invoice_period_end != null) {
+                contract.last_invoice_period_end = new Date(contract.last_invoice_period_end.getTime());
+
             }
         }
     }
@@ -134,9 +166,9 @@ public class ManageContracts extends HttpServlet {
     }
 
     public void updateContract() throws IOException {
-        selectedItem.start_date= new java.util.Date(selectedItem.start_date.getTime());
+        //selectedItem.start_date= new java.util.Date(selectedItem.start_date.getTime());
         System.out.println(selectedItem.start_date);
-        //long time=selectedItem.start_date.getTime();
+        long time=selectedItem.start_date.getTime();
 
 
         Gson gson = new Gson();

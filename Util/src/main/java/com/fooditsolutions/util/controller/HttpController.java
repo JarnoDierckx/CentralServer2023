@@ -31,7 +31,7 @@ public class HttpController {
             result = String.valueOf(response);
         }
         }catch (Exception ex){
-
+            System.out.println(ex.toString());
         }
         return result;
     }
