@@ -1,5 +1,6 @@
 package com.fooditsolutions.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.web.model.Contract;
@@ -44,18 +45,17 @@ public class EditContracts implements Serializable {
     }
 
     public void updateContract() throws IOException {
-        //selectedItem.start_date= new java.util.Date(selectedItem.start_date.getTime());
-        System.out.println(updatingContract.start_date);
-        long time = updatingContract.start_date.getTime();
 
 
-        Gson gson = new Gson();
-        String contractString = gson.toJson(updatingContract);
-        //String detailString=gson.toJson(details);
-        System.out.println("update: " + contractString);
+        //Creating the ObjectMapper object
+        ObjectMapper mapper = new ObjectMapper();
+        //Converting the Object to JSONString
+        String jsonString = mapper.writeValueAsString(updatingContract);
+
+        System.out.println("update: "+jsonString);
         //System.out.println(detailString);
 
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract", contractString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract", jsonString);
     }
 
     public void onCellEdit(CellEditEvent event) {
