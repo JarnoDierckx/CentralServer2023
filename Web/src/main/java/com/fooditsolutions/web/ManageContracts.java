@@ -174,10 +174,16 @@ public class ManageContracts extends HttpServlet {
         Gson gson = new Gson();
         String contractString=gson.toJson(selectedItem);
         //String detailString=gson.toJson(details);
+
+        //Creating the ObjectMapper object
+        ObjectMapper mapper = new ObjectMapper();
+        //Converting the Object to JSONString
+        String jsonString = mapper.writeValueAsString(selectedItem);
+
         System.out.println("update: "+contractString);
         //System.out.println(detailString);
 
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract", contractString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract", jsonString);
     }
 
     public void onCellEdit(CellEditEvent event){

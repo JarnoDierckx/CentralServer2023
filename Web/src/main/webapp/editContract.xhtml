@@ -63,12 +63,12 @@
           <p:cellEditor>
             <f:facet name="output">
               <h:outputText value="#{contract.start_date}">
-                <f:convertDateTime pattern = "YYYY-MM-dd" />
+                <f:convertDateTime pattern = "yyyy-MM-dd" />
               </h:outputText>
             </f:facet>
             <f:facet name="input">
-              <p:calendar  value="#{contract.start_date}" style="width:100%">
-                <f:convertDateTime pattern = "YYYY-MM-dd" />
+              <p:calendar  value="#{contract.start_date}" style="width:100%" pattern="yyyy-MM-dd">
+                <f:convertDateTime pattern = "yyyy-MM-dd" />
               </p:calendar>
             </f:facet>
           </p:cellEditor>
