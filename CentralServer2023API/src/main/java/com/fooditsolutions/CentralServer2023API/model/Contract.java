@@ -4,25 +4,19 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.json.bind.annotation.JsonbProperty;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Table(name = "CONTRACT")
 @Getter
 @Setter
-public class Contract{
-    @Id
-    @JsonbProperty("id")
+public class Contract {
     public int id;
     public String contract_number;
     @JsonbProperty("client_id")
     public BigDecimal client_id;
-
-    //@JsonbProperty("bjr_id")
-
+    public Client client;
     public int bjr_id;
+    public Bjr bjr;
     public Date start_date;
     public Date end_date;
     public String source;
@@ -40,8 +34,6 @@ public class Contract{
     public String comments;
     public Date created;
     public Date updated;
-
-
 
 
 }

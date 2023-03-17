@@ -14,13 +14,17 @@ import org.primefaces.util.LangUtils;
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -28,11 +32,15 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.Time;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @ManagedBean
 @SessionScoped
-public class ManageContracts extends HttpServlet {
+public class ManageContracts extends HttpServlet implements Serializable {
+    @Inject
+    private EditContracts editContracts;
     private List<Contract> contracts;
     private Contract[] contracts2;
     private Contract selectedItem;
@@ -161,26 +169,24 @@ public class ManageContracts extends HttpServlet {
 
     public String editContract() throws IOException {
         //getContractDetails();
+
+        HttpSession session= (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        session.setAttribute("contract", selectedItem);
+
+        //editContracts.setSelectedContract(selectedItem);
         System.out.println(selectedItem.contract_number);
-        return "editContract.xhtml?faces-redirect=true&includeViewParams=true";
+        return "editContract.xhtml?faces-redirect=true";
     }
 
     public void updateContract() throws IOException {
-        //selectedItem.start_date= new java.util.Date(selectedItem.start_date.getTime());
-        System.out.println(selectedItem.start_date);
-        long time=selectedItem.start_date.getTime();
 
-
-        Gson gson = new Gson();
-        String contractString=gson.toJson(selectedItem);
-        //String detailString=gson.toJson(details);
 
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
         //Converting the Object to JSONString
         String jsonString = mapper.writeValueAsString(selectedItem);
 
-        System.out.println("update: "+contractString);
+        System.out.println("update: "+jsonString);
         //System.out.println(detailString);
 
         HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract", jsonString);

@@ -20,6 +20,10 @@ public class Contract extends Sqlmodel {
     @JsonbProperty("client_id")
     public BigDecimal client_id;
 
+    public Client client;
+
+    public Bjr bjr;
+
     //@JsonbProperty("bjr_id")
 
     public int bjr_id;

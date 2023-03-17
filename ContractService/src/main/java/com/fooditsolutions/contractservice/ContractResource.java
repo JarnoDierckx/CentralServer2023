@@ -1,5 +1,7 @@
 package com.fooditsolutions.contractservice;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.contractservice.controller.ClientController;
 import com.fooditsolutions.contractservice.controller.ContractController;
 import com.fooditsolutions.contractservice.model.Client;
@@ -51,9 +53,13 @@ public class ContractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     public void updateContract(Contract contract) throws IOException {
-        Gson gson =new Gson();
-        String contractString=gson.toJson(contract);
-        System.out.println(contractString);
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore(), contractString);
+
+        //Creating the ObjectMapper object
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //Converting the Object to JSONString
+        String jsonString = mapper.writeValueAsString(contract);
+        System.out.println(jsonString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
     }
 }

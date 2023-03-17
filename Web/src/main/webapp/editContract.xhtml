@@ -12,14 +12,13 @@
 <h:body>
   <h:form>
     <div class="card">
-      <p:dataTable var="contract" value="#{ManageContracts.selectedItem}" paginator="true" paginatorTemplate="{Save}" editable="true" editMode="cell">
+      <p:dataTable var="edit" value="#{EditContracts.updatingContract}" paginator="true" paginatorTemplate="{Save}" editable="true" editMode="cell">
 
-        <p:ajax event="cellEdit" listener="#{ManageContracts.onCellEdit}"/>
+        <p:ajax event="cellEdit" listener="#{EditContracts.onCellEdit}"/>
 
         <f:facet name="{Save}">
           <p:commandButton title="Save Changes">
-            <f:setPropertyActionListener value="#{contract}" target="#{ManageContracts.updatedContract}"/>
-            <f:ajax listener="#{ManageContracts.updateContract}"/>
+            <f:ajax listener="#{EditContracts.updateContract}"/>
           </p:commandButton >
         </f:facet>
         <f:facet name="header">
@@ -29,10 +28,10 @@
         <p:column headerText="contract number">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.contract_number}"/>
+              <h:outputText value="#{edit.contract_number}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.contract_number}" style="width:100%"/>
+              <p:inputText value="#{edit.contract_number}" style="width:100%"/>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -40,10 +39,10 @@
         <p:column headerText="Client">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.client.name}"/>
+              <h:outputText value="#{edit.client.name}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.client.name}" style="width:100%"/>
+              <p:inputText value="#{edit.client.name}" style="width:100%"/>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -51,10 +50,10 @@
         <p:column headerText="BJR">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.bjr.name}"/>
+              <h:outputText value="#{edit.bjr.name}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.bjr.name}" style="width:100%"/>
+              <p:inputText value="#{edit.bjr.name}" style="width:100%"/>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -62,12 +61,12 @@
         <p:column headerText="start date">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.start_date}">
+              <h:outputText value="#{edit.start_date}">
                 <f:convertDateTime pattern = "yyyy-MM-dd" />
               </h:outputText>
             </f:facet>
             <f:facet name="input">
-              <p:calendar  value="#{contract.start_date}" style="width:100%" pattern="yyyy-MM-dd">
+              <p:calendar  value="#{edit.start_date}" style="width:100%" pattern="yyyy-MM-dd">
                 <f:convertDateTime pattern = "yyyy-MM-dd" />
               </p:calendar>
             </f:facet>
@@ -77,12 +76,12 @@
         <p:column headerText="end date">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.end_date}">
+              <h:outputText value="#{edit.end_date}">
                 <f:convertDateTime pattern = "YYYY-MM-dd" />
               </h:outputText>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.end_date}" style="width:100%">
+              <p:inputText value="#{edit.end_date}" style="width:100%">
                 <f:convertDateTime pattern = "YYYY-MM-dd" />
               </p:inputText>
             </f:facet>
@@ -92,10 +91,10 @@
         <p:column headerText="source">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.source}"/>
+              <h:outputText value="#{edit.source}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.source}" style="width:100%"/>
+              <p:inputText value="#{edit.source}" style="width:100%"/>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -103,10 +102,10 @@
         <p:column headerText="invoice frequency">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.invoice_frequency}"/>
+              <h:outputText value="#{edit.invoice_frequency}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.invoice_frequency}" style="width:100%"/>
+              <p:inputText value="#{edit.invoice_frequency}" style="width:100%"/>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -114,10 +113,10 @@
         <p:column headerText="index frequency">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.index_frequency}"/>
+              <h:outputText value="#{edit.index_frequency}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.index_frequency}" style="width:100%"/>
+              <p:inputText value="#{edit.index_frequency}" style="width:100%"/>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -125,10 +124,10 @@
         <p:column headerText="base index year">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.base_index_year}"/>
+              <h:outputText value="#{edit.base_index_year}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.base_index_year}" style="width:100%"/>
+              <p:inputText value="#{edit.base_index_year}" style="width:100%"/>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -136,10 +135,10 @@
         <p:column headerText="index start">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.index_start}"/>
+              <h:outputText value="#{edit.index_start}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.index_start}" style="width:100%"/>
+              <p:inputText value="#{edit.index_start}" style="width:100%"/>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -147,10 +146,10 @@
         <p:column headerText="index last invoice">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.index_last_invoice}"/>
+              <h:outputText value="#{edit.index_last_invoice}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.index_last_invoice}" style="width:100%"/>
+              <p:inputText value="#{edit.index_last_invoice}" style="width:100%"/>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -158,10 +157,10 @@
         <p:column headerText="amount last invoice">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.amount_last_invoice}"/>
+              <h:outputText value="#{edit.amount_last_invoice}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.amount_last_invoice}" style="width:100%"/>
+              <p:inputText value="#{edit.amount_last_invoice}" style="width:100%"/>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -169,10 +168,10 @@
         <p:column headerText="last invoice number">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.last_invoice_number}"/>
+              <h:outputText value="#{edit.last_invoice_number}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.last_invoice_number}" style="width:100%"/>
+              <p:inputText value="#{edit.last_invoice_number}" style="width:100%"/>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -180,12 +179,12 @@
         <p:column headerText="last invoice date">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.last_invoice_date}">
+              <h:outputText value="#{edit.last_invoice_date}">
                 <f:convertDateTime pattern = "YYYY-MM-dd" />
               </h:outputText>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.last_invoice_date}" style="width:100%">
+              <p:inputText value="#{edit.last_invoice_date}" style="width:100%">
                 <f:convertDateTime pattern = "YYYY-MM-dd" />
               </p:inputText>
             </f:facet>
@@ -195,12 +194,12 @@
         <p:column headerText="last invoice period start">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.last_invoice_period_start}">
+              <h:outputText value="#{edit.last_invoice_period_start}">
                 <f:convertDateTime pattern = "YYYY-MM-dd" />
               </h:outputText>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.last_invoice_period_start}" style="width:100%">
+              <p:inputText value="#{edit.last_invoice_period_start}" style="width:100%">
                 <f:convertDateTime pattern = "YYYY-MM-dd" />
               </p:inputText>
             </f:facet>
@@ -210,12 +209,12 @@
         <p:column headerText="last invoice period end">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.last_invoice_period_end}">
+              <h:outputText value="#{edit.last_invoice_period_end}">
                 <f:convertDateTime pattern = "YYYY-MM-dd" />
               </h:outputText>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.last_invoice_period_end}" style="width:100%">
+              <p:inputText value="#{edit.last_invoice_period_end}" style="width:100%">
                 <f:convertDateTime pattern = "YYYY-MM-dd" />
               </p:inputText>
             </f:facet>
@@ -225,10 +224,10 @@
         <p:column headerText="jgr">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{contract.jgr}"/>
+              <h:outputText value="#{edit.jgr}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{contract.jgr}" style="width:100%"/>
+              <p:inputText value="#{edit.jgr}" style="width:100%"/>
             </f:facet>
           </p:cellEditor>
         </p:column>
