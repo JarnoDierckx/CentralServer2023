@@ -1,5 +1,8 @@
 package com.fooditsolutions.contractservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.contractservice.model.Client;
 import com.fooditsolutions.contractservice.model.Contract;
 import com.fooditsolutions.contractservice.model.ContractDetail;
@@ -16,7 +19,7 @@ import java.util.Dictionary;
 import java.util.List;
 
 public class ContractDetailController {
-    public static List<ContractDetail> createContractDetailInformation(String jsonContractDetails) {
+    public static List<ContractDetail> createContractDetailInformation(String jsonContractDetails) throws JsonProcessingException {
         List<ContractDetail> contractsDetails = new ArrayList<>();
         ContractDetail[] ContractDetails2;
         PropertiesController.getProperty().setDatastore("C287746F288DF2CB7292DD2EE29CFECD");
@@ -33,7 +36,10 @@ public class ContractDetailController {
                     }
                 })
                 .create();
-        ContractDetails2=gson.fromJson(jsonContractDetails,ContractDetail[].class);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        ContractDetails2= mapper.readValue(jsonContractDetails,ContractDetail[].class);
         for(int i=0; i < ContractDetails2.length; i++){
 
             ModuleId moduleId = Moduleids.get(ContractDetails2[i].getModule_DBB_ID());

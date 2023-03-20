@@ -1,5 +1,6 @@
 package com.fooditsolutions.contractservice;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fooditsolutions.contractservice.controller.ContractDetailController;
 import com.fooditsolutions.contractservice.model.Contract;
 import com.fooditsolutions.contractservice.model.ContractDetail;
@@ -22,7 +23,7 @@ public class ContractDetailResource {
     @Path("/{ContractID}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public List<ContractDetail> getContractDetails(@PathParam("ContractID") String contractID) {
+    public List<ContractDetail> getContractDetails(@PathParam("ContractID") String contractID) throws JsonProcessingException {
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail/"+ contractID +"?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         System.out.println("getContractDetails: "+responseString);
 
