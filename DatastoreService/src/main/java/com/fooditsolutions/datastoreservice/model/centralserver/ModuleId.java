@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ModeuleId extends Sqlmodel {
+public class ModuleId extends Sqlmodel {
     @Id
     BigDecimal dbb_id = new BigDecimal(0);
     String Name="";

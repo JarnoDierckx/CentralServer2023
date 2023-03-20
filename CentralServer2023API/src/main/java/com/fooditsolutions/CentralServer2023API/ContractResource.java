@@ -3,6 +3,7 @@ package com.fooditsolutions.CentralServer2023API;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.CentralServer2023API.model.Contract;
+import com.fooditsolutions.CentralServer2023API.model.ContractDetail;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.google.gson.Gson;
@@ -91,5 +92,20 @@ public class ContractResource {
         String jsonString = mapper.writeValueAsString(contract);
 
         HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice()+"/contract", jsonString);
+    }
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
+    @Path("/detail")
+    public void updateContractDetails(ContractDetail[] contract) throws IOException {
+
+        //Creating the ObjectMapper object
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //Converting the Object to JSONString
+        String jsonString = mapper.writeValueAsString(contract);
+        System.out.println(jsonString);
+
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice()+"/contract/detail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
     }
 }

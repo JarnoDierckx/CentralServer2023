@@ -40,10 +40,13 @@
                 </p:column>
                 <p:column headerText="start date">
                     <h:outputText value="#{contract.start_date}">
+                        <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
                 <p:column headerText="end date">
-                    #{contract.end_date}
+                    <h:outputText value="#{contract.end_date}">
+                        <f:convertDateTime pattern = "yyyy-MM-dd" />
+                    </h:outputText>
                 </p:column>
                 <p:column headerText="source">
                     #{contract.source}
@@ -70,13 +73,19 @@
                     #{contract.last_invoice_number}
                 </p:column>
                 <p:column headerText="last invoice date">
-                    #{contract.last_invoice_date}
+                    <h:outputText value="#{contract.last_invoice_date}">
+                        <f:convertDateTime pattern = "yyyy-MM-dd" />
+                    </h:outputText>
                 </p:column>
                 <p:column headerText="last invoice period start">
-                    #{contract.last_invoice_period_start}
+                    <h:outputText value="#{contract.last_invoice_period_start}">
+                        <f:convertDateTime pattern = "yyyy-MM-dd" />
+                    </h:outputText>
                 </p:column>
                 <p:column headerText="last invoice period end">
-                    #{contract.last_invoice_period_end}
+                    <h:outputText value="#{contract.last_invoice_period_end}">
+                        <f:convertDateTime pattern = "yyyy-MM-dd" />
+                    </h:outputText>
                 </p:column>
                 <p:column headerText="jgr">
                     #{contract.jgr}

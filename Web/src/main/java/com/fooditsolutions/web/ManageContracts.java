@@ -6,18 +6,13 @@ import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.web.model.Contract;
 import com.fooditsolutions.web.model.ContractDetail;
-import com.google.gson.*;
-import javafx.scene.control.TableColumn;
-import org.primefaces.event.CellEditEvent;
 import org.primefaces.util.LangUtils;
 
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
@@ -25,15 +20,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.sql.Date;
-import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @ManagedBean
@@ -94,7 +83,7 @@ public class ManageContracts extends HttpServlet implements Serializable {
     }
 
     public String ContractDetails() throws IOException {
-        getContractDetails();
+        details=getContractDetails(selectedItem.id);
         return "contractDetails.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
@@ -102,9 +91,11 @@ public class ManageContracts extends HttpServlet implements Serializable {
      * Gets called when a user presses the button next to a contract entry.
      * It uses the id of the relevent contract to send a request forward for said contracts details.
      * When it gets those details back, they are put in an array and the user gets redirected to a page where the details are put into a datatable.
+     *
+     * @return
      */
-    public void getContractDetails() throws IOException {
-        URL url = new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crudContract/"+selectedItem.getId());
+    public ContractDetail[] getContractDetails(int id) throws IOException {
+        URL url = new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crudContract/"+id);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         int responseCode = connection.getResponseCode();
@@ -124,9 +115,12 @@ public class ManageContracts extends HttpServlet implements Serializable {
             String responseString = String.valueOf(response);
             System.out.println("ResponseString: "+responseString);
 
-            Gson gson = new Gson();
-            details=gson.fromJson(responseString,ContractDetail[].class);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+            return mapper.readValue(responseString,ContractDetail[].class);
         }
+        return null;
     }
 
     public String editContract() throws IOException {
@@ -138,12 +132,6 @@ public class ManageContracts extends HttpServlet implements Serializable {
         //editContracts.setSelectedContract(selectedItem);
         System.out.println(selectedItem.contract_number);
         return "editContract.xhtml?faces-redirect=true";
-    }
-
-    public void onCellEdit(CellEditEvent event){
-        Object oldValue=event.getOldValue();
-        Object newValue=event.getNewValue();
-        System.out.println(newValue);
     }
 
     /**

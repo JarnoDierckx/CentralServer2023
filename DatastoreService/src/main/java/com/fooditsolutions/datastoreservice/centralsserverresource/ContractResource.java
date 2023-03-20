@@ -5,6 +5,7 @@ import com.fooditsolutions.datastoreservice.controller.Datastores;
 import com.fooditsolutions.datastoreservice.controller.Util;
 import com.fooditsolutions.datastoreservice.model.centralserver.Contract;
 import com.fooditsolutions.datastoreservice.model.DatastoreObject;
+import com.fooditsolutions.datastoreservice.model.centralserver.ContractDetail;
 import org.json.JSONArray;
 
 import javax.annotation.PostConstruct;
@@ -114,6 +115,25 @@ public class ContractResource {
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
                 DBFirebird.executeSQLUpdate(ds, sql);
+                System.out.println("update successfull");
+            }
+        }
+    }
+
+    @PUT
+    @Path("/detail")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void updateContractDetails(@QueryParam("datastoreKey") String datastoreKey, ContractDetail[] contractDetail){
+        String[] sql = new String[contractDetail.length];
+        for (int i=0;i<contractDetail.length;i++){
+            sql[i]=contractDetail[i].getUpdateStatement();
+        }
+
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                for (int i=0;i<sql.length;i++){
+                    DBFirebird.executeSQLUpdate(ds, sql[i]);
+                }
                 System.out.println("update successfull");
             }
         }

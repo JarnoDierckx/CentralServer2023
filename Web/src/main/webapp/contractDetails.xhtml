@@ -18,7 +18,9 @@
                     #{detail.moduleId.name}
                 </p:column>
                 <p:column headerText="purchase date">
-                    #{detail.purchase_Date}
+                    <h:outputText value="#{detail.purchase_Date}">
+                        <f:convertDateTime pattern = "yyyy-MM-dd" />
+                    </h:outputText>
                 </p:column>
                 <p:column headerText="amount">
                     #{detail.amount}

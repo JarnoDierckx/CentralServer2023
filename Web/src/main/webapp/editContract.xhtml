@@ -12,7 +12,7 @@
 <h:body>
   <h:form>
     <div class="card">
-      <p:dataTable var="edit" value="#{EditContracts.updatingContract}" paginator="true" paginatorTemplate="{Save}" editable="true" editMode="cell">
+      <p:dataTable var="edit" value="#{EditContracts.updatingContract}" paginator="true" paginatorTemplate="{Save}" paginatorPosition="bottom" editable="true" editMode="cell">
 
         <p:ajax event="cellEdit" listener="#{EditContracts.onCellEdit}"/>
 
@@ -77,12 +77,12 @@
           <p:cellEditor>
             <f:facet name="output">
               <h:outputText value="#{edit.end_date}">
-                <f:convertDateTime pattern = "YYYY-MM-dd" />
+                <f:convertDateTime pattern = "yyyy-MM-dd" />
               </h:outputText>
             </f:facet>
             <f:facet name="input">
               <p:inputText value="#{edit.end_date}" style="width:100%">
-                <f:convertDateTime pattern = "YYYY-MM-dd" />
+                <f:convertDateTime pattern = "yyyy-MM-dd" />
               </p:inputText>
             </f:facet>
           </p:cellEditor>
@@ -180,12 +180,12 @@
           <p:cellEditor>
             <f:facet name="output">
               <h:outputText value="#{edit.last_invoice_date}">
-                <f:convertDateTime pattern = "YYYY-MM-dd" />
+                <f:convertDateTime pattern = "yyyy-MM-dd" />
               </h:outputText>
             </f:facet>
             <f:facet name="input">
               <p:inputText value="#{edit.last_invoice_date}" style="width:100%">
-                <f:convertDateTime pattern = "YYYY-MM-dd" />
+                <f:convertDateTime pattern = "yyyy-MM-dd" />
               </p:inputText>
             </f:facet>
           </p:cellEditor>
@@ -195,12 +195,12 @@
           <p:cellEditor>
             <f:facet name="output">
               <h:outputText value="#{edit.last_invoice_period_start}">
-                <f:convertDateTime pattern = "YYYY-MM-dd" />
+                <f:convertDateTime pattern = "yyyy-MM-dd" />
               </h:outputText>
             </f:facet>
             <f:facet name="input">
               <p:inputText value="#{edit.last_invoice_period_start}" style="width:100%">
-                <f:convertDateTime pattern = "YYYY-MM-dd" />
+                <f:convertDateTime pattern = "yyyy-MM-dd" />
               </p:inputText>
             </f:facet>
           </p:cellEditor>
@@ -210,12 +210,12 @@
           <p:cellEditor>
             <f:facet name="output">
               <h:outputText value="#{edit.last_invoice_period_end}">
-                <f:convertDateTime pattern = "YYYY-MM-dd" />
+                <f:convertDateTime pattern = "yyyy-MM-dd" />
               </h:outputText>
             </f:facet>
             <f:facet name="input">
               <p:inputText value="#{edit.last_invoice_period_end}" style="width:100%">
-                <f:convertDateTime pattern = "YYYY-MM-dd" />
+                <f:convertDateTime pattern = "yyyy-MM-dd" />
               </p:inputText>
             </f:facet>
           </p:cellEditor>
@@ -235,6 +235,90 @@
     </div>
 
 
+
+
+
+      <div class="card">
+        <p:dataTable var="detail" value="#{EditContracts.updatingContractDetails}" paginator="true" paginatorTemplate="{Save}" paginatorPosition="bottom" editable="true" editMode="cell">
+          <p:ajax event="cellEdit" listener="#{EditContracts.onCellEdit}"/>
+
+          <f:facet name="{Save}">
+            <p:commandButton title="Save Changes">
+              <f:ajax listener="#{EditContracts.UpdateContractDetails()}"/>
+            </p:commandButton >
+          </f:facet>
+
+          <p:column headerText="Module id">
+            <p:cellEditor>
+              <f:facet name="output">
+                <h:outputText value="#{detail.moduleId.name}"/>
+              </f:facet>
+              <f:facet name="input">
+                <p:inputText value="#{detail.moduleId.name}" style="width:100%"/>
+              </f:facet>
+            </p:cellEditor>
+          </p:column>
+
+          <p:column headerText="purchase date">
+            <p:cellEditor>
+              <f:facet name="output">
+                <h:outputText value="#{detail.purchase_Date}">
+                  <f:convertDateTime pattern = "yyyy-MM-dd" />
+                </h:outputText>
+              </f:facet>
+              <f:facet name="input">
+                <p:inputText value="#{detail.purchase_Date}" style="width:100%">
+                  <f:convertDateTime pattern = "yyyy-MM-dd" />
+                </p:inputText>
+              </f:facet>
+            </p:cellEditor>
+          </p:column>
+
+          <p:column headerText="amount">
+            <p:cellEditor>
+              <f:facet name="output">
+                <h:outputText value="#{detail.amount}"/>
+              </f:facet>
+              <f:facet name="input">
+                <p:inputText value="#{detail.amount}" style="width:100%"/>
+              </f:facet>
+            </p:cellEditor>
+          </p:column>
+
+          <p:column headerText="purchase price">
+            <p:cellEditor>
+              <f:facet name="output">
+                <h:outputText value="#{detail.purchase_price}"/>
+              </f:facet>
+              <f:facet name="input">
+                <p:inputText value="#{detail.purchase_price}" style="width:100%"/>
+              </f:facet>
+            </p:cellEditor>
+          </p:column>
+
+          <p:column headerText="index start">
+            <p:cellEditor>
+              <f:facet name="output">
+                <h:outputText value="#{detail.index_Start}"/>
+              </f:facet>
+              <f:facet name="input">
+                <p:inputText value="#{detail.index_Start}" style="width:100%"/>
+              </f:facet>
+            </p:cellEditor>
+          </p:column>
+
+          <p:column headerText="renewal">
+            <p:cellEditor>
+              <f:facet name="output">
+                <h:outputText value="#{detail.renewal}"/>
+              </f:facet>
+              <f:facet name="input">
+                <p:inputText value="#{detail.renewal}" style="width:100%"/>
+              </f:facet>
+            </p:cellEditor>
+          </p:column>
+        </p:dataTable>
+      </div>
   </h:form>
 
 </h:body>

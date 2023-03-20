@@ -6,6 +6,7 @@ import com.fooditsolutions.contractservice.controller.ClientController;
 import com.fooditsolutions.contractservice.controller.ContractController;
 import com.fooditsolutions.contractservice.model.Client;
 import com.fooditsolutions.contractservice.model.Contract;
+import com.fooditsolutions.contractservice.model.ContractDetail;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.util.controller.HttpController;
 import com.google.gson.Gson;
@@ -61,9 +62,21 @@ public class ContractResource {
         String jsonString = mapper.writeValueAsString(contract);
         System.out.println(jsonString);
 
-        System.out.println(PropertiesController.getProperty().getBase_url_datastoreservice());
-        System.out.println(PropertiesController.getProperty().getDatastore());
-
         HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
+    }
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
+    @Path("/detail")
+    public void updateContractDetails(ContractDetail[] contract) throws IOException {
+
+        //Creating the ObjectMapper object
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //Converting the Object to JSONString
+        String jsonString = mapper.writeValueAsString(contract);
+        System.out.println(jsonString);
+
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract/detail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
     }
 }

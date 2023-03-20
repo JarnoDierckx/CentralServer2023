@@ -1,10 +1,12 @@
 package com.fooditsolutions.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.web.model.Contract;
+import com.fooditsolutions.web.model.ContractDetail;
 import com.google.gson.Gson;
 import lombok.Setter;
 import lombok.Getter;
@@ -26,9 +28,11 @@ public class EditContracts implements Serializable {
 
     private Contract selectedContract;
     private Contract updatingContract;
+    private ContractDetail[] selectedContractDetails;
+    private ContractDetail[] updatingContractDetails;
 
     @PostConstruct
-    public void Init() {
+    public void Init() throws IOException {
         System.out.println("Edit contract");
         System.out.println(selectedContract);
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
@@ -43,6 +47,8 @@ public class EditContracts implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        ManageContracts manageContracts=new ManageContracts();
+        updatingContractDetails=manageContracts.getContractDetails(updatingContract.id);
     }
 
     public void updateContract() throws IOException {
@@ -58,6 +64,19 @@ public class EditContracts implements Serializable {
         //System.out.println(detailString);
 
         HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract", jsonString);
+    }
+
+    public void UpdateContractDetails() throws IOException {
+        //Creating the ObjectMapper object
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //Converting the Object to JSONString
+        String jsonString = mapper.writeValueAsString(updatingContractDetails);
+
+        System.out.println("update: "+jsonString);
+        //System.out.println(detailString);
+
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract/detail", jsonString);
     }
 
     public void onCellEdit(CellEditEvent event) {
@@ -80,5 +99,21 @@ public class EditContracts implements Serializable {
 
     public void setUpdatingContract(Contract updatingContract) {
         this.updatingContract = updatingContract;
+    }
+
+    public ContractDetail[] getSelectedContractDetails() {
+        return selectedContractDetails;
+    }
+
+    public void setSelectedContractDetails(ContractDetail[] selectedContractDetails) {
+        this.selectedContractDetails = selectedContractDetails;
+    }
+
+    public ContractDetail[] getUpdatingContractDetails() {
+        return updatingContractDetails;
+    }
+
+    public void setUpdatingContractDetails(ContractDetail[] updatingContractDetails) {
+        this.updatingContractDetails = updatingContractDetails;
     }
 }
