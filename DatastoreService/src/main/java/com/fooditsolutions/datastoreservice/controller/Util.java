@@ -17,6 +17,7 @@ public class Util {
                 result = o.toString();
                 break;
             case"java.sql.Date":
+            case"java.util.Date":
                 //date needs to be structured
                 SimpleDateFormat sdf = new SimpleDateFormat(
                         "dd.MM.yyyy");

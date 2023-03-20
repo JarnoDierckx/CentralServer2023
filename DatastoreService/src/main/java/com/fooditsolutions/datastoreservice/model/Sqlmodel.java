@@ -2,6 +2,8 @@ package com.fooditsolutions.datastoreservice.model;
 
 
 import com.fooditsolutions.datastoreservice.controller.Util;
+import com.fooditsolutions.datastoreservice.model.centralserver.Bjr;
+import com.fooditsolutions.datastoreservice.model.centralserver.Client;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -76,24 +78,24 @@ public class Sqlmodel{
 
         Field[] fields = this.getClass().getDeclaredFields();
 
-        String sqlSet = "";
-        String sqlWhere = "";
+        StringBuilder sqlSet = new StringBuilder();
+        StringBuilder sqlWhere = new StringBuilder();
         try {
             for(Field f:fields){
                 Annotation annotation = f.getAnnotation(Id.class);
                 if((annotation instanceof Id)) {
                     Object o = runGetter(f, this);
                     if (o != null && !Objects.equals(o,0)) {
-                        sqlWhere += f.getName() + "=" + Util.structureSQL(o);
+                        sqlWhere.append(f.getName()).append("=").append(Util.structureSQL(o));
                     }
                 } else {
                     Object o = runGetter(f, this);
-                    if (o != null && !Objects.equals(o,0) && !Objects.equals(o,0.00)) {
-                        if (sqlSet != "") {
-                            sqlSet += ",";
+                    if (o != null && !Objects.equals(o,0) && !Objects.equals(o,0.00) && !(o instanceof Client) && !(o instanceof Bjr)) {
+                        if (!sqlSet.toString().equals("")) {
+                            sqlSet.append(",");
 
                         }
-                        sqlSet += f.getName() +"="+ Util.structureSQL(o);
+                        sqlSet.append(f.getName()).append("=").append(Util.structureSQL(o));
                     }
                 }
             }

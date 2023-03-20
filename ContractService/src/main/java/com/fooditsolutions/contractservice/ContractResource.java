@@ -60,6 +60,10 @@ public class ContractResource {
         //Converting the Object to JSONString
         String jsonString = mapper.writeValueAsString(contract);
         System.out.println(jsonString);
+
+        System.out.println(PropertiesController.getProperty().getBase_url_datastoreservice());
+        System.out.println(PropertiesController.getProperty().getDatastore());
+
         HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
     }
 }

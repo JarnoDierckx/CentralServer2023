@@ -114,6 +114,7 @@ public class ContractResource {
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
                 DBFirebird.executeSQLUpdate(ds, sql);
+                System.out.println("update successfull");
             }
         }
     }

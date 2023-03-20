@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.json.bind.annotation.JsonbProperty;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 
 @Getter
@@ -13,6 +15,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class Client {
 
-    BigDecimal id = BigDecimal.valueOf(0);
+    @Id
+    @JsonbProperty("DBB_ID")
+    BigDecimal DBB_ID = BigDecimal.valueOf(0);
     String name="";
 }

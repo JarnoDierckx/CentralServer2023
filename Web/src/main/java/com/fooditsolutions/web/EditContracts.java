@@ -1,5 +1,6 @@
 package com.fooditsolutions.web;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
@@ -49,6 +50,7 @@ public class EditContracts implements Serializable {
 
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         //Converting the Object to JSONString
         String jsonString = mapper.writeValueAsString(updatingContract);
 

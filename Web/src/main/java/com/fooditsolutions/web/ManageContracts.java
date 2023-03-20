@@ -70,45 +70,6 @@ public class ManageContracts extends HttpServlet implements Serializable {
         String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract");
         System.out.println("getContracts: "+response);
 
-        /*URL url = new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crudContract/");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        int responseCode = connection.getResponseCode();
-
-        if (responseCode == HttpURLConnection.HTTP_OK) { // success
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            System.out.println("in " + in);
-
-            StringBuilder response = new StringBuilder();
-
-            //put return in a string
-            String inputLine;
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-            String responseString = String.valueOf(response);
-            System.out.println("ResponseString: "+responseString);
-
-            //turn string into array of objects
-
-            Gson gson = new Gson();
-            //Contract[] contracts1=gson.fromJson(responseString,Contract[].class);
-            contracts2=gson.fromJson(responseString,Contract[].class);
-
-            for (Contract contract : contracts2) {
-                System.out.println(contract.start_date);
-                contract.start_date= new Date(contract.start_date.getTime());
-                contract.last_invoice_date= new Date(contract.last_invoice_date.getTime());
-                contract.last_invoice_period_start= new Date(contract.last_invoice_period_start.getTime());
-                contract.last_invoice_period_end= new Date(contract.last_invoice_period_end.getTime());
-            }
-        }*/
-
-        /*Gson gson = new Gson();
-        //Contract[] contracts1=gson.fromJson(responseString,Contract[].class);
-        contracts2=gson.fromJson(response,Contract[].class);*/
-
         byte[] jsonData = response.getBytes();
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -162,6 +123,7 @@ public class ManageContracts extends HttpServlet implements Serializable {
             in.close();
             String responseString = String.valueOf(response);
             System.out.println("ResponseString: "+responseString);
+
             Gson gson = new Gson();
             details=gson.fromJson(responseString,ContractDetail[].class);
         }
@@ -176,20 +138,6 @@ public class ManageContracts extends HttpServlet implements Serializable {
         //editContracts.setSelectedContract(selectedItem);
         System.out.println(selectedItem.contract_number);
         return "editContract.xhtml?faces-redirect=true";
-    }
-
-    public void updateContract() throws IOException {
-
-
-        //Creating the ObjectMapper object
-        ObjectMapper mapper = new ObjectMapper();
-        //Converting the Object to JSONString
-        String jsonString = mapper.writeValueAsString(selectedItem);
-
-        System.out.println("update: "+jsonString);
-        //System.out.println(detailString);
-
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract", jsonString);
     }
 
     public void onCellEdit(CellEditEvent event){

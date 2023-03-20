@@ -17,7 +17,7 @@ public class ClientController {
         JSONArray jsonArray = new JSONArray(JsonClients);
         for(int i=0; i <= jsonArray.length(); i++){
             Client client = new Client();
-            client.setId((BigDecimal) jsonArray.getJSONObject(i).get("dbb_ID"));
+            client.setDBB_ID((BigDecimal) jsonArray.getJSONObject(i).get("dbb_ID"));
             client.setName((String) jsonArray.getJSONObject(i).get("name"));
             clients.add(client);
         }
@@ -29,9 +29,9 @@ public class ClientController {
         JSONArray jsonArray = new JSONArray(JsonClients);
         for(int i=0; i < jsonArray.length(); i++){
             Client client = new Client();
-            client.setId(BigDecimal.valueOf((long)jsonArray.getJSONObject(i).get("dbb_ID")));
+            client.setDBB_ID(BigDecimal.valueOf((long)jsonArray.getJSONObject(i).get("dbb_ID")));
             client.setName((String) jsonArray.getJSONObject(i).get("name"));
-            clients.put(client.getId(),client);
+            clients.put(client.getDBB_ID(),client);
         }
 
         return clients;
