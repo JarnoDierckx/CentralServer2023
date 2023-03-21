@@ -116,6 +116,24 @@ public class ContractResource {
         String jsonString = mapper.writeValueAsString(contractDetails);
         System.out.println(jsonString);
 
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice()+"/contractDetail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice()+"/contractDetail?datastoreKey=", jsonString);
+    }
+
+    /**
+     * The endpoint to create a new contract.
+     * @param contract is immediately parsed back into a json string and send forward to the datastoreService.
+     */
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
+    public void createContract(Contract contract) throws IOException {
+
+        //Creating the ObjectMapper object
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //Converting the Object to JSONString
+        String jsonString = mapper.writeValueAsString(contract);
+
+        HttpController.httpPost(PropertiesController.getProperty().getBase_url_contractservice()+"/contract", jsonString);
     }
 }

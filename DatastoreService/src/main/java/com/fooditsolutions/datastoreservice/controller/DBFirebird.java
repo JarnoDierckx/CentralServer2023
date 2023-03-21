@@ -97,4 +97,35 @@ public class DBFirebird {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * Function to execute INSERT sql queries.
+     * @param ds is the object containing the info needed to connect to the database.
+     * @param query is the query that will be executed by stmt.execute().
+     */
+    public static void executeSQLInsert(DatastoreObject ds,String query){
+        try {
+            Class.forName("org.firebirdsql.jdbc.FBDriver");
+
+            Connection connection = null;
+
+            connection = DriverManager.getConnection(
+                    ds.getConnectionString(),
+                    ds.getUserName(), ds.getPassword());
+
+
+            Statement stmt = connection.createStatement();
+
+            try {
+                stmt.execute(query);
+
+            } finally {
+                stmt.close();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

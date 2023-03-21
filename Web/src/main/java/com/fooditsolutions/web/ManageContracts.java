@@ -1,9 +1,12 @@
 package com.fooditsolutions.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
+import com.fooditsolutions.web.model.Bjr;
+import com.fooditsolutions.web.model.Client;
 import com.fooditsolutions.web.model.Contract;
 import com.fooditsolutions.web.model.ContractDetail;
 import org.primefaces.util.LangUtils;
@@ -67,7 +70,6 @@ public class ManageContracts extends HttpServlet implements Serializable {
         contracts2 = mapper.readValue(jsonData, Contract[].class);
 
         for (Contract contract : contracts2) {
-            System.out.println(contract.start_date);
             if (contract.start_date != null) {
                 contract.start_date = new Date(contract.start_date.getTime());
             }
@@ -191,4 +193,5 @@ public class ManageContracts extends HttpServlet implements Serializable {
     public void setUpdatedContract(Contract updatedContract) {
         this.updatedContract = updatedContract;
     }
+
 }

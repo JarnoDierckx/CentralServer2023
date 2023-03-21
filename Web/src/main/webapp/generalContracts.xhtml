@@ -100,9 +100,11 @@
             </p:dataTable>
         </div>
     </h:form>
-    <p:commandButton title="refresh page" action="#{ManageContracts.getContracts()}" oncomplete="setTimeout(function(){ location.reload(); });">
+    <p:commandButton title="refresh page" action="#{ManageContracts.getContracts()}" oncomplete="setTimeout(function(){ location.reload(); });"/>
+    <h:form target="_blank">
+        <p:commandButton title="Create new contract" action="#{CreateContracts.PrepareCreateContract()}" ajax="false"/>
+    </h:form>
 
-    </p:commandButton>
 
 </h:body>
 </html>

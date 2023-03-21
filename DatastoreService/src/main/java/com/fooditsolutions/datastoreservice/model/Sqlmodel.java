@@ -14,8 +14,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
-public class Sqlmodel{
-    public String getInsertStatement(){
+public class Sqlmodel {
+    public String getInsertStatement() {
         Table classAnnotation = this.getClass().getAnnotation(Table.class);
 
         Field[] fields = this.getClass().getDeclaredFields();
@@ -23,9 +23,9 @@ public class Sqlmodel{
         String sqlFields = "";
         String sqlValues = "";
         try {
-            for(Field f:fields){
+            for (Field f : fields) {
                 Annotation annotation = f.getAnnotation(Id.class);
-                if(!(annotation instanceof Id)) {
+                if (!(annotation instanceof Id)) {
                     Object o = runGetter(f, this);
                     if (o != null) {
                         if (sqlFields != "") {
@@ -40,12 +40,12 @@ public class Sqlmodel{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        String result = "INSERT INTO "+classAnnotation.name()+" (" +
+        String result = "INSERT INTO " + classAnnotation.name() + " (" +
                 sqlFields +
-                ") VALUES ("+
+                ") VALUES (" +
                 sqlValues +
                 ");";
-        return result ;
+        return result;
     }
 
     public String getDeleteStatement() {
@@ -56,9 +56,9 @@ public class Sqlmodel{
 
         String sqlWhere = "";
         try {
-            for(Field f:fields){
+            for (Field f : fields) {
                 Annotation annotation = f.getAnnotation(Id.class);
-                if((annotation instanceof Id)) {
+                if ((annotation instanceof Id)) {
                     Object o = runGetter(f, this);
                     if (o != null) {
 
@@ -69,9 +69,9 @@ public class Sqlmodel{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        String result = "DELETE FROM "+classAnnotation.name()+" WHERE "+
-                sqlWhere +";";
-        return result ;
+        String result = "DELETE FROM " + classAnnotation.name() + " WHERE " +
+                sqlWhere + ";";
+        return result;
     }
 
     /**
@@ -80,6 +80,7 @@ public class Sqlmodel{
      * Any values that are empty or are themselves an object are ignored.
      * any property that has the @ID annotation is looped over separately and put into sqlWhere.
      * Both sqlSet and sqlWhere are then used to create a sql update query.
+     *
      * @return gives back a working update query.
      */
     public String getUpdateStatement() {
@@ -90,16 +91,16 @@ public class Sqlmodel{
         StringBuilder sqlSet = new StringBuilder();
         StringBuilder sqlWhere = new StringBuilder();
         try {
-            for(Field f:fields){
+            for (Field f : fields) {
                 Annotation annotation = f.getAnnotation(Id.class);
-                if((annotation instanceof Id)) {
+                if ((annotation instanceof Id)) {
                     Object o = runGetter(f, this);
-                    if (o != null && !Objects.equals(o,0)) {
+                    if (o != null && !Objects.equals(o, 0)) {
                         sqlWhere.append(f.getName()).append("=").append(Util.structureSQL(o));
                     }
                 } else {
                     Object o = runGetter(f, this);
-                    if (o != null && !Objects.equals(o,0) && !Objects.equals(o,0.00) && !(o instanceof Client) && !(o instanceof Bjr) && !(o instanceof ModuleId)) {
+                    if (o != null && !Objects.equals(o, 0) && !Objects.equals(o, 0.00) && !(o instanceof Client) && !(o instanceof Bjr) && !(o instanceof ModuleId)) {
                         if (!sqlSet.toString().equals("")) {
                             sqlSet.append(",");
 
@@ -111,38 +112,65 @@ public class Sqlmodel{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        String result = "UPDATE "+classAnnotation.name() +
-                " SET " +  sqlSet +
-                " WHERE "+ sqlWhere +";";
-        return result ;
+        String result = "UPDATE " + classAnnotation.name() +
+                " SET " + sqlSet +
+                " WHERE " + sqlWhere + ";";
+        return result;
+    }
+
+    /**
+     * Gets called on objects that need to be inserted into the database.
+     * It loops over the different properties in the object, taking their names and values and putting them into sqlInsertInto and sqlValues respectively.
+     * Both variables are then used to create the INSERT INTO query.
+     * @return The created query is then returned as a string.
+     */
+    public String getCreateStatement() {
+        Table classAnnotation = this.getClass().getAnnotation(Table.class);
+
+        Field[] fields = this.getClass().getDeclaredFields();
+        StringBuilder sqlInserInto = new StringBuilder();
+        StringBuilder sqlValues = new StringBuilder();
+
+        try {
+            for (Field f : fields) {
+                Object o = runGetter(f, this);
+                if (o != null && !Objects.equals(o, 0) && !Objects.equals(o, 0.00) && !(o instanceof Client) && !(o instanceof Bjr) && !(o instanceof ModuleId)) {
+                    if (!sqlInserInto.toString().equals("")) {
+                        sqlInserInto.append(",");
+                        sqlValues.append(",");
+                    }
+                    sqlInserInto.append(f.getName());
+                    sqlValues.append(Util.structureSQL(o));
+                }
+
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        String result = "INSERT INTO " + classAnnotation.name() +
+                " (" + sqlInserInto + ")" +
+                " VALUES (" + sqlValues + ");";
+        return result;
     }
 
     /**
      * is used to retrieve the method to get the value of an object
+     *
      * @param field is the name of the object.
-     * @param o is the object that needs its value found
+     * @param o     is the object that needs its value found
      * @return calls the getter of the object.
      */
-    private static Object runGetter(Field field, Object o)
-    {
+    private static Object runGetter(Field field, Object o) {
         // MZ: Find the correct method
-        for (Method method : o.getClass().getMethods())
-        {
-            if ((method.getName().startsWith("get")) && (method.getName().length() == (field.getName().length() + 3)))
-            {
-                if (method.getName().toLowerCase().endsWith(field.getName().toLowerCase()))
-                {
+        for (Method method : o.getClass().getMethods()) {
+            if ((method.getName().startsWith("get")) && (method.getName().length() == (field.getName().length() + 3))) {
+                if (method.getName().toLowerCase().endsWith(field.getName().toLowerCase())) {
                     // MZ: Method found, run it
-                    try
-                    {
+                    try {
                         return method.invoke(o);
-                    }
-                    catch (IllegalAccessException e)
-                    {
+                    } catch (IllegalAccessException e) {
                         System.out.println("Could not determine method: " + method.getName());
-                    }
-                    catch (InvocationTargetException e)
-                    {
+                    } catch (InvocationTargetException e) {
                         System.out.println("Could not determine method: " + method.getName());
                     }
 

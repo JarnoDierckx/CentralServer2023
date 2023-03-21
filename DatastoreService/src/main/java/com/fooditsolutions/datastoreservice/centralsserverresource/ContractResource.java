@@ -115,4 +115,22 @@ public class ContractResource {
         }
     }
 
+    /**
+     *Endpoint to create a single contract.
+     * The contract object send as a parameter is used to build the query string that will be used.
+     * @param datastoreKey is to specify which database to query
+     * @param contract is the contract that will be inserted into the database.
+     */
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void createContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract){
+        String sql=contract.getCreateStatement();
+
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                DBFirebird.executeSQLInsert(ds, sql);
+                System.out.println("Insert successfull");
+            }
+        }
+    }
 }
