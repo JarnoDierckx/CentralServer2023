@@ -38,6 +38,7 @@ public class ManageContracts extends HttpServlet implements Serializable {
 
     /**
      * executes getContracts when generalContracts.xhtml is loaded.
+     * This makes sure all contracts are on the page when it is loaded.
      */
     @PostConstruct
     public void init(){
@@ -53,6 +54,7 @@ public class ManageContracts extends HttpServlet implements Serializable {
     /**
      * Sends a GET request forward for all contracts that are currently stored.
      * The returned value is put into a string before it is turned into an array of Contract objects to be used by the datatable in generalContracts.xhtml
+     * All the dates in each contract are returned as 'long' variables and are parsed to proper dates.
      */
     public void getContracts() throws IOException, ServletException {
         System.out.println("Starting read in ManageContracts");
@@ -82,17 +84,20 @@ public class ManageContracts extends HttpServlet implements Serializable {
         }
     }
 
+    /**
+     * calls getContractDetails and puts the returned values in 'details'
+     * @return redirects the user to the contractDetails.xhtml
+     */
     public String ContractDetails() throws IOException {
         details=getContractDetails(selectedItem.id);
         return "contractDetails.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
     /**
-     * Gets called when a user presses the button next to a contract entry.
-     * It uses the id of the relevent contract to send a request forward for said contracts details.
-     * When it gets those details back, they are put in an array and the user gets redirected to a page where the details are put into a datatable.
-     *
-     * @return
+     * Gets called when a user presses the search icon next to a contract entry.
+     * It uses the id of the relevant contract to send a request forward for said contracts details.
+     * The received value is then parsed to a string.
+     * @return the string is then further parsed to the ContractDetail class as the return value
      */
     public ContractDetail[] getContractDetails(int id) throws IOException {
         URL url = new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crudContract/"+id);
@@ -123,14 +128,15 @@ public class ManageContracts extends HttpServlet implements Serializable {
         return null;
     }
 
-    public String editContract() throws IOException {
+    /**
+     * Creates a session object for the user and puts the object of the contract they selected in it, so it can be retrieved and used later on.
+     * @return redirects the user to editContract.xhtml
+     */
+    public String editContract(){
         //getContractDetails();
 
         HttpSession session= (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         session.setAttribute("contract", selectedItem);
-
-        //editContracts.setSelectedContract(selectedItem);
-        System.out.println(selectedItem.contract_number);
         return "editContract.xhtml?faces-redirect=true";
     }
 

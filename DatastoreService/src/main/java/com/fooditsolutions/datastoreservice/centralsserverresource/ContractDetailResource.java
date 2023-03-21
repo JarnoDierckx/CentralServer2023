@@ -7,6 +7,7 @@ import com.fooditsolutions.datastoreservice.model.centralserver.ContractDetail;
 import org.json.JSONArray;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +17,7 @@ import java.util.List;
 public class ContractDetailResource {
 
     /**
-     * Recieves a contract ID and passes it to the database in a query for that contracts details.
+     * Receives a contract ID and passes it to the database in a query for that contracts details.
      * All entries are put into objects, which are further put into a list that is then send back down the line.
      */
     @GET
@@ -45,5 +46,28 @@ public class ContractDetailResource {
         }
 
         return contractDetails;
+    }
+
+    /**
+     * Endpoint called to update the details of a contract.
+     * @param datastoreKey is to specify and access the required database.
+     * @param contractDetail is looped over. Each object gets its own query string that gets looped over to execute each one.
+     */
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void updateContractDetails(@QueryParam("datastoreKey") String datastoreKey, ContractDetail[] contractDetail){
+        String[] sql = new String[contractDetail.length];
+        for (int i=0;i<contractDetail.length;i++){
+            sql[i]=contractDetail[i].getUpdateStatement();
+        }
+
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                for (int i=0;i<sql.length;i++){
+                    DBFirebird.executeSQLUpdate(ds, sql[i]);
+                }
+                System.out.println("update successfull");
+            }
+        }
     }
 }

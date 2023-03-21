@@ -74,6 +74,14 @@ public class Sqlmodel{
         return result ;
     }
 
+    /**
+     * Gets called on objects that need to update existing values in the database.
+     * It loops over the different properties in the object, taking their names and values and puts it into sqlSet.
+     * Any values that are empty or are themselves an object are ignored.
+     * any property that has the @ID annotation is looped over separately and put into sqlWhere.
+     * Both sqlSet and sqlWhere are then used to create a sql update query.
+     * @return gives back a working update query.
+     */
     public String getUpdateStatement() {
         Table classAnnotation = this.getClass().getAnnotation(Table.class);
 
@@ -109,6 +117,12 @@ public class Sqlmodel{
         return result ;
     }
 
+    /**
+     * is used to retrieve the method to get the value of an object
+     * @param field is the name of the object.
+     * @param o is the object that needs its value found
+     * @return calls the getter of the object.
+     */
     private static Object runGetter(Field field, Object o)
     {
         // MZ: Find the correct method

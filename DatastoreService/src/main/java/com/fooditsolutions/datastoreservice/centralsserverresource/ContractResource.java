@@ -25,6 +25,13 @@ public class ContractResource {
         System.out.println("DataStoreService");
     }
 
+
+    /**
+     * Endpoint called to retrieve all contracts stored in the database.
+     * After the database is queried, A list of Contracts is made and each object it the retrieved json string has its properties put into the corresponding properties in the Contract object.
+     * @param datastoreKey is to specify what database needs to be used for this transaction.
+     * @return sends back the list of Contracts.
+     */
     @GET
     @Produces("application/json")
     public List<Contract> getContracts(@QueryParam("datastoreKey") String datastoreKey) {
@@ -89,27 +96,15 @@ public class ContractResource {
         return contracts;
     }
 
+    /**
+     *Endpoint to update a single contract.
+     * The contract object send as a parameter is used to build the query string that will be used.
+     * @param datastoreKey is to specify which database to query
+     * @param contract is the contract that will update the original depending on the id.
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void updateContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract){
-        /*Class<?> klas=contract.getClass();
-        Field[] fields= klas.getDeclaredFields();
-        StringBuilder sql = new StringBuilder("UPDATE CONTRACT SET ");
-        for (Field field: fields){
-            if (field.get(contract) != null && !Objects.equals(field.get(contract), 0) && !field.getName().equals("id")){
-                if(field.get(contract) == ""){
-                    sql.append(field.getName()).append(" = ''").append(field.get(contract)).append(", ");
-                } else if (field.get(contract) instanceof String) {
-                    sql.append(field.getName()).append(" = '").append(field.get(contract)).append("', ");
-                } else{
-                    sql.append(field.getName()).append(" = ").append(field.get(contract)).append(", ");
-                }
-            }
-        }
-        sql= new StringBuilder(sql.substring(0, sql.length() - 2));
-        sql.append(" WHERE id = ").append(contract.getId());
-
-        System.out.println(sql);*/
         String sql=contract.getUpdateStatement();
 
         for (DatastoreObject ds : Datastores.getDatastores()) {
@@ -120,22 +115,4 @@ public class ContractResource {
         }
     }
 
-    @PUT
-    @Path("/detail")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void updateContractDetails(@QueryParam("datastoreKey") String datastoreKey, ContractDetail[] contractDetail){
-        String[] sql = new String[contractDetail.length];
-        for (int i=0;i<contractDetail.length;i++){
-            sql[i]=contractDetail[i].getUpdateStatement();
-        }
-
-        for (DatastoreObject ds : Datastores.getDatastores()) {
-            if (datastoreKey.equals(ds.getKey())) {
-                for (int i=0;i<sql.length;i++){
-                    DBFirebird.executeSQLUpdate(ds, sql[i]);
-                }
-                System.out.println("update successfull");
-            }
-        }
-    }
 }

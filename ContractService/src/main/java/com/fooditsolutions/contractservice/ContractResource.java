@@ -30,7 +30,8 @@ public class ContractResource {
     }
 
     /**
-     * Simply sends the recieved request forward and the then returned value to where it recieved the initial request from.
+     * Receives and sends forward a request for all stored contracts.
+     * @return gives back a json string containing all of said contracts.
      */
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -43,6 +44,10 @@ public class ContractResource {
         return response;
     }
 
+    /**
+     * Incomplete function. It is meant to receive and sends forward a request for a specific Contract depending on the id send with the request.
+     * It now instead returns "Hello world", acting as a placeholder.
+     */
     @GET
     @Produces("application/json")
     @Path("/{contractId}")
@@ -50,6 +55,10 @@ public class ContractResource {
         return "Hello, World!";
     }
 
+    /**
+     * The endpoint to update the information of a contract.
+     * @param contract is immediately parsed back into a json string and send forward to the datastoreService.
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
@@ -64,19 +73,5 @@ public class ContractResource {
 
         HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
     }
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces("application/json")
-    @Path("/detail")
-    public void updateContractDetails(ContractDetail[] contract) throws IOException {
 
-        //Creating the ObjectMapper object
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        //Converting the Object to JSONString
-        String jsonString = mapper.writeValueAsString(contract);
-        System.out.println(jsonString);
-
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract/detail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
-    }
 }

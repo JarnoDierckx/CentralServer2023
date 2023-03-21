@@ -80,6 +80,11 @@ public class ContractResource {
             return null;
         }
     }
+
+    /**
+     * The endpoint called to update a single contract's general information.
+     * @param contract is immediately parsed to a json string and send forward to the contract service.
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
@@ -93,19 +98,24 @@ public class ContractResource {
 
         HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice()+"/contract", jsonString);
     }
+
+    /**
+     * The endpoint called to update a contract's details.
+     * @param contractDetails is immediately parsed to a json String and send forward to the contracts service.
+     */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     @Path("/detail")
-    public void updateContractDetails(ContractDetail[] contract) throws IOException {
+    public void updateContractDetails(ContractDetail[] contractDetails) throws IOException {
 
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         //Converting the Object to JSONString
-        String jsonString = mapper.writeValueAsString(contract);
+        String jsonString = mapper.writeValueAsString(contractDetails);
         System.out.println(jsonString);
 
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice()+"/contract/detail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice()+"/contractDetail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
     }
 }
