@@ -4,6 +4,7 @@ package com.fooditsolutions.datastoreservice.model;
 import com.fooditsolutions.datastoreservice.controller.Util;
 import com.fooditsolutions.datastoreservice.model.centralserver.Bjr;
 import com.fooditsolutions.datastoreservice.model.centralserver.Client;
+import com.fooditsolutions.datastoreservice.model.centralserver.ModuleId;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -90,7 +91,7 @@ public class Sqlmodel{
                     }
                 } else {
                     Object o = runGetter(f, this);
-                    if (o != null && !Objects.equals(o,0) && !Objects.equals(o,0.00) && !(o instanceof Client) && !(o instanceof Bjr)) {
+                    if (o != null && !Objects.equals(o,0) && !Objects.equals(o,0.00) && !(o instanceof Client) && !(o instanceof Bjr) && !(o instanceof ModuleId)) {
                         if (!sqlSet.toString().equals("")) {
                             sqlSet.append(",");
 
