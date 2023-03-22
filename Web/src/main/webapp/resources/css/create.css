@@ -1,7 +1,5 @@
 form {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    display: grid;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 10px;

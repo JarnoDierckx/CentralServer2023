@@ -1,5 +1,6 @@
 package com.fooditsolutions.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
@@ -8,40 +9,62 @@ import com.fooditsolutions.web.model.Bjr;
 import com.fooditsolutions.web.model.Client;
 import com.fooditsolutions.web.model.Contract;
 
+import javax.annotation.ManagedBean;
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.Arrays;
 
-public class CreateContracts {
+@ManagedBean
+@SessionScoped
+public class CreateContracts implements Serializable {
     private Contract newContract;
     private Client client;
     private Client[] clients;
-    private Bjr brj;
+    private Bjr bjr;
     private Bjr[] bjrs;
 
+    @PostConstruct
+    public void init(){
+        newContract=new Contract();
+        client=new Client();
+        bjr=new Bjr();
+    }
 
-    public String PrepareCreateContract(){
 
+    public String PrepareCreateContract() throws JsonProcessingException {
+        bjrs =retrieveBjr();
+        clients=retrieveClients();
         return "createContract.xhtml?faces-redirect=true";
     }
     public void createContract() throws IOException {
+        newContract.bjr_id=bjr.getId();
+        newContract.client_id=client.getDBB_ID();
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         //Converting the Object to JSONString
         String jsonString = mapper.writeValueAsString(newContract);
 
-        System.out.println("update: "+jsonString);
+        System.out.println("Create: "+jsonString);
         //System.out.println(detailString);
 
         HttpController.httpPost(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract/detail", jsonString);
     }
 
-    public void retrieveClients(){
-
-
+    public Client[] retrieveClients() throws JsonProcessingException {
+        String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/clients");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.readValue(response, Client[].class);
     }
 
-    public void retrieveBjr(){
-
+    public Bjr[] retrieveBjr() throws JsonProcessingException {
+        String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/bjr");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.readValue(response, Bjr[].class);
     }
 
     public Contract getNewContract() {
@@ -68,12 +91,12 @@ public class CreateContracts {
         this.clients = clients;
     }
 
-    public Bjr getBrj() {
-        return brj;
+    public Bjr getBjr() {
+        return bjr;
     }
 
-    public void setBrj(Bjr brj) {
-        this.brj = brj;
+    public void setBjr(Bjr brj) {
+        this.bjr = bjr;
     }
 
     public Bjr[] getBjrs() {

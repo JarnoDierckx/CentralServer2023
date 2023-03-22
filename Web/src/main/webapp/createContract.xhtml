@@ -16,10 +16,14 @@
     <p:inputText value="#{CreateContracts.newContract.contract_number}"/><br/><br/>
 
     <h:outputText value="Client"/><br/>
-    <p:inputText value="#{CreateContracts.newContract.contract_number}"/><br/><br/>
+    <h:selectOneMenu value="#{CreateContracts.client}">
+        <f:selectItems value="#{CreateContracts.clients}" var="c" itemLabel="#{c.name}" itemValue="#{c.DBB_ID}"/>
+    </h:selectOneMenu><br/><br/>
 
     <h:outputText value="BRJ"/><br/>
-    <p:inputText value="#{CreateContracts.newContract.contract_number}"/><br/><br/>
+    <h:selectOneMenu value="#{CreateContracts.bjr}">
+        <f:selectItems value="#{CreateContracts.bjrs}" var="b" itemLabel="#{b.name}" itemValue="#{b.id}"/>
+    </h:selectOneMenu><br/><br/>
 
     <h:outputText value="Start Date"/><br/>
     <p:calendar  value="#{CreateContracts.newContract.start_date}" pattern="yyyy-MM-dd">
@@ -70,7 +74,7 @@
     <h:outputText value="jgr"/><br/>
     <p:inputText value="#{CreateContracts.newContract.jgr}"/><br/><br/>
 
-    <p:commandButton value="Create">
+    <p:commandButton value="Create" process="@form" update="@form">
         <f:ajax listener="#{CreateContracts.createContract}"/>
     </p:commandButton>
 
