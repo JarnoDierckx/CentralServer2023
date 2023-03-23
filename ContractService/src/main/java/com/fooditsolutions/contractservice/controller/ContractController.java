@@ -23,7 +23,6 @@ public class ContractController {
     public static List<Contract> createContractInformation(String jsonContracts) throws IOException {
         List<Contract> contracts = new ArrayList<>();
         Contract[] contracts2;
-        //PropertiesController.getProperty().setDatastore("C287746F288DF2CB7292DD2EE29CFECD");
         String jsonClient = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/client?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         Dictionary<BigDecimal, Client> clients = ClientController.getClientDictionaryFromJson(jsonClient);
         String jsonBjr = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/bjr?datastoreKey="+ PropertiesController.getProperty().getDatastore());

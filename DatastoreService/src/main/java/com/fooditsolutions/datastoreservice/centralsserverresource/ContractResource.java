@@ -1,5 +1,8 @@
 package com.fooditsolutions.datastoreservice.centralsserverresource;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.datastoreservice.controller.DBFirebird;
 import com.fooditsolutions.datastoreservice.controller.Datastores;
 import com.fooditsolutions.datastoreservice.controller.Util;
@@ -21,7 +24,7 @@ import java.util.Objects;
 @Path("/contract")
 public class ContractResource {
     @PostConstruct
-    public void init(){
+    public void init() {
         System.out.println("DataStoreService");
     }
 
@@ -29,6 +32,7 @@ public class ContractResource {
     /**
      * Endpoint called to retrieve all contracts stored in the database.
      * After the database is queried, A list of Contracts is made and each object it the retrieved json string has its properties put into the corresponding properties in the Contract object.
+     *
      * @param datastoreKey is to specify what database needs to be used for this transaction.
      * @return sends back the list of Contracts.
      */
@@ -41,6 +45,76 @@ public class ContractResource {
                 jsonContracts = DBFirebird.executeSQL(ds, "SELECT * FROM CONTRACT");
             }
         }
+
+
+        return JsonToContract(jsonContracts);
+    }
+
+    /**
+     * Endpoint to update a single contract.
+     * The contract object send as a parameter is used to build the query string that will be used.
+     *
+     * @param datastoreKey is to specify which database to query
+     * @param contract     is the contract that will update the original depending on the id.
+     */
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void updateContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract) throws IllegalAccessException, InstantiationException {
+        JSONArray jsonContract = new JSONArray();
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                jsonContract = DBFirebird.executeSQL(ds, "SELECT * FROM CONTRACT WHERE ID LIKE " + contract.id);
+            }
+        }
+
+        List<Contract> contracts = JsonToContract(jsonContract);
+        Contract originalContract = contracts.get(0);
+
+        Contract differences = new Contract();
+        Field[] fields = originalContract.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            Object value1 = field.get(originalContract);
+            Object value2 = field.get(contract);
+            if (value1 != null && value2 != null) {
+                if (!value1.equals(value2)) {
+                    field.set(differences, value2);
+                }
+            }
+        }
+        differences.id=contract.id;
+
+        String sql = differences.getUpdateStatement();
+
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                DBFirebird.executeSQLUpdate(ds, sql);
+                System.out.println("update successfull");
+            }
+        }
+    }
+
+    /**
+     * Endpoint to create a single contract.
+     * The contract object send as a parameter is used to build the query string that will be used.
+     *
+     * @param datastoreKey is to specify which database to query
+     * @param contract     is the contract that will be inserted into the database.
+     */
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void createContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract) {
+        String sql = contract.getCreateStatement();
+
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                DBFirebird.executeSQLInsert(ds, sql);
+                System.out.println("Insert successfull");
+            }
+        }
+    }
+
+    public List<Contract> JsonToContract(JSONArray jsonContracts) {
         List<Contract> contracts = new ArrayList<>();
         for (int i = 0; i < jsonContracts.length(); i++) {
             Contract contract = new Contract();
@@ -55,38 +129,38 @@ public class ContractResource {
             contract.setSource((String) jsonContracts.getJSONObject(i).opt("SOURCE"));
             contract.setInvoice_frequency((String) jsonContracts.getJSONObject(i).opt("INVOICE_FREQUENCY"));
             contract.setIndex_frequency((String) jsonContracts.getJSONObject(i).opt("INDEX_FREQUENCY"));
-            if(jsonContracts.getJSONObject(i).opt("BASE_INDEX_YEAR")!=null) {
+            if (jsonContracts.getJSONObject(i).opt("BASE_INDEX_YEAR") != null) {
                 contract.setBase_index_year((int) jsonContracts.getJSONObject(i).opt("BASE_INDEX_YEAR"));
             }
-            if(jsonContracts.getJSONObject(i).opt("INDEX_START")!=null) {
+            if (jsonContracts.getJSONObject(i).opt("INDEX_START") != null) {
                 contract.setIndex_start((BigDecimal) jsonContracts.getJSONObject(i).opt("INDEX_START"));
             }
-            if(jsonContracts.getJSONObject(i).opt("INDEX_LAST_INVOICE")!=null) {
+            if (jsonContracts.getJSONObject(i).opt("INDEX_LAST_INVOICE") != null) {
                 contract.setIndex_last_invoice((BigDecimal) jsonContracts.getJSONObject(i).opt("INDEX_LAST_INVOICE"));
             }
-            if(jsonContracts.getJSONObject(i).opt("AMOUNT_LAST_INVOICE")!=null) {
+            if (jsonContracts.getJSONObject(i).opt("AMOUNT_LAST_INVOICE") != null) {
                 contract.setAmount_last_invoice((BigDecimal) jsonContracts.getJSONObject(i).opt("AMOUNT_LAST_INVOICE"));
             }
-            if(jsonContracts.getJSONObject(i).opt("LAST_INVOICE_NUMBER")!=null) {
+            if (jsonContracts.getJSONObject(i).opt("LAST_INVOICE_NUMBER") != null) {
                 contract.setLast_invoice_number((int) jsonContracts.getJSONObject(i).opt("LAST_INVOICE_NUMBER"));
             }
-            if(jsonContracts.getJSONObject(i).opt("LAST_INVOICE_DATE")!=null) {
+            if (jsonContracts.getJSONObject(i).opt("LAST_INVOICE_DATE") != null) {
                 contract.setLast_invoice_date((Date) jsonContracts.getJSONObject(i).opt("LAST_INVOICE_DATE"));
             }
-            if(jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_START")!=null) {
+            if (jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_START") != null) {
                 contract.setLast_invoice_period_start((Date) jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_START"));
             }
-            if(jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_END")!=null) {
+            if (jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_END") != null) {
                 contract.setLast_invoice_period_end((Date) jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_END"));
             }
-            if(jsonContracts.getJSONObject(i).opt("JGR")!=null) {
+            if (jsonContracts.getJSONObject(i).opt("JGR") != null) {
                 contract.setJgr((int) jsonContracts.getJSONObject(i).opt("JGR"));
             }
             contract.setComments((String) jsonContracts.getJSONObject(i).opt("COMMENTS"));
-            if(jsonContracts.getJSONObject(i).opt("CREATED")!=null) {
+            if (jsonContracts.getJSONObject(i).opt("CREATED") != null) {
                 contract.setCreated((Date) jsonContracts.getJSONObject(i).opt("CREATED"));
             }
-            if(jsonContracts.getJSONObject(i).opt("UPDATED")!=null) {
+            if (jsonContracts.getJSONObject(i).opt("UPDATED") != null) {
                 contract.setUpdated((Date) jsonContracts.getJSONObject(i).opt("UPDATED"));
             }
 
@@ -94,43 +168,5 @@ public class ContractResource {
         }
 
         return contracts;
-    }
-
-    /**
-     *Endpoint to update a single contract.
-     * The contract object send as a parameter is used to build the query string that will be used.
-     * @param datastoreKey is to specify which database to query
-     * @param contract is the contract that will update the original depending on the id.
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void updateContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract){
-        String sql=contract.getUpdateStatement();
-
-        for (DatastoreObject ds : Datastores.getDatastores()) {
-            if (datastoreKey.equals(ds.getKey())) {
-                DBFirebird.executeSQLUpdate(ds, sql);
-                System.out.println("update successfull");
-            }
-        }
-    }
-
-    /**
-     *Endpoint to create a single contract.
-     * The contract object send as a parameter is used to build the query string that will be used.
-     * @param datastoreKey is to specify which database to query
-     * @param contract is the contract that will be inserted into the database.
-     */
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void createContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract){
-        String sql=contract.getCreateStatement();
-
-        for (DatastoreObject ds : Datastores.getDatastores()) {
-            if (datastoreKey.equals(ds.getKey())) {
-                DBFirebird.executeSQLInsert(ds, sql);
-                System.out.println("Insert successfull");
-            }
-        }
     }
 }

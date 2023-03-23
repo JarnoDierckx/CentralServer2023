@@ -22,7 +22,6 @@ public class ContractDetailController {
     public static List<ContractDetail> createContractDetailInformation(String jsonContractDetails) throws JsonProcessingException {
         List<ContractDetail> contractsDetails = new ArrayList<>();
         ContractDetail[] ContractDetails2;
-        PropertiesController.getProperty().setDatastore("C287746F288DF2CB7292DD2EE29CFECD");
         String jsonModuleid = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/moduleid?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         Dictionary<BigDecimal, ModuleId> Moduleids = ModuleidController.getModuleIdDictionaryFromJson(jsonModuleid);
 
