@@ -8,6 +8,7 @@ import org.json.JSONArray;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,6 +31,56 @@ public class ContractDetailResource {
                 jsonContracts = DBFirebird.executeSQL(ds, "SELECT * FROM CONTRACT_DETAIL WHERE CONTRACT_ID = '"+contractID+"'");
             }
         }
+        return JsonToContractDetail(jsonContracts);
+    }
+
+    /**
+     * Endpoint called to update the details of a contract.
+     * @param datastoreKey is to specify and access the required database.
+     * @param contractDetail is looped over. Each object gets its own query string that gets looped over to execute each one.
+     */
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void updateContractDetails(@QueryParam("datastoreKey") String datastoreKey, ContractDetail[] contractDetail) throws IllegalAccessException {
+        JSONArray jsonContracts = new JSONArray();
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                jsonContracts = DBFirebird.executeSQL(ds, "SELECT * FROM CONTRACT_DETAIL WHERE CONTRACT_ID = '"+contractDetail[0].getContract_ID()+"'");
+            }
+        }
+        List<ContractDetail> originalContractDetails=JsonToContractDetail(jsonContracts);
+        ContractDetail[] detailDifferences=new ContractDetail[contractDetail.length];
+
+        for (int i=0;i<contractDetail.length;i++){
+            Field[] fields = originalContractDetails.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                Object value1 = field.get(originalContractDetails.get(i));
+                Object value2 = field.get(contractDetail[i]);
+                if (value1 != null && value2 != null) {
+                    if (!value1.equals(value2)) {
+                        field.set(detailDifferences[i], value2);
+                    }
+                }
+            }
+        }
+
+        String[] sql = new String[detailDifferences.length];
+        for (int i=0;i<detailDifferences.length;i++){
+            sql[i]=detailDifferences[i].getUpdateStatement();
+        }
+
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                for (int i=0;i<sql.length;i++){
+                    DBFirebird.executeSQLUpdate(ds, sql[i]);
+                }
+                System.out.println("update successfull");
+            }
+        }
+    }
+
+    public List<ContractDetail> JsonToContractDetail(JSONArray jsonContracts){
         List<ContractDetail> contractDetails = new ArrayList<>();
         for (int i = 0; i < jsonContracts.length(); i++) {
             ContractDetail contractDetail = new ContractDetail();
@@ -46,28 +97,5 @@ public class ContractDetailResource {
         }
 
         return contractDetails;
-    }
-
-    /**
-     * Endpoint called to update the details of a contract.
-     * @param datastoreKey is to specify and access the required database.
-     * @param contractDetail is looped over. Each object gets its own query string that gets looped over to execute each one.
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_JSON)
-    public void updateContractDetails(@QueryParam("datastoreKey") String datastoreKey, ContractDetail[] contractDetail){
-        String[] sql = new String[contractDetail.length];
-        for (int i=0;i<contractDetail.length;i++){
-            sql[i]=contractDetail[i].getUpdateStatement();
-        }
-
-        for (DatastoreObject ds : Datastores.getDatastores()) {
-            if (datastoreKey.equals(ds.getKey())) {
-                for (int i=0;i<sql.length;i++){
-                    DBFirebird.executeSQLUpdate(ds, sql[i]);
-                }
-                System.out.println("update successfull");
-            }
-        }
     }
 }
