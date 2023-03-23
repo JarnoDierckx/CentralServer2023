@@ -8,18 +8,22 @@ import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.web.model.Bjr;
 import com.fooditsolutions.web.model.Client;
 import com.fooditsolutions.web.model.Contract;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.annotation.ManagedBean;
+
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ManagedBean;
 import javax.inject.Named;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 
-@Named("CreateContracts")
 @ManagedBean
 @SessionScoped
+@Getter
+@Setter
 public class CreateContracts implements Serializable {
     private Contract newContract;
     private Client client;

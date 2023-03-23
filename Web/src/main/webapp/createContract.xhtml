@@ -77,9 +77,8 @@
 
         <p:inputText value="#{CreateContracts.test}"/>
 
-        <h:commandButton value="Create">
-            <f:ajax listener="#{CreateContracts.createContract}"/>
-        </h:commandButton>
+        <p><h:commandButton value="Create" action="#{CreateContracts.createContract}" /></p>
+
 
     </h:form>
 </div>

@@ -13,9 +13,10 @@ import lombok.Getter;
 import org.apache.commons.beanutils.BeanUtils;
 import org.primefaces.event.CellEditEvent;
 
-import javax.annotation.ManagedBean;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpSession;
