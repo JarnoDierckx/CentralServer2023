@@ -12,10 +12,12 @@ import com.fooditsolutions.web.model.Contract;
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Named;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Arrays;
 
+@Named("CreateContracts")
 @ManagedBean
 @SessionScoped
 public class CreateContracts implements Serializable {
@@ -24,6 +26,7 @@ public class CreateContracts implements Serializable {
     private Client[] clients;
     private Bjr bjr;
     private Bjr[] bjrs;
+    private String test;
 
     @PostConstruct
     public void init(){
@@ -49,7 +52,7 @@ public class CreateContracts implements Serializable {
 
         System.out.println("Create: "+jsonString);
         //System.out.println(detailString);
-
+        System.out.println(test);
         HttpController.httpPost(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract/detail", jsonString);
     }
 
@@ -105,5 +108,13 @@ public class CreateContracts implements Serializable {
 
     public void setBjrs(Bjr[] bjrs) {
         this.bjrs = bjrs;
+    }
+
+    public String getTest() {
+        return test;
+    }
+
+    public void setTest(String test) {
+        this.test = test;
     }
 }
