@@ -19,6 +19,7 @@
         <option value="$PROJECT_DIR$/DatastoreService/pom.xml" />
         <option value="$PROJECT_DIR$/ContractService/pom.xml" />
         <option value="$PROJECT_DIR$/Util/pom.xml" />
+        <option value="$PROJECT_DIR$/ModuleService/pom.xml" />
       </list>
     </option>
   </component>

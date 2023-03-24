@@ -14,70 +14,68 @@
 <div class="card">
     <h:form>
         <h:outputText value="Contract number"/><br/>
-        <h:inputText value="#{CreateContracts.newContract.contract_number}"/><br/><br/>
+        <h:inputText value="#{contractBean.newContract.contract_number}"/><br/><br/>
 
         <h:outputText value="Client"/><br/>
-        <p:selectOneMenu value="#{CreateContracts.client}" onchange="$('#form').submit()">
-            <f:selectItems value="#{CreateContracts.clients}" var="c" itemLabel="#{c.name}" itemValue="#{c.DBB_ID}"/>
+        <p:selectOneMenu value="#{contractBean.newContract.client_id}">
+            <f:selectItems value="#{contractBean.clients}" var="c" itemLabel="#{c.name}" itemValue="#{c.DBB_ID}"/>
         </p:selectOneMenu><br/><br/>
 
         <h:outputText value="BRJ"/><br/>
-        <p:selectOneMenu value="#{CreateContracts.bjr}" onchange="$('#form').submit()">
-            <f:selectItems value="#{CreateContracts.bjrs}" var="b" itemLabel="#{b.name}" itemValue="#{b.id}"/>
+        <p:selectOneMenu value="#{contractBean.newContract.bjr_id}">
+            <f:selectItems value="#{contractBean.bjrs}" var="b" itemLabel="#{b.name}" itemValue="#{b.id}"/>
         </p:selectOneMenu><br/><br/>
 
         <h:outputText value="Start Date"/><br/>
-        <p:calendar  value="#{CreateContracts.newContract.start_date}" pattern="yyyy-MM-dd">
+        <p:calendar  value="#{contractBean.newContract.start_date}" pattern="yyyy-MM-dd">
             <f:convertDateTime pattern = "yyyy-MM-dd" />
         </p:calendar><br/><br/>
 
         <h:outputText value="End Date"/><br/>
-        <p:calendar  value="#{CreateContracts.newContract.end_date}" pattern="yyyy-MM-dd">
+        <p:calendar  value="#{contractBean.newContract.end_date}" pattern="yyyy-MM-dd">
             <f:convertDateTime pattern = "yyyy-MM-dd" />
         </p:calendar><br/><br/>
 
         <h:outputText value="Source"/><br/>
-        <h:inputText value="#{CreateContracts.newContract.source}"/><br/><br/>
+        <h:inputText value="#{contractBean.newContract.source}"/><br/><br/>
 
         <h:outputText value="Invoice frequency"/><br/>
-        <h:inputText value="#{CreateContracts.newContract.invoice_frequency}"/><br/><br/>
+        <h:inputText value="#{contractBean.newContract.invoice_frequency}"/><br/><br/>
 
         <h:outputText value="Index frequency"/><br/>
-        <h:inputText value="#{CreateContracts.newContract.index_frequency}"/><br/><br/>
+        <h:inputText value="#{contractBean.newContract.index_frequency}"/><br/><br/>
 
         <h:outputText value="Base index year"/><br/>
-        <h:inputText value="#{CreateContracts.newContract.base_index_year}"/><br/><br/>
+        <h:inputText value="#{contractBean.newContract.base_index_year}"/><br/><br/>
 
         <h:outputText value="Index last invoice"/><br/>
-        <h:inputText value="#{CreateContracts.newContract.index_last_invoice}"/><br/><br/>
+        <h:inputText value="#{contractBean.newContract.index_last_invoice}"/><br/><br/>
 
         <h:outputText value="Amount last invoice"/><br/>
-        <h:inputText value="#{CreateContracts.newContract.amount_last_invoice}"/><br/><br/>
+        <h:inputText value="#{contractBean.newContract.amount_last_invoice}"/><br/><br/>
 
         <h:outputText value="Last invoice number"/><br/>
-        <h:inputText value="#{CreateContracts.newContract.last_invoice_number}"/><br/><br/>
+        <h:inputText value="#{contractBean.newContract.last_invoice_number}"/><br/><br/>
 
         <h:outputText value="Last invoice date"/><br/>
-        <p:calendar  value="#{CreateContracts.newContract.last_invoice_date}" pattern="yyyy-MM-dd">
+        <p:calendar  value="#{contractBean.newContract.last_invoice_date}" pattern="yyyy-MM-dd">
             <f:convertDateTime pattern = "yyyy-MM-dd" />
         </p:calendar><br/><br/>
 
         <h:outputText value="Last invoice period start"/><br/>
-        <p:calendar  value="#{CreateContracts.newContract.last_invoice_period_start}" pattern="yyyy-MM-dd">
+        <p:calendar  value="#{contractBean.newContract.last_invoice_period_start}" pattern="yyyy-MM-dd">
             <f:convertDateTime pattern = "yyyy-MM-dd" />
         </p:calendar><br/><br/>
 
         <h:outputText value="Last invoice period end"/><br/>
-        <p:calendar  value="#{CreateContracts.newContract.last_invoice_period_end}" pattern="yyyy-MM-dd">
+        <p:calendar  value="#{contractBean.newContract.last_invoice_period_end}" pattern="yyyy-MM-dd">
             <f:convertDateTime pattern = "yyyy-MM-dd" />
         </p:calendar><br/><br/>
 
         <h:outputText value="jgr"/><br/>
-        <h:inputText value="#{CreateContracts.newContract.jgr}"/><br/><br/>
+        <h:inputText value="#{contractBean.newContract.jgr}"/><br/><br/>
 
-        <p:inputText value="#{CreateContracts.test}"/>
-
-        <p><h:commandButton value="Create" action="#{CreateContracts.createContract}" /></p>
+        <p><h:commandButton value="Create" action="#{contractBean.createContract}" /></p>
 
 
     </h:form>

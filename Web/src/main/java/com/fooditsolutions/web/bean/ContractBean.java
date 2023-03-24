@@ -1,4 +1,4 @@
-package com.fooditsolutions.web;
+package com.fooditsolutions.web.bean;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -15,16 +15,14 @@ import lombok.Setter;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ManagedBean;
-import javax.inject.Named;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Arrays;
 
 @ManagedBean
 @SessionScoped
 @Getter
 @Setter
-public class CreateContracts implements Serializable {
+public class ContractBean implements Serializable {
     private Contract newContract;
     private Client client;
     private Client[] clients;
@@ -46,8 +44,8 @@ public class CreateContracts implements Serializable {
         return "createContract.xhtml?faces-redirect=true";
     }
     public void createContract() throws IOException {
-        newContract.bjr_id=bjr.getId();
-        newContract.client_id=client.getDBB_ID();
+        /*newContract.bjr_id=bjr.getId();
+        newContract.client_id=client.getDBB_ID();*/
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

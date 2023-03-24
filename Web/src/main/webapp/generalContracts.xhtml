@@ -102,7 +102,7 @@
     </h:form>
     <p:commandButton title="refresh page" action="#{ManageContracts.getContracts()}" oncomplete="setTimeout(function(){ location.reload(); });"/>
     <h:form target="_blank">
-        <p:commandButton title="Create new contract" action="#{CreateContracts.PrepareCreateContract()}" ajax="false"/>
+        <p:commandButton title="Create new contract" action="#{contractBean.PrepareCreateContract()}" ajax="false"/>
     </h:form>
 </h:body>
 </html>

@@ -31,7 +31,7 @@
     </managed-bean>
     <managed-bean>
         <managed-bean-name>CreateContracts</managed-bean-name>
-        <managed-bean-class>com.fooditsolutions.web.CreateContracts</managed-bean-class>
+        <managed-bean-class>com.fooditsolutions.web.bean.ContractBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 </faces-config>
