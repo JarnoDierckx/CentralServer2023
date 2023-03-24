@@ -14,7 +14,7 @@
 <div class="card">
     <h:form>
         <h:outputText value="Contract number"/><br/>
-        <h:inputText value="#{contractBean.newContract.contract_number}"/><br/><br/>
+        <h:inputText value="#{contractBean.newContract.contract_number}" required="true"/><br/><br/>
 
         <h:outputText value="Client"/><br/>
         <p:selectOneMenu value="#{contractBean.newContract.client_id}">
@@ -40,13 +40,16 @@
         <h:inputText value="#{contractBean.newContract.source}"/><br/><br/>
 
         <h:outputText value="Invoice frequency"/><br/>
-        <h:inputText value="#{contractBean.newContract.invoice_frequency}"/><br/><br/>
+        <h:inputText value="#{contractBean.newContract.invoice_frequency}" required="true"/><br/><br/>
 
         <h:outputText value="Index frequency"/><br/>
-        <h:inputText value="#{contractBean.newContract.index_frequency}"/><br/><br/>
+        <h:inputText value="#{contractBean.newContract.index_frequency}" required="true"/><br/><br/>
 
         <h:outputText value="Base index year"/><br/>
         <h:inputText value="#{contractBean.newContract.base_index_year}"/><br/><br/>
+
+        <h:outputText value="Index start"/><br/>
+        <h:inputText value="#{contractBean.newContract.index_start}" required="true"/><br/><br/>
 
         <h:outputText value="Index last invoice"/><br/>
         <h:inputText value="#{contractBean.newContract.index_last_invoice}"/><br/><br/>

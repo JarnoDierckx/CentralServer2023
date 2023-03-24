@@ -104,7 +104,7 @@ public class ContractResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void createContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract) {
-        String sql = contract.getCreateStatement();
+        String sql = contract.getInsertStatement();
 
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {

@@ -54,8 +54,8 @@ public class ContractBean implements Serializable {
 
         System.out.println("Create: "+jsonString);
         //System.out.println(detailString);
-        System.out.println(test);
-        HttpController.httpPost(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract/detail", jsonString);
+        HttpController.httpPost(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract", jsonString);
+        newContract=new Contract();
     }
 
     public Client[] retrieveClients() throws JsonProcessingException {

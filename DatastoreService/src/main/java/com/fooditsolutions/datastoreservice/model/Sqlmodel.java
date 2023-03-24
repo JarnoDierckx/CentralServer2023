@@ -15,36 +15,40 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 public class Sqlmodel {
+    /**
+     * Gets called on objects that need to be inserted into the database.
+     * It loops over the different properties in the object, taking their names and values and putting them into sqlInsertInto and sqlValues respectively.
+     * Both variables are then used to create the INSERT INTO query.
+     * @return The created query is then returned as a string.
+     */
     public String getInsertStatement() {
         Table classAnnotation = this.getClass().getAnnotation(Table.class);
 
         Field[] fields = this.getClass().getDeclaredFields();
 
-        String sqlFields = "";
-        String sqlValues = "";
+        StringBuilder sqlInserInto = new StringBuilder();
+        StringBuilder sqlValues = new StringBuilder();
         try {
             for (Field f : fields) {
                 Annotation annotation = f.getAnnotation(Id.class);
                 if (!(annotation instanceof Id)) {
                     Object o = runGetter(f, this);
-                    if (o != null) {
-                        if (sqlFields != "") {
-                            sqlFields += ",";
-                            sqlValues += ",";
+                    if (o != null && !Objects.equals(o, 0) && !Objects.equals(o, 0.00) && !(o instanceof Client) && !(o instanceof Bjr) && !(o instanceof ModuleId)) {
+                        if (!sqlInserInto.toString().equals("")) {
+                            sqlInserInto.append(",");
+                            sqlValues.append(",");
                         }
-                        sqlFields += f.getName();
-                        sqlValues += Util.structureSQL(o);
+                        sqlInserInto.append(f.getName());
+                        sqlValues.append(Util.structureSQL(o));
                     }
                 }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        String result = "INSERT INTO " + classAnnotation.name() + " (" +
-                sqlFields +
-                ") VALUES (" +
-                sqlValues +
-                ");";
+        String result = "INSERT INTO " + classAnnotation.name() +
+                " (" + sqlInserInto + ")" +
+                " VALUES (" + sqlValues + ");";
         return result;
     }
 
@@ -95,7 +99,7 @@ public class Sqlmodel {
                 Annotation annotation = f.getAnnotation(Id.class);
                 if ((annotation instanceof Id)) {
                     Object o = runGetter(f, this);
-                    if (o != null && !Objects.equals(o, 0)) {
+                    if (o != null) {
                         sqlWhere.append(f.getName()).append("=").append(Util.structureSQL(o));
                     }
                 } else {
@@ -118,40 +122,6 @@ public class Sqlmodel {
         return result;
     }
 
-    /**
-     * Gets called on objects that need to be inserted into the database.
-     * It loops over the different properties in the object, taking their names and values and putting them into sqlInsertInto and sqlValues respectively.
-     * Both variables are then used to create the INSERT INTO query.
-     * @return The created query is then returned as a string.
-     */
-    public String getCreateStatement() {
-        Table classAnnotation = this.getClass().getAnnotation(Table.class);
-
-        Field[] fields = this.getClass().getDeclaredFields();
-        StringBuilder sqlInserInto = new StringBuilder();
-        StringBuilder sqlValues = new StringBuilder();
-
-        try {
-            for (Field f : fields) {
-                Object o = runGetter(f, this);
-                if (o != null && !Objects.equals(o, 0) && !Objects.equals(o, 0.00) && !(o instanceof Client) && !(o instanceof Bjr) && !(o instanceof ModuleId)) {
-                    if (!sqlInserInto.toString().equals("")) {
-                        sqlInserInto.append(",");
-                        sqlValues.append(",");
-                    }
-                    sqlInserInto.append(f.getName());
-                    sqlValues.append(Util.structureSQL(o));
-                }
-
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        String result = "INSERT INTO " + classAnnotation.name() +
-                " (" + sqlInserInto + ")" +
-                " VALUES (" + sqlValues + ");";
-        return result;
-    }
 
     /**
      * is used to retrieve the method to get the value of an object
