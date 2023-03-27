@@ -40,7 +40,7 @@ public class ContractResource {
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         System.out.println("getContracts: "+responseString);
         List<Contract> response = new ArrayList<>();
-        response = ContractController.createContractInformation(responseString);
+        response = ContractController.createContractsInformation(responseString);
         return response;
     }
 
@@ -51,8 +51,12 @@ public class ContractResource {
     @GET
     @Produces("application/json")
     @Path("/{contractId}")
-    public String hello(@PathParam("contractId") int contractId) {
-        return "Hello, World!";
+    public Contract getContract(@PathParam("contractId") int contractId) throws IOException {
+        String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract/"+contractId+"?datastoreKey="+ PropertiesController.getProperty().getDatastore());
+        System.out.println("getContracts: "+responseString);
+        Contract response = new Contract();
+        response = ContractController.createContractInformation(responseString);
+        return response;
     }
 
     /**

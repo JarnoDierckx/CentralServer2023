@@ -102,7 +102,17 @@ public class ManageContracts extends HttpServlet implements Serializable {
      * @return the string is then further parsed to the ContractDetail class as the return value
      */
     public ContractDetail[] getContractDetails(int id) throws IOException {
-        URL url = new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crudContract/"+id);
+        String responseContractDetails = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract/"+id+"/contractdetails?checkCS=true");
+
+        System.out.println("ResponseString: "+responseContractDetails);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        return mapper.readValue(responseContractDetails,ContractDetail[].class);
+
+        /*
+        URL url = new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crudContract/"+id+"?checkCS=true");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
         int responseCode = connection.getResponseCode();
@@ -126,8 +136,8 @@ public class ManageContracts extends HttpServlet implements Serializable {
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
             return mapper.readValue(responseString,ContractDetail[].class);
-        }
-        return null;
+        }*/
+        //return null;
     }
 
     /**

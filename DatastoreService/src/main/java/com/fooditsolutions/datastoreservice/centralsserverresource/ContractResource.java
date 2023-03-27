@@ -50,6 +50,22 @@ public class ContractResource {
         return JsonToContract(jsonContracts);
     }
 
+    @GET
+    @Produces("application/json")
+    @Path("/{ContractId}")
+    public Contract getContract(@PathParam("ContractId") int contractId,
+            @QueryParam("datastoreKey") String datastoreKey) {
+        JSONArray jsonContracts = new JSONArray();
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                jsonContracts = DBFirebird.executeSQL(ds, "SELECT * FROM CONTRACT WHERE ID="+contractId);
+            }
+        }
+
+
+        return JsonToContract(jsonContracts).get(0);
+    }
+
     /**
      * Endpoint to update a single contract.
      * The contract object send as a parameter is used to build the query string that will be used.
