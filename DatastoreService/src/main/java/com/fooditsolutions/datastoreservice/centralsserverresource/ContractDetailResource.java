@@ -99,8 +99,30 @@ public class ContractDetailResource {
         }
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void createContractDetails(@QueryParam("datastoreKey") String datastoreKey, ContractDetail[] contractDetails){
+        String[] sql=new String[contractDetails.length];
+        for (int i=0;i< contractDetails.length;i++){
+            sql[i]=contractDetails[i].getInsertStatement();
+        }
 
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                for (String s : sql) {
+                    if (s != null) {
+                        DBFirebird.executeSQLInsert(ds, s);
+                    }
+                }
+                System.out.println("Insert successful");
+            }
+        }
+    }
 
+    /**
+     * Takes a jsonArray object, loops over every object in it and maps it to the corresponding fields in the ContractDetail class
+     * @return A List<ContractDetail> item is returned.
+     */
     public List<ContractDetail> JsonToContractDetail(JSONArray jsonContracts){
         List<ContractDetail> contractDetails = new ArrayList<>();
         for (int i = 0; i < jsonContracts.length(); i++) {

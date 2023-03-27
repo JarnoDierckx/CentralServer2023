@@ -136,4 +136,18 @@ public class ContractResource {
 
         HttpController.httpPost(PropertiesController.getProperty().getBase_url_contractservice()+"/contract", jsonString);
     }
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
+    public void createContractDetails(ContractDetail[] contractDetails) throws IOException {
+
+        //Creating the ObjectMapper object
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //Converting the Object to JSONString
+        String jsonString = mapper.writeValueAsString(contractDetails);
+        System.out.println(jsonString);
+
+        HttpController.httpPost(PropertiesController.getProperty().getBase_url_contractservice()+"/contractDetail", jsonString);
+    }
 }

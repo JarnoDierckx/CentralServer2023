@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
+import com.fooditsolutions.web.ManageContracts;
 import com.fooditsolutions.web.model.Bjr;
 import com.fooditsolutions.web.model.Client;
 import com.fooditsolutions.web.model.Contract;
@@ -15,6 +16,7 @@ import lombok.Setter;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ManagedBean;
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -37,27 +39,34 @@ public class ContractBean implements Serializable {
         bjr=new Bjr();
     }
 
-
+    /**
+     * Retrieves all clients and bjr objects for later use.
+     * @return redirects user to the createContracts page
+     */
     public String PrepareCreateContract() throws JsonProcessingException {
         bjrs =retrieveBjr();
         clients=retrieveClients();
         return "createContract.xhtml?faces-redirect=true";
     }
-    public void createContract() throws IOException {
-        /*newContract.bjr_id=bjr.getId();
-        newContract.client_id=client.getDBB_ID();*/
-        //Creating the ObjectMapper object
+
+    /**
+     * Maps all values of newContract to a json object in a String and sends it to centralServerAPI.
+     */
+    public void createContract() throws IOException, ServletException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         //Converting the Object to JSONString
         String jsonString = mapper.writeValueAsString(newContract);
 
         System.out.println("Create: "+jsonString);
-        //System.out.println(detailString);
         HttpController.httpPost(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract", jsonString);
         newContract=new Contract();
     }
 
+    /**
+     * retrieves all clients
+     * @return maps all values from the api response into an array of Client objects
+     */
     public Client[] retrieveClients() throws JsonProcessingException {
         String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/clients");
         ObjectMapper mapper = new ObjectMapper();
@@ -65,6 +74,10 @@ public class ContractBean implements Serializable {
         return mapper.readValue(response, Client[].class);
     }
 
+    /**
+     * retrieves all bjr objects
+     * @return maps all values from the api response into an array of Bjr objects
+     */
     public Bjr[] retrieveBjr() throws JsonProcessingException {
         String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/bjr");
         ObjectMapper mapper = new ObjectMapper();

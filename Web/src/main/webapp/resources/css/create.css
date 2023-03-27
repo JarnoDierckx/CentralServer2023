@@ -1,10 +1,14 @@
-form {
-    display: grid;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background-color: #f8f8f8;
+.formContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
+
+section {
+    margin: 10px;
+    width: 30%;
+}
+
 
 form input[type="text"],
 form input[type="date"] {
@@ -18,12 +22,11 @@ form input[type="date"] {
 
 form input[type="submit"] {
     padding: 10px 20px;
-    background-color: #428bca;
+    background-color: yellow !important;
     color: #fff;
     border: none;
     border-radius: 5px;
     font-size: 16px;
-    cursor: pointer;
 }
 
 form input[type="submit"]:hover {

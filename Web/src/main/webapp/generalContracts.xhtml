@@ -15,7 +15,7 @@
 
     <h:form target="_blank">
         <div class="card">
-            <p:dataTable var="contract" value="#{ManageContracts.contracts2}" paginator="true" rows="5" widgetVar="contractTable" globalFilterFunction="#{ManageContracts.globalFilterFunction}">
+            <p:dataTable var="contract" value="#{ManageContracts.contracts2}" paginator="true" rows="10" widgetVar="contractTable" globalFilterFunction="#{ManageContracts.globalFilterFunction}">
                 <f:facet name="header">
                     <div class="flex justify-content-end">
                         <p:inputText id="globalFilter" onkeyup="PF('contractTable').filter()" style="width:300px"
