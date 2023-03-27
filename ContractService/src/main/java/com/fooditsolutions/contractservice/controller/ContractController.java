@@ -20,27 +20,13 @@ import java.util.List;
 
 public class ContractController {
 
-    public static List<Contract> createContractInformation(String jsonContracts) throws IOException {
+    public static List<Contract> createContractsInformation(String jsonContracts) throws IOException {
         List<Contract> contracts = new ArrayList<>();
         Contract[] contracts2;
         String jsonClient = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/client?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         Dictionary<BigDecimal, Client> clients = ClientController.getClientDictionaryFromJson(jsonClient);
         String jsonBjr = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/bjr?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         Dictionary<Integer, Bjr> bjrs = BjrController.getBjrDictionaryFromJson(jsonBjr);
-
-        /* had to add the GsonBuilder() as there was an issue with the epoch date conversion
-         * https://itecnote.com/tecnote/java-convert-string-date-to-object-yields-invalid-time-zone-indicator-0/
-         */
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
-                    public Date deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
-                        return new Date(jsonElement.getAsJsonPrimitive().getAsLong());
-                    }
-                })
-                .create();
-        //Gson gson = new Gson();
-        //Contract[] contracts1=gson.fromJson(responseString,Contract[].class);
-        contracts2=gson.fromJson(jsonContracts,Contract[].class);
 
         byte[] jsonData = jsonContracts.getBytes();
         ObjectMapper mapper = new ObjectMapper();
@@ -56,4 +42,28 @@ public class ContractController {
         }
         return contracts;
     }
+
+    public static Contract createContractInformation(String jsonContracts) throws IOException {
+        Contract contract = new Contract();
+        Contract contracts2;
+        String jsonClient = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/client?datastoreKey="+ PropertiesController.getProperty().getDatastore());
+        Dictionary<BigDecimal, Client> clients = ClientController.getClientDictionaryFromJson(jsonClient);
+        String jsonBjr = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/bjr?datastoreKey="+ PropertiesController.getProperty().getDatastore());
+        Dictionary<Integer, Bjr> bjrs = BjrController.getBjrDictionaryFromJson(jsonBjr);
+
+        byte[] jsonData = jsonContracts.getBytes();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        contracts2 = mapper.readValue(jsonData, Contract.class);
+
+        //JSONArray jsonArray = new JSONArray(jsonContracts);
+
+            contracts2.setClient(clients.get(contracts2.getClient_id()));
+            contracts2.setBjr(bjrs.get(contracts2.getBjr_id()));
+            //contract.setName((String) jsonArray.getJSONObject(i).get("name"));
+            contract=contracts2;
+
+        return contract;
+    }
+
 }
