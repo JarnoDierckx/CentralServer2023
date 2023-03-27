@@ -1,7 +1,12 @@
-.formContainer {
+body{
+    background: pink;
+}
+
+.CS2023Container {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    color: pink;
 }
 
 section {
@@ -22,7 +27,7 @@ form input[type="date"] {
 
 form input[type="submit"] {
     padding: 10px 20px;
-    background-color: yellow !important;
+    background-color: yellow;
     color: #fff;
     border: none;
     border-radius: 5px;

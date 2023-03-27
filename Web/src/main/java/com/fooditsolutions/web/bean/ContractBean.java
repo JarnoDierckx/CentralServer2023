@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
-import com.fooditsolutions.web.ManageContracts;
-import com.fooditsolutions.web.model.Bjr;
-import com.fooditsolutions.web.model.Client;
-import com.fooditsolutions.web.model.Contract;
+import com.fooditsolutions.web.model.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +16,8 @@ import javax.faces.bean.ManagedBean;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @ManagedBean
 @SessionScoped
@@ -30,13 +29,16 @@ public class ContractBean implements Serializable {
     private Client[] clients;
     private Bjr bjr;
     private Bjr[] bjrs;
-    private String test;
+    private ModuleId[] modules;
+    private List<ContractDetail> contractDetailsList = new ArrayList<>();
 
     @PostConstruct
     public void init(){
         newContract=new Contract();
         client=new Client();
         bjr=new Bjr();
+        ContractDetail detail=new ContractDetail();
+        contractDetailsList.add(detail);
     }
 
     /**
@@ -46,7 +48,13 @@ public class ContractBean implements Serializable {
     public String PrepareCreateContract() throws JsonProcessingException {
         bjrs =retrieveBjr();
         clients=retrieveClients();
+        //modules=retrieveModules();
         return "createContract.xhtml?faces-redirect=true";
+    }
+
+    public void addContractDetail(){
+        ContractDetail detail=new ContractDetail();
+        contractDetailsList.add(detail);
     }
 
     /**
@@ -61,6 +69,7 @@ public class ContractBean implements Serializable {
         System.out.println("Create: "+jsonString);
         HttpController.httpPost(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract", jsonString);
         newContract=new Contract();
+        contractDetailsList=new ArrayList<>();
     }
 
     /**
@@ -84,6 +93,14 @@ public class ContractBean implements Serializable {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return mapper.readValue(response, Bjr[].class);
     }
+
+    public ModuleId[] retrieveModules() throws JsonProcessingException{
+        String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/module");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.readValue(response, ModuleId[].class);
+    }
+
 
     public Contract getNewContract() {
         return newContract;
@@ -125,11 +142,19 @@ public class ContractBean implements Serializable {
         this.bjrs = bjrs;
     }
 
-    public String getTest() {
-        return test;
+    public ModuleId[] getModules() {
+        return modules;
     }
 
-    public void setTest(String test) {
-        this.test = test;
+    public void setModules(ModuleId[] modules) {
+        this.modules = modules;
+    }
+
+    public List<ContractDetail> getContractDetailsList() {
+        return contractDetailsList;
+    }
+
+    public void setContractDetailsList(List<ContractDetail> contractDetailsList) {
+        this.contractDetailsList = contractDetailsList;
     }
 }

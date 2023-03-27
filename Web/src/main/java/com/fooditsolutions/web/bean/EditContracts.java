@@ -1,21 +1,16 @@
-package com.fooditsolutions.web;
+package com.fooditsolutions.web.bean;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.web.model.Contract;
 import com.fooditsolutions.web.model.ContractDetail;
-import com.google.gson.Gson;
-import lombok.Setter;
-import lombok.Getter;
 import org.apache.commons.beanutils.BeanUtils;
 import org.primefaces.event.CellEditEvent;
 
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;

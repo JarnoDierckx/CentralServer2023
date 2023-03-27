@@ -1,4 +1,4 @@
-package com.fooditsolutions.web;
+package com.fooditsolutions.web.bean;
 
 public class HandleLogout {
 

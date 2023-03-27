@@ -1,12 +1,9 @@
-package com.fooditsolutions.web;
+package com.fooditsolutions.web.bean;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
-import com.fooditsolutions.web.model.Bjr;
-import com.fooditsolutions.web.model.Client;
 import com.fooditsolutions.web.model.Contract;
 import com.fooditsolutions.web.model.ContractDetail;
 import org.primefaces.util.LangUtils;
@@ -19,12 +16,8 @@ import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Serializable;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.sql.Date;
 import java.util.*;
 

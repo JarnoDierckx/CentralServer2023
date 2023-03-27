@@ -16,17 +16,17 @@
 
     <managed-bean>
         <managed-bean-name>HandleLogin</managed-bean-name>
-        <managed-bean-class>com.fooditsolutions.web.HandleLogin</managed-bean-class>
+        <managed-bean-class>com.fooditsolutions.web.bean.HandleLogin</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
         <managed-bean-name>ManageContracts</managed-bean-name>
-        <managed-bean-class>com.fooditsolutions.web.ManageContracts</managed-bean-class>
+        <managed-bean-class>com.fooditsolutions.web.bean.ManageContracts</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
         <managed-bean-name>EditContracts</managed-bean-name>
-        <managed-bean-class>com.fooditsolutions.web.EditContracts</managed-bean-class>
+        <managed-bean-class>com.fooditsolutions.web.bean.EditContracts</managed-bean-class>
         <managed-bean-scope>view</managed-bean-scope>
     </managed-bean>
     <managed-bean>
