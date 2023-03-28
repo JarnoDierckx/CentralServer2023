@@ -50,20 +50,46 @@ public class ContractDetailResource {
             }
         }
         List<ContractDetail> originalContractDetails = JsonToContractDetail(jsonContracts);
-        ContractDetail[] detailDifferences = new ContractDetail[contractDetail.length];
+        ContractDetail[] detailDifferences = new ContractDetail[originalContractDetails.size()];
 
-        for (int i = 0; i < contractDetail.length; i++) {
+        ContractDetail[] updatedContractDetails=new ContractDetail[detailDifferences.length];
+        for (int i=0;i<updatedContractDetails.length;i++){
+            if (originalContractDetails.get(i).getID() == contractDetail[i].getID()){
+                updatedContractDetails[i]=contractDetail[i];
+                contractDetail[i]=null;
+            }
+        }
+
+        List<ContractDetail> toCreateDetailsList=new ArrayList<>();
+
+        //train of thought here was originally wrong, but it still needs to check what detail objects are mostly empty as those are from CS and need to be ignored. The rest need to be added to DB.
+        for(int i=0;i<contractDetail.length;i++){
+            if (contractDetail[i] != null){
+                if (contractDetail[i].getPurchase_Date()==null&&contractDetail[i].getAmount()==0&&contractDetail[i].getPurchase_price()==null&&contractDetail[i].getIndex_Start()==null&&contractDetail[i].getRenewal()==null){
+                    contractDetail[i]=null;
+                }else{
+                    toCreateDetailsList.add(contractDetail[i]);
+                }
+            }
+        }
+        ContractDetail[] toCreateDetailsArray= new ContractDetail[toCreateDetailsList.size()];
+        toCreateDetailsList.toArray(toCreateDetailsArray);
+
+        createContractDetails(datastoreKey,toCreateDetailsArray);
+
+
+        for (int i = 0; i < updatedContractDetails.length; i++) {
             boolean newDetail = false;
             if (detailDifferences[i] == null) {
                 detailDifferences[i] = new ContractDetail();
-                detailDifferences[i].setID(contractDetail[i].getID());
+                detailDifferences[i].setID(updatedContractDetails[i].getID());
                 newDetail = true;
             }
             Field[] fields = ContractDetail.class.getDeclaredFields();
             for (Field field : fields) {
                 field.setAccessible(true);
                 Object value1 = field.get(originalContractDetails.get(i));
-                Object value2 = field.get(contractDetail[i]);
+                Object value2 = field.get(updatedContractDetails[i]);
                 if (value1 != null && value2 != null) {
                     if (!value1.equals(value2)) {
                         if (newDetail) {

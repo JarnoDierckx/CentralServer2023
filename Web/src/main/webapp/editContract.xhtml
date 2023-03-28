@@ -18,7 +18,7 @@
 
         <f:facet name="{Save}">
           <p:commandButton title="Save Changes">
-            <f:ajax listener="#{EditContracts.updateContract}"/>
+            <f:ajax listener="#{EditContracts.updateAll()}"/>
           </p:commandButton >
         </f:facet>
         <f:facet name="header">
@@ -239,14 +239,11 @@
 
 
       <div class="card">
-        <p:dataTable var="detail" value="#{EditContracts.updatingContractDetails}" paginator="true" paginatorTemplate="{Save}" paginatorPosition="bottom" editable="true" editMode="cell">
+        <p:dataTable var="detail" value="#{EditContracts.updatingContractDetails}" paginator="true" paginatorPosition="both"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                     rowsPerPageTemplate="5,10,{ShowAll|'All'}" editable="true" editMode="cell">
           <p:ajax event="cellEdit" listener="#{EditContracts.onCellEdit}"/>
-
-          <f:facet name="{Save}">
-            <p:commandButton title="Save Changes">
-              <f:ajax listener="#{EditContracts.UpdateContractDetails()}"/>
-            </p:commandButton >
-          </f:facet>
 
           <p:column headerText="Module id">
             <p:cellEditor>

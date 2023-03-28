@@ -188,7 +188,7 @@
             </p:dataTable>
             <p:commandButton title="Add detail" actionListener="#{contractBean.addContractDetail}" process="@this" oncomplete="PF('detailsTable').addRow();"/>
         </div>
-        <p><h:commandButton value="Create" action="#{CreateContracts.createContract}" /></p>
+        <p><h:commandButton value="Create" action="#{contractBean.createContract}" /></p>
     </h:form>
 </div>
 

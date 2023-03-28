@@ -52,6 +52,11 @@ public class EditContracts implements Serializable {
         updatingContractDetails=manageContracts.getContractDetails(updatingContract.id);
     }
 
+    public void updateAll() throws IOException{
+        //updateContract();
+        UpdateContractDetails();
+    }
+
     /**
      *Takes updatingContract and parses it into a json string
      * An api call is then made to CentralServer2023API with the json string, so it can update the original Contract.
