@@ -186,11 +186,9 @@
                     </p:cellEditor>
                 </p:column>
             </p:dataTable>
-            <p:commandButton title="Add detail" process="@this" oncomplete="PF('detailsTable').addRow();">
-                <f:ajax listener="#{contractBean.addContractDetail}"/>
-            </p:commandButton>
+            <p:commandButton title="Add detail" actionListener="#{contractBean.addContractDetail}" process="@this" oncomplete="PF('detailsTable').addRow();"/>
         </div>
-        <p:commandButton value="Create" action="#{contractBean.createContract}"/>
+        <p><h:commandButton value="Create" action="#{CreateContracts.createContract}" /></p>
     </h:form>
 </div>
 

@@ -21,8 +21,6 @@ import java.util.List;
 
 @ManagedBean
 @SessionScoped
-@Getter
-@Setter
 public class ContractBean implements Serializable {
     private Contract newContract;
     private Client client;
