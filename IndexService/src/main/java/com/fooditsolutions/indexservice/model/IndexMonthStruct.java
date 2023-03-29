@@ -1,21 +1,18 @@
 package com.fooditsolutions.indexservice.model;
 
-import com.fooditsolutions.indexservice.enums.Source;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Index {
-    int year;
+public class IndexMonthStruct {
+    Integer Year;
     String Month;
-    String Base;
-    BigDecimal CI;
-    Source source;
+    List<Index> indexList;
 }
