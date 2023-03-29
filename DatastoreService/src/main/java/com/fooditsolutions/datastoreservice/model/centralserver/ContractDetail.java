@@ -26,6 +26,7 @@ public class ContractDetail extends Sqlmodel {
     private BigDecimal purchase_price;
     private BigDecimal index_Start;
     private String renewal;
+    private String whatToDo;
 
 
 }

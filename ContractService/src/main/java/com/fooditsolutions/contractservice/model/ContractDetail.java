@@ -21,4 +21,5 @@ public class ContractDetail {
     private BigDecimal purchase_price;
     private BigDecimal index_Start;
     private String renewal;
+    private String whatToDo;
 }

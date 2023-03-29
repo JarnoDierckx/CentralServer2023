@@ -233,17 +233,17 @@
         </p:column>
       </p:dataTable>
     </div>
-
-
-
-
-
       <div class="card">
-        <p:dataTable var="detail" value="#{EditContracts.updatingContractDetails}" paginator="true" paginatorPosition="both"
-                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+        <p:dataTable id="detailsTable" var="detail" value="#{EditContracts.updatingContractDetailsList}" paginator="true" paginatorPosition="both"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {addRow}"
                      currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
-                     rowsPerPageTemplate="5,10,{ShowAll|'All'}" editable="true" editMode="cell">
+                     rowsPerPageTemplate="{ShowAll|'All'},5,10" editable="true" editMode="cell">
           <p:ajax event="cellEdit" listener="#{EditContracts.onCellEdit}"/>
+          <f:facet name="{addRow}">
+            <p:commandButton value="Add new detail" process="@this" action="#{editContracts.addRow()}" oncomplete="PF('detailsTable').addRow();">
+
+            </p:commandButton>
+          </f:facet>
 
           <p:column headerText="Module id">
             <p:cellEditor>

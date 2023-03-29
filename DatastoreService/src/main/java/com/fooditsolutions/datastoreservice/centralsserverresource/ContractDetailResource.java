@@ -36,7 +36,8 @@ public class ContractDetailResource {
     }
 
     /**
-     * Endpoint called to update the details of a contract.
+     * Endpoint called to update the details of a contract. The differences between the received objects and those
+     * currently in the database are taken out so only those variables are send to the database.
      * @param datastoreKey is to specify and access the required database.
      * @param contractDetail is looped over. Each object gets its own query string that gets looped over to execute each one.
      */
@@ -50,53 +51,31 @@ public class ContractDetailResource {
             }
         }
         List<ContractDetail> originalContractDetails = JsonToContractDetail(jsonContracts);
-        ContractDetail[] detailDifferences = new ContractDetail[originalContractDetails.size()];
-
-        ContractDetail[] updatedContractDetails=new ContractDetail[detailDifferences.length];
-        for (int i=0;i<updatedContractDetails.length;i++){
-            if (originalContractDetails.get(i).getID() == contractDetail[i].getID()){
-                updatedContractDetails[i]=contractDetail[i];
-                contractDetail[i]=null;
-            }
-        }
-
-        List<ContractDetail> toCreateDetailsList=new ArrayList<>();
-
-        //train of thought here was originally wrong, but it still needs to check what detail objects are mostly empty as those are from CS and need to be ignored. The rest need to be added to DB.
-        for(int i=0;i<contractDetail.length;i++){
-            if (contractDetail[i] != null){
-                if (contractDetail[i].getPurchase_Date()==null&&contractDetail[i].getAmount()==0&&contractDetail[i].getPurchase_price()==null&&contractDetail[i].getIndex_Start()==null&&contractDetail[i].getRenewal()==null){
-                    contractDetail[i]=null;
-                }else{
-                    toCreateDetailsList.add(contractDetail[i]);
-                }
-            }
-        }
-        ContractDetail[] toCreateDetailsArray= new ContractDetail[toCreateDetailsList.size()];
-        toCreateDetailsList.toArray(toCreateDetailsArray);
-
-        createContractDetails(datastoreKey,toCreateDetailsArray);
+        ContractDetail[] detailDifferences = new ContractDetail[contractDetail.length];
 
 
-        for (int i = 0; i < updatedContractDetails.length; i++) {
-            boolean newDetail = false;
-            if (detailDifferences[i] == null) {
-                detailDifferences[i] = new ContractDetail();
-                detailDifferences[i].setID(updatedContractDetails[i].getID());
-                newDetail = true;
-            }
-            Field[] fields = ContractDetail.class.getDeclaredFields();
-            for (Field field : fields) {
-                field.setAccessible(true);
-                Object value1 = field.get(originalContractDetails.get(i));
-                Object value2 = field.get(updatedContractDetails[i]);
-                if (value1 != null && value2 != null) {
-                    if (!value1.equals(value2)) {
-                        if (newDetail) {
-                            field.set(detailDifferences[i], value2);
-                        } else {
-                            // Object already created, set the field in the existing object
-                            field.set(detailDifferences[i], value2);
+        for (int i = 0; i < contractDetail.length; i++) {
+            for (ContractDetail originalContractDetail : originalContractDetails) {
+                if (contractDetail[i].getID() == originalContractDetail.getID()) {
+                    boolean newDetail = false;
+                    if (detailDifferences[i] == null) {
+                        detailDifferences[i] = new ContractDetail();
+                        detailDifferences[i].setID(contractDetail[i].getID());
+                        newDetail = true;
+                    }
+                    Field[] fields = ContractDetail.class.getDeclaredFields();
+                    for (Field field : fields) {
+                        field.setAccessible(true);
+                        Object value1 = field.get(originalContractDetail);
+                        Object value2 = field.get(contractDetail[i]);
+                        if (value1 != null && value2 != null) {
+                            if (!value1.equals(value2)) {
+                                if (newDetail) {
+                                    field.set(detailDifferences[i], value2);
+                                } else {
+                                    field.set(detailDifferences[i], value2);
+                                }
+                            }
                         }
                     }
                 }
@@ -109,9 +88,6 @@ public class ContractDetailResource {
                 sql[i] = detailDifferences[i].getUpdateStatement();
             }
         }
-        List<String> sqlList = new ArrayList<>(Arrays.asList(sql));
-        sqlList.removeIf(s -> s.contains("UPDATE CONTRACT_DETAIL SET  WHERE"));
-        sql = sqlList.toArray(new String[0]);
 
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
@@ -125,6 +101,11 @@ public class ContractDetailResource {
         }
     }
 
+    /**
+     * Receives an array of ContractDetail objects that need to be inserted into the database.
+     * @param datastoreKey is to specify and access the required database.
+     * @param contractDetails is looped over. Each object gets its own query string that gets looped over to execute each one.
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void createContractDetails(@QueryParam("datastoreKey") String datastoreKey, ContractDetail[] contractDetails){

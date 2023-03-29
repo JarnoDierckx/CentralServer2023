@@ -4,6 +4,7 @@ package com.fooditsolutions.datastoreservice.model;
 import com.fooditsolutions.datastoreservice.controller.Util;
 import com.fooditsolutions.datastoreservice.model.centralserver.Bjr;
 import com.fooditsolutions.datastoreservice.model.centralserver.Client;
+import com.fooditsolutions.datastoreservice.model.centralserver.ContractDetail;
 import com.fooditsolutions.datastoreservice.model.centralserver.ModuleId;
 
 import javax.persistence.Id;
@@ -15,6 +16,7 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 public class Sqlmodel {
+
     /**
      * Gets called on objects that need to be inserted into the database.
      * It loops over the different properties in the object, taking their names and values and putting them into sqlInsertInto and sqlValues respectively.
@@ -33,7 +35,7 @@ public class Sqlmodel {
                 Annotation annotation = f.getAnnotation(Id.class);
                 if (!(annotation instanceof Id)) {
                     Object o = runGetter(f, this);
-                    if (o != null && !Objects.equals(o, 0) && !Objects.equals(o, 0.00) && !(o instanceof Client) && !(o instanceof Bjr) && !(o instanceof ModuleId)) {
+                    if (o != null && !Objects.equals(o, 0) && !Objects.equals(o, 0.00) && !(o instanceof Client) && !(o instanceof Bjr) && !(o instanceof ModuleId) && !f.getName().equals("whatToDo")) {
                         if (!sqlInserInto.toString().equals("")) {
                             sqlInserInto.append(",");
                             sqlValues.append(",");
@@ -81,7 +83,7 @@ public class Sqlmodel {
     /**
      * Gets called on objects that need to update existing values in the database.
      * It loops over the different properties in the object, taking their names and values and puts it into sqlSet.
-     * Any values that are empty or are themselves an object are ignored.
+     * Any values that are empty or are themselves an object are ignored, same with the whatToDo variable.
      * any property that has the @ID annotation is looped over separately and put into sqlWhere.
      * Both sqlSet and sqlWhere are then used to create a sql update query.
      *
@@ -104,7 +106,7 @@ public class Sqlmodel {
                     }
                 } else {
                     Object o = runGetter(f, this);
-                    if (o != null && !Objects.equals(o, 0) && !Objects.equals(o, 0.00) && !(o instanceof Client) && !(o instanceof Bjr) && !(o instanceof ModuleId)) {
+                    if (o != null && !Objects.equals(o, 0) && !Objects.equals(o, 0.00) && !(o instanceof Client) && !(o instanceof Bjr) && !(o instanceof ModuleId) && !f.getName().equals("whatToDo")) {
                         if (!sqlSet.toString().equals("")) {
                             sqlSet.append(",");
 
