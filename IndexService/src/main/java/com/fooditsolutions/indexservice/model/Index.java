@@ -15,5 +15,5 @@ public class Index {
     int year;
     String Month;
     String Base;
-    BigDecimal CI,Infl,GI,AI,IWP,IWE;
+    BigDecimal CI;
 }
