@@ -10,6 +10,7 @@
         <module name="ModuleService" />
         <module name="Web" />
         <module name="CentralServer2023API" />
+        <module name="IndexService" />
         <module name="DatastoreService" />
         <module name="ContractService" />
         <module name="Util" />
