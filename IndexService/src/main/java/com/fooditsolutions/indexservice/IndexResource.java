@@ -19,6 +19,9 @@ public class IndexResource {
     @GET
     @Produces("application/json")
     public List<Index> getIndex(@QueryParam("base") String base) throws IOException {
+        if(!base.toLowerCase().trim().replace(" ","").contains("=100")){
+            base+="=100";
+        }
         List<Index> indexList = new ArrayList<>();
         String responseString = HttpController.httpGet("https://bestat.statbel.fgov.be/bestat/api/views/1e33c9bc-20f4-4699-adff-f800da946ed9/result/JSON");
         byte[] jsonData = responseString.getBytes();
@@ -29,7 +32,7 @@ public class IndexResource {
 
             if(base != null && base != ""){
                 String bj = it.getBasisjaar();
-                if(bj.trim().toLowerCase().equals(base.trim().toLowerCase())){
+                if(bj.trim().toLowerCase().replace(" ","").equals(base.trim().toLowerCase().replace(" ",""))){
                     Index ind = new Index();
                     ind.setYear(Integer.parseInt(it.getJaar()));
                     ind.setMonth(it.getMaand());
