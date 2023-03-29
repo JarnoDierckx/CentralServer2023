@@ -88,6 +88,7 @@ public class ContractResource {
 
         Contract differences = new Contract();
         Field[] fields = originalContract.getClass().getDeclaredFields();
+        int counter=0;
         for (Field field : fields) {
             field.setAccessible(true);
             Object value1 = field.get(originalContract);
@@ -95,17 +96,20 @@ public class ContractResource {
             if (value1 != null && value2 != null) {
                 if (!value1.equals(value2)) {
                     field.set(differences, value2);
+                    counter++;
                 }
             }
         }
-        differences.id=contract.id;
+        if (counter>0){
+            differences.id=contract.id;
 
-        String sql = differences.getUpdateStatement();
+            String sql = differences.getUpdateStatement();
 
-        for (DatastoreObject ds : Datastores.getDatastores()) {
-            if (datastoreKey.equals(ds.getKey())) {
-                DBFirebird.executeSQLUpdate(ds, sql);
-                System.out.println("update successfull");
+            for (DatastoreObject ds : Datastores.getDatastores()) {
+                if (datastoreKey.equals(ds.getKey())) {
+                    DBFirebird.executeSQLUpdate(ds, sql);
+                    System.out.println("update successfull");
+                }
             }
         }
     }

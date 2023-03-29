@@ -13,7 +13,7 @@
     <h:outputStylesheet library="css" name="create.css"/>
 <div class="card">
     <h:form styleClass="grid">
-        <div class="CS2023Container">
+        <div>
             <section >
                 <h:outputText value="Contract number"/><br/>
                 <p:inputText value="#{contractBean.newContract.contract_number}" required="true"/>
@@ -112,81 +112,6 @@
                 <h:outputText value="jgr"/><br/>
                 <p:inputText value="#{contractBean.newContract.jgr}"/>
             </section>
-        </div>
-        <div>
-            <p:dataTable id="detailsTable" var="detail" value="#{contractBean.contractDetailsList}" editable="true" editMode="cell">
-
-                <p:column headerText="Module id">
-                    <p:cellEditor>
-                        <f:facet name="output">
-                            <h:outputText value="#{detail.moduleId.name}"/>
-                        </f:facet>
-                        <f:facet name="input">
-                            <p:inputText value="#{detail.moduleId.name}" style="width:100%"/>
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
-
-                <p:column headerText="purchase date">
-                    <p:cellEditor>
-                        <f:facet name="output">
-                            <h:outputText value="#{detail.purchase_Date}">
-                                <f:convertDateTime pattern = "yyyy-MM-dd" />
-                            </h:outputText>
-                        </f:facet>
-                        <f:facet name="input">
-                            <p:inputText value="#{detail.purchase_Date}" style="width:100%">
-                                <f:convertDateTime pattern = "yyyy-MM-dd" />
-                            </p:inputText>
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
-
-                <p:column headerText="amount">
-                    <p:cellEditor>
-                        <f:facet name="output">
-                            <h:outputText value="#{detail.amount}"/>
-                        </f:facet>
-                        <f:facet name="input">
-                            <p:inputText value="#{detail.amount}" style="width:100%"/>
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
-
-                <p:column headerText="purchase price">
-                    <p:cellEditor>
-                        <f:facet name="output">
-                            <h:outputText value="#{detail.purchase_price}"/>
-                        </f:facet>
-                        <f:facet name="input">
-                            <p:inputText value="#{detail.purchase_price}" style="width:100%"/>
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
-
-                <p:column headerText="index start">
-                    <p:cellEditor>
-                        <f:facet name="output">
-                            <h:outputText value="#{detail.index_Start}"/>
-                        </f:facet>
-                        <f:facet name="input">
-                            <p:inputText value="#{detail.index_Start}" style="width:100%"/>
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
-
-                <p:column headerText="renewal">
-                    <p:cellEditor>
-                        <f:facet name="output">
-                            <h:outputText value="#{detail.renewal}"/>
-                        </f:facet>
-                        <f:facet name="input">
-                            <p:inputText value="#{detail.renewal}" style="width:100%"/>
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
-            </p:dataTable>
-            <p:commandButton title="Add detail" actionListener="#{contractBean.addContractDetail}" process="@this" oncomplete="PF('detailsTable').addRow();"/>
         </div>
         <p><h:commandButton value="Create" action="#{contractBean.createContract}" /></p>
     </h:form>

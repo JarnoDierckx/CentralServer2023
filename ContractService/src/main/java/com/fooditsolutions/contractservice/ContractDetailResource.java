@@ -12,6 +12,7 @@ import com.fooditsolutions.util.controller.PropertiesController;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Path("/contractDetail")
@@ -38,24 +39,42 @@ public class ContractDetailResource {
     }
 
     /**
-     * The endpoint to update a contract's details.
-     * @param contractDetails is put into a json string and send towards the datastoreService.
+     * Receives al ContractDetail objects from the edit page.
+     * Those with whatToDo set to 'U' are sent to the PUT endpoint in the datastore service.
+     * Those with whatToDo set to 'C' are sent to the POST endpoint in this class.
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     public void updateContractDetails(ContractDetail[] contractDetails) throws IOException {
+        List<ContractDetail> detailsToUpdate=new ArrayList<>();
+        List<ContractDetail> detailsToCreate=new ArrayList<>();
+        for (int i=0;i<contractDetails.length;i++){
+            if (contractDetails[i].getWhatToDo() !=null){
+                if (contractDetails[i].getWhatToDo().equals("U")){
+                    detailsToUpdate.add(contractDetails[i]);
+                }else if(contractDetails[i].getWhatToDo().equals("C")){
+                    detailsToCreate.add(contractDetails[i]);
+                }
+            }
+        }
+        ContractDetail[] detailsToCreateArray=new ContractDetail[detailsToCreate.size()];
+        createContractDetails(detailsToCreate.toArray(detailsToCreateArray));
+
 
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         //Converting the Object to JSONString
-        String jsonString = mapper.writeValueAsString(contractDetails);
+        String jsonString = mapper.writeValueAsString(detailsToUpdate);
         System.out.println(jsonString);
 
         HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
     }
 
+    /**
+     * @param contractDetails array of ContractDetails objects that are send to the POST endpoint in the datastore service
+     */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")

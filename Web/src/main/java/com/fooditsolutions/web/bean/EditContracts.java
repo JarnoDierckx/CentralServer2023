@@ -12,20 +12,28 @@ import org.primefaces.event.CellEditEvent;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.client.Entity;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 @ManagedBean
 @ViewScoped
 public class EditContracts implements Serializable {
 
     private Contract selectedContract;
+    //This is the one that goes to the webpage
     private Contract updatingContract;
     private ContractDetail[] selectedContractDetails;
+    //this is the one that goes to the webpage
     private ContractDetail[] updatingContractDetails;
+    private List<ContractDetail> updatingContractDetailsList;
 
     /**
      *The function creates a session object, checks if one already exists and then retrieves the Contract object created before this class and the webpage it manages
@@ -50,10 +58,11 @@ public class EditContracts implements Serializable {
         }
         ManageContracts manageContracts=new ManageContracts();
         updatingContractDetails=manageContracts.getContractDetails(updatingContract.id);
+        updatingContractDetailsList= Arrays.asList(updatingContractDetails);
     }
 
     public void updateAll() throws IOException{
-        //updateContract();
+        updateContract();
         UpdateContractDetails();
     }
 
@@ -81,7 +90,7 @@ public class EditContracts implements Serializable {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         //Converting the Object to JSONString
-        String jsonString = mapper.writeValueAsString(updatingContractDetails);
+        String jsonString = mapper.writeValueAsString(updatingContractDetailsList);
 
         System.out.println("update: "+jsonString);
         //System.out.println(detailString);
@@ -90,12 +99,36 @@ public class EditContracts implements Serializable {
     }
 
     /**
-     * gets called every time a cell is edited, the cells new value is then printed onto the console.
+     * Gets called every time a cell is edited.
+     * Discerns what objects need to be updated and what objects need to be inserted into the database.
+     * The new value is also printed onto the console.
      */
     public void onCellEdit(CellEditEvent event) {
         Object oldValue = event.getOldValue();
         Object newValue = event.getNewValue();
+
+        FacesContext context = FacesContext.getCurrentInstance();
+        ContractDetail editedDetail = context.getApplication().evaluateExpressionGet(context, "#{detail}", ContractDetail.class);
+        if (editedDetail.getID()>0){
+            for (ContractDetail detail: updatingContractDetailsList){
+                if (detail.getID()== editedDetail.getID()){
+                    detail.setWhatToDo("U");
+                }
+            }
+        } else if(editedDetail.getID()==0){
+            for (ContractDetail detail: updatingContractDetailsList){
+                if (Objects.equals(detail.getModule_DBB_ID(), editedDetail.getModule_DBB_ID())){
+                    detail.setWhatToDo("C");
+                }
+            }
+        }
+
         System.out.println(newValue);
+    }
+
+    public void addRow(){
+        ContractDetail detail=new ContractDetail();
+        updatingContractDetailsList.add(detail);
     }
 
     public Contract getSelectedContract() {
@@ -128,5 +161,13 @@ public class EditContracts implements Serializable {
 
     public void setUpdatingContractDetails(ContractDetail[] updatingContractDetails) {
         this.updatingContractDetails = updatingContractDetails;
+    }
+
+    public List<ContractDetail> getUpdatingContractDetailsList() {
+        return updatingContractDetailsList;
+    }
+
+    public void setUpdatingContractDetailsList(List<ContractDetail> updatingContractDetailsList) {
+        this.updatingContractDetailsList = updatingContractDetailsList;
     }
 }
