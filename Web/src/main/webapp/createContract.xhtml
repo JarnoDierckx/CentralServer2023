@@ -112,8 +112,15 @@
                 <h:outputText value="jgr"/><br/>
                 <p:inputText value="#{contractBean.newContract.jgr}"/>
             </section>
+<<<<<<< Updated upstream
         </div>
         <p><h:commandButton value="Create" action="#{contractBean.createContract}" /></p>
+=======
+
+
+            <p:commandButton value="Create" action="#{contractBean.createContract}" > <f:ajax listener="#{contractBean.createContract}"/> </p:commandButton>
+        </p:panelGrid>
+>>>>>>> Stashed changes
     </h:form>
 </div>
 
