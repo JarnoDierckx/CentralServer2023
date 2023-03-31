@@ -110,9 +110,16 @@ public class ManageContracts extends HttpServlet implements Serializable {
      * @return redirects the user to editContract.xhtml
      */
     public String editContract(){
-        //getContractDetails();
-
         HttpSession session= (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        if (session.getAttribute("contract")!=null) {
+            //selectedItem = (Contract) session.getAttribute("contract");
+            session.removeAttribute("contract");
+        }
+        if (session.getAttribute("EditContracts")!=null){
+            session.removeAttribute("EditContracts");
+        }
+
+
         session.setAttribute("contract", selectedItem);
         return "editContract.xhtml?faces-redirect=true";
     }

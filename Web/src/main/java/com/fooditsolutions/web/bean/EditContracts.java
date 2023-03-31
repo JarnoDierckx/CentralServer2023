@@ -1,30 +1,33 @@
 package com.fooditsolutions.web.bean;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
-import com.fooditsolutions.web.model.Contract;
-import com.fooditsolutions.web.model.ContractDetail;
+import com.fooditsolutions.web.model.*;
 import org.apache.commons.beanutils.BeanUtils;
 import org.primefaces.event.CellEditEvent;
 
 
+import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.client.Entity;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class EditContracts implements Serializable {
 
     private Contract selectedContract;
@@ -33,7 +36,9 @@ public class EditContracts implements Serializable {
     private ContractDetail[] selectedContractDetails;
     //this is the one that goes to the webpage
     private ContractDetail[] updatingContractDetails;
-    private List<ContractDetail> updatingContractDetailsList;
+    private List<ContractDetail> updatingContractDetailsList=new ArrayList<>();
+    private ModuleId[] moduleIds;
+    private int counter;
 
     /**
      *The function creates a session object, checks if one already exists and then retrieves the Contract object created before this class and the webpage it manages
@@ -48,7 +53,6 @@ public class EditContracts implements Serializable {
                 .getExternalContext().getSession(false);
         if (session != null) {
             selectedContract = (Contract) session.getAttribute("contract");
-            session.removeAttribute("contract");
         }
         updatingContract=new Contract();
         try {
@@ -58,7 +62,15 @@ public class EditContracts implements Serializable {
         }
         ManageContracts manageContracts=new ManageContracts();
         updatingContractDetails=manageContracts.getContractDetails(updatingContract.id);
+        counter=0;
+        for (ContractDetail detail:updatingContractDetails){
+            if (detail.getID()==0){
+                counter--;
+                detail.setID(counter);
+            }
+        }
         updatingContractDetailsList= Arrays.asList(updatingContractDetails);
+        moduleIds=retrieveModuleIds();
     }
 
     public void updateAll() throws IOException{
@@ -98,6 +110,13 @@ public class EditContracts implements Serializable {
         HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract/detail", jsonString);
     }
 
+    public ModuleId[] retrieveModuleIds() throws JsonProcessingException {
+        String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/module");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.readValue(response, ModuleId[].class);
+    }
+
     /**
      * Gets called every time a cell is edited.
      * Discerns what objects need to be updated and what objects need to be inserted into the database.
@@ -109,26 +128,34 @@ public class EditContracts implements Serializable {
 
         FacesContext context = FacesContext.getCurrentInstance();
         ContractDetail editedDetail = context.getApplication().evaluateExpressionGet(context, "#{detail}", ContractDetail.class);
-        if (editedDetail.getID()>0){
-            for (ContractDetail detail: updatingContractDetailsList){
-                if (detail.getID()== editedDetail.getID()){
-                    detail.setWhatToDo("U");
+        if (editedDetail != null){
+            if (editedDetail.getID()>0){
+                for (ContractDetail detail: updatingContractDetailsList){
+                    if (detail.getID()== editedDetail.getID()){
+                        detail.setWhatToDo("U");
+                    }
                 }
-            }
-        } else if(editedDetail.getID()==0){
-            for (ContractDetail detail: updatingContractDetailsList){
-                if (Objects.equals(detail.getModule_DBB_ID(), editedDetail.getModule_DBB_ID())){
-                    detail.setWhatToDo("C");
+            } else if(editedDetail.getID()<0){
+                for (ContractDetail detail: updatingContractDetailsList){
+                    if (detail.getID()== editedDetail.getID()){
+                        detail.setWhatToDo("C");
+                    }
                 }
             }
         }
-
         System.out.println(newValue);
     }
 
-    public void addRow(){
-        ContractDetail detail=new ContractDetail();
-        updatingContractDetailsList.add(detail);
+
+
+    public void addRow() {
+        ContractDetail detail = new ContractDetail();
+        counter--;
+        detail.setID(counter);
+        detail.setContract_ID(updatingContract.id);
+        List<ContractDetail> newList = new ArrayList<>(updatingContractDetailsList);
+        newList.add(detail);
+        updatingContractDetailsList = newList;
     }
 
     public Contract getSelectedContract() {
@@ -169,5 +196,13 @@ public class EditContracts implements Serializable {
 
     public void setUpdatingContractDetailsList(List<ContractDetail> updatingContractDetailsList) {
         this.updatingContractDetailsList = updatingContractDetailsList;
+    }
+
+    public ModuleId[] getModuleIds() {
+        return moduleIds;
+    }
+
+    public void setModuleIds(ModuleId[] moduleIds) {
+        this.moduleIds = moduleIds;
     }
 }

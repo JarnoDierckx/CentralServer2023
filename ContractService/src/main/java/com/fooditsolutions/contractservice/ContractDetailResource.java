@@ -61,15 +61,18 @@ public class ContractDetailResource {
         ContractDetail[] detailsToCreateArray=new ContractDetail[detailsToCreate.size()];
         createContractDetails(detailsToCreate.toArray(detailsToCreateArray));
 
+        if (detailsToUpdate.size()>0){
+            //Creating the ObjectMapper object
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            //Converting the Object to JSONString
+            String jsonString = mapper.writeValueAsString(detailsToUpdate);
+            System.out.println(jsonString);
 
-        //Creating the ObjectMapper object
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        //Converting the Object to JSONString
-        String jsonString = mapper.writeValueAsString(detailsToUpdate);
-        System.out.println(jsonString);
+            HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
+        }
 
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
+
     }
 
     /**

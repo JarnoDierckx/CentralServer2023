@@ -162,6 +162,7 @@ public class ContractResource {
         HttpController.httpPost(PropertiesController.getProperty().getBase_url_contractservice()+"/contract", jsonString);
     }
 
+    @Path("/detail")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")

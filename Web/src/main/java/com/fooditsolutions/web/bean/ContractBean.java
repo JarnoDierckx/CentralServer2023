@@ -8,11 +8,13 @@ import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.web.model.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.primefaces.event.CellEditEvent;
 
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.Serializable;
@@ -80,6 +82,13 @@ public class ContractBean implements Serializable {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return mapper.readValue(response, Bjr[].class);
+    }
+
+    public void onCellEdit(CellEditEvent event) {
+        Object oldValue = event.getOldValue();
+        Object newValue = event.getNewValue();
+
+        System.out.println(newValue);
     }
 
 

@@ -19,18 +19,21 @@ public class ContractController {
         }
         //The modules details are stored in ModuleId. The link between the module and a server is in the table Module
         for(Module mod : modules){
-            BigDecimal Moduleid_id = mod.getModuleid().getDbb_id();
-            CompareContractCS compareContractCS = new CompareContractCS();
-            compareContractCS.setModuleId_DBB_ID(Moduleid_id);
-            compareContractCS.setModuleId(mod.getModuleid());
-            cModules.put(Moduleid_id,mod);
-            if(cContractDetail.containsKey(Moduleid_id)){
-                compareContractCS.setModuleSyncStatus(ModuleCompare.SYNC);
-                cContractDetail.remove(Moduleid_id);
-            }else{
-                compareContractCS.setModuleSyncStatus(ModuleCompare.CENTRALSERVER);
+            if (mod.getModuleid()!=null){
+                BigDecimal Moduleid_id = mod.getModuleid().getDbb_id();
+                CompareContractCS compareContractCS = new CompareContractCS();
+                compareContractCS.setModuleId_DBB_ID(Moduleid_id);
+                compareContractCS.setModuleId(mod.getModuleid());
+                cModules.put(Moduleid_id,mod);
+                if(cContractDetail.containsKey(Moduleid_id)){
+                    compareContractCS.setModuleSyncStatus(ModuleCompare.SYNC);
+                    cContractDetail.remove(Moduleid_id);
+                }else{
+                    compareContractCS.setModuleSyncStatus(ModuleCompare.CENTRALSERVER);
+                }
+                compareContractCSs.add(compareContractCS);
             }
-            compareContractCSs.add(compareContractCS);
+
         }
 
         for(Map.Entry<BigDecimal,ContractDetail> set : cContractDetail.entrySet()){
