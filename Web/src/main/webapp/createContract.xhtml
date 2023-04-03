@@ -49,17 +49,28 @@
 
             <section>
                 <h:outputText value="Source"/><br/>
-                <p:inputText value="#{contractBean.newContract.source}"/>
+                <h:selectOneMenu value="#{contractBean.newContract.source}">
+                    <f:selectItem itemValue="CS" itemLabel="CS" />
+                    <f:selectItem itemValue="M" itemLabel="M" />
+                </h:selectOneMenu>
             </section>
 
             <section>
                 <h:outputText value="Invoice frequency"/><br/>
-                <p:inputText value="#{contractBean.newContract.invoice_frequency}" required="true"/>
+                <h:selectOneMenu value="#{contractBean.newContract.invoice_frequency}">
+                    <f:selectItem itemValue="J" itemLabel="J" />
+                    <f:selectItem itemValue="M" itemLabel="M" />
+                    <f:selectItem itemValue="W" itemLabel="W" />
+                </h:selectOneMenu>
             </section>
 
             <section>
                 <h:outputText value="Index frequency"/><br/>
-                <p:inputText value="#{contractBean.newContract.index_frequency}" required="true"/>
+                <h:selectOneMenu value="#{contractBean.newContract.index_frequency}">
+                    <f:selectItem itemValue="J" itemLabel="J" />
+                    <f:selectItem itemValue="M" itemLabel="M" />
+                    <f:selectItem itemValue="W" itemLabel="W" />
+                </h:selectOneMenu>
             </section>
 
             <section>

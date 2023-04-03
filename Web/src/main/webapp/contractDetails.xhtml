@@ -13,6 +13,76 @@
 <h:body>
     <h:form>
         <div class="card">
+            <p:dataTable var="contract" value="#{ManageContracts.selectedItem}" widgetVar="contractTable">
+
+                <p:column headerText="contract number">
+                    <h:outputText value="#{contract.contract_number}">
+                        <f:converter converterId="javax.faces.Integer" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Client">
+                    #{contract.client.name}
+                </p:column>
+                <p:column headerText="BJR">
+                    #{contract.bjr.name}
+                </p:column>
+                <p:column headerText="start date">
+                    <h:outputText value="#{contract.start_date}">
+                        <f:convertDateTime pattern = "yyyy-MM-dd" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="end date">
+                    <h:outputText value="#{contract.end_date}">
+                        <f:convertDateTime pattern = "yyyy-MM-dd" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="source">
+                    #{contract.source}
+                </p:column>
+                <p:column headerText="invoice frequency">
+                    #{contract.invoice_frequency}
+                </p:column>
+                <p:column headerText="index frequency">
+                    #{contract.index_frequency}
+                </p:column>
+                <p:column headerText="base index year">
+                    #{contract.base_index_year}
+                </p:column>
+                <p:column headerText="index start">
+                    #{contract.index_start}
+                </p:column>
+                <p:column headerText="index last invoice">
+                    #{contract.index_last_invoice}
+                </p:column>
+                <p:column headerText="amount last invoice">
+                    #{contract.amount_last_invoice}
+                </p:column>
+                <p:column headerText="last invoice number">
+                    #{contract.last_invoice_number}
+                </p:column>
+                <p:column headerText="last invoice date">
+                    <h:outputText value="#{contract.last_invoice_date}">
+                        <f:convertDateTime pattern = "yyyy-MM-dd" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="last invoice period start">
+                    <h:outputText value="#{contract.last_invoice_period_start}">
+                        <f:convertDateTime pattern = "yyyy-MM-dd" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="last invoice period end">
+                    <h:outputText value="#{contract.last_invoice_period_end}">
+                        <f:convertDateTime pattern = "yyyy-MM-dd" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="jgr">
+                    #{contract.jgr}
+                </p:column>
+
+            </p:dataTable>
+        </div>
+
+        <div class="card">
             <p:dataTable var="detail" value="#{ManageContracts.details}">
                 <p:column headerText="Module id">
                     #{detail.moduleId.name}
@@ -22,7 +92,7 @@
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="amount">
+                <p:column headerText="quantity">
                     #{detail.amount}
                 </p:column>
                 <p:column headerText="purchase price">

@@ -138,7 +138,10 @@ public class ContractDetailResource {
             contractDetail.setContract_ID((int) jsonContracts.getJSONObject(i).opt("CONTRACT_ID"));
             contractDetail.setModule_DBB_ID((BigDecimal) jsonContracts.getJSONObject(i).opt("MODULE_DBB_ID"));
             contractDetail.setPurchase_Date((Date) jsonContracts.getJSONObject(i).opt("PURCHASE_DATE"));
-            contractDetail.setAmount((int) jsonContracts.getJSONObject(i).opt("AMOUNT"));
+            if (jsonContracts.getJSONObject(i).opt("AMOUNT") != null) {
+                contractDetail.setAmount((int) jsonContracts.getJSONObject(i).opt("AMOUNT"));
+            }
+
             contractDetail.setPurchase_price((BigDecimal) jsonContracts.getJSONObject(i).opt("PURCHASE_PRICE"));
             contractDetail.setIndex_Start((BigDecimal) jsonContracts.getJSONObject(i).opt("INDEX_START"));
             contractDetail.setRenewal((String) jsonContracts.getJSONObject(i).opt("RENEWAL"));

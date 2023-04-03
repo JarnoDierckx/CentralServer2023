@@ -94,7 +94,11 @@
               <h:outputText value="#{edit.source}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{edit.source}" style="width:100%"/>
+              <h:selectOneMenu value="#{edit.source}">
+                <f:selectItem itemValue="CS" itemLabel="CS" />
+                <f:selectItem itemValue="M" itemLabel="M" />
+              </h:selectOneMenu>
+
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -105,7 +109,11 @@
               <h:outputText value="#{edit.invoice_frequency}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{edit.invoice_frequency}" style="width:100%"/>
+              <h:selectOneMenu value="#{edit.invoice_frequency}">
+                <f:selectItem itemValue="J" itemLabel="J" />
+                <f:selectItem itemValue="M" itemLabel="M" />
+                <f:selectItem itemValue="W" itemLabel="W" />
+              </h:selectOneMenu>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -116,7 +124,11 @@
               <h:outputText value="#{edit.index_frequency}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{edit.index_frequency}" style="width:100%"/>
+              <h:selectOneMenu value="#{edit.index_frequency}">
+                <f:selectItem itemValue="J" itemLabel="J" />
+                <f:selectItem itemValue="M" itemLabel="M" />
+                <f:selectItem itemValue="W" itemLabel="W" />
+              </h:selectOneMenu>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -233,11 +245,13 @@
         </p:column>
       </p:dataTable>
     </div>
+
+
+
       <div class="card">
         <p:dataTable id="detailsTable" widgetVar="detailsTableWidget" var="detail" value="#{EditContracts.updatingContractDetailsList}" paginator="true" paginatorPosition="both"
-                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {addRow}"
-                     currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
-                     rowsPerPageTemplate="{ShowAll|'All'},5,10" editable="true" editMode="cell">
+                     paginatorTemplate="{addRow}"
+                     editable="true" editMode="cell">
           <p:ajax event="cellEdit" listener="#{EditContracts.onCellEdit}"/>
           <f:facet name="{addRow}">
             <p:commandButton value="Add new detail" action="#{EditContracts.addRow}" update="detailsTable"/>
@@ -273,7 +287,7 @@
             </p:cellEditor>
           </p:column>
 
-          <p:column headerText="amount">
+          <p:column headerText="quantity">
             <p:cellEditor>
               <f:facet name="output">
                 <h:outputText value="#{detail.amount}"/>
