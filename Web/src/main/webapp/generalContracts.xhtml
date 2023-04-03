@@ -15,7 +15,7 @@
 
     <h:form target="_blank">
         <div class="card">
-            <p:dataTable var="contract" value="#{ManageContracts.contracts2}" paginator="true" rows="10" widgetVar="contractTable" globalFilterFunction="#{ManageContracts.globalFilterFunction}">
+            <p:dataTable var="contract" value="#{ManageContracts.contracts}" widgetVar="contractTable" globalFilterFunction="#{ManageContracts.globalFilterFunction}" allowUnsorting="true" sortMode="single">
                 <f:facet name="header">
                     <div class="flex justify-content-end">
                         <p:inputText id="globalFilter" onkeyup="PF('contractTable').filter()" style="width:300px"
@@ -29,65 +29,65 @@
                     </p:commandButton >
                 </p:column>
 
-                <p:column headerText="contract number">
+                <p:column headerText="contract number" sortBy="#{contract.contract_number}" sortFunction="#{ManageContracts.customSortFunction}">
                     #{contract.contract_number}
                 </p:column>
-                <p:column headerText="Client">
+                <p:column headerText="Client" sortBy="#{contract.client.name}">
                     #{contract.client.name}
                 </p:column>
-                <p:column headerText="BJR">
+                <p:column headerText="BJR" sortBy="#{contract.bjr.name}">
                     #{contract.bjr.name}
                 </p:column>
-                <p:column headerText="start date">
+                <p:column headerText="start date" sortBy="#{contract.start_date}">
                     <h:outputText value="#{contract.start_date}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="end date">
+                <p:column headerText="end date" sortBy="#{contract.end_date}">
                     <h:outputText value="#{contract.end_date}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="source">
+                <p:column headerText="source" sortBy="#{contract.source}">
                     #{contract.source}
                 </p:column>
-                <p:column headerText="invoice frequency">
+                <p:column headerText="invoice frequency" sortBy="#{contract.invoice_frequency}">
                     #{contract.invoice_frequency}
                 </p:column>
-                <p:column headerText="index frequency">
+                <p:column headerText="index frequency" sortBy="#{contract.index_frequency}">
                     #{contract.index_frequency}
                 </p:column>
-                <p:column headerText="base index year">
+                <p:column headerText="base index year" sortBy="#{contract.base_index_year}">
                     #{contract.base_index_year}
                 </p:column>
-                <p:column headerText="index start">
+                <p:column headerText="index start" sortBy="#{contract.index_start}">
                     #{contract.index_start}
                 </p:column>
-                <p:column headerText="index last invoice">
+                <p:column headerText="index last invoice" sortBy="#{contract.index_last_invoice}">
                     #{contract.index_last_invoice}
                 </p:column>
-                <p:column headerText="amount last invoice">
+                <p:column headerText="amount last invoice" sortBy="#{contract.amount_last_invoice}">
                     #{contract.amount_last_invoice}
                 </p:column>
-                <p:column headerText="last invoice number">
+                <p:column headerText="last invoice number" sortBy="#{contract.last_invoice_number}">
                     #{contract.last_invoice_number}
                 </p:column>
-                <p:column headerText="last invoice date">
+                <p:column headerText="last invoice date" sortBy="#{contract.last_invoice_date}">
                     <h:outputText value="#{contract.last_invoice_date}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="last invoice period start">
+                <p:column headerText="last invoice period start" sortBy="#{contract.last_invoice_period_start}">
                     <h:outputText value="#{contract.last_invoice_period_start}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="last invoice period end">
+                <p:column headerText="last invoice period end" sortBy="#{contract.last_invoice_period_end}">
                     <h:outputText value="#{contract.last_invoice_period_end}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="jgr">
+                <p:column headerText="jgr" sortBy="#{contract.jgr}">
                     #{contract.jgr}
                 </p:column>
 

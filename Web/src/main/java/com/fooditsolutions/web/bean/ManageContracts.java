@@ -6,6 +6,8 @@ import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.web.model.Contract;
 import com.fooditsolutions.web.model.ContractDetail;
+import org.primefaces.model.SortMeta;
+import org.primefaces.model.SortOrder;
 import org.primefaces.util.LangUtils;
 
 import javax.annotation.ManagedBean;
@@ -21,6 +23,8 @@ import java.io.Serializable;
 import java.sql.Date;
 import java.util.*;
 
+import static java.lang.Integer.parseInt;
+
 @ManagedBean
 @SessionScoped
 public class ManageContracts extends HttpServlet implements Serializable {
@@ -31,6 +35,7 @@ public class ManageContracts extends HttpServlet implements Serializable {
     private Contract selectedItem;
     private Contract updatedContract;
     private ContractDetail[] details;
+    private List<SortMeta> sortBy;
 
     /**
      * executes getContracts when generalContracts.xhtml is loaded.
@@ -40,11 +45,13 @@ public class ManageContracts extends HttpServlet implements Serializable {
     public void init(){
         try {
             PropertiesController.init();
-            getContracts();
+            retrieveContracts();
 
         } catch (IOException | ServletException e) {
             throw new RuntimeException(e);
         }
+        sortBy = new ArrayList<>();
+        sortBy.add(SortMeta.builder().field("contract_number").order(SortOrder.ASCENDING).build());
     }
 
     /**
@@ -52,7 +59,7 @@ public class ManageContracts extends HttpServlet implements Serializable {
      * The returned value is put into a string before it is turned into an array of Contract objects to be used by the datatable in generalContracts.xhtml
      * All the dates in each contract are returned as 'long' variables and are parsed to proper dates.
      */
-    public void getContracts() throws IOException, ServletException {
+    public void retrieveContracts() throws IOException, ServletException {
         System.out.println("Starting read in ManageContracts");
         String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract");
         System.out.println("getContracts: "+response);
@@ -77,6 +84,7 @@ public class ManageContracts extends HttpServlet implements Serializable {
 
             }
         }
+        contracts= Arrays.asList(contracts2);
     }
 
     /**
@@ -136,12 +144,23 @@ public class ManageContracts extends HttpServlet implements Serializable {
 
         Contract filterContract = (Contract) value;
         return filterContract.getContract_number().toLowerCase().contains(filterText)
-                || String.valueOf(filterContract.getClient_id()).contains(filterText);
+                || filterContract.getClient().getName().contains(filterText);
     }
+
+    public int customSortFunction(String nr1, String nr2) {
+        // Convert the string value to a number for comparison
+        int num1 = parseInt(nr1, 10);
+        int num2 = parseInt(nr2, 10);
+
+        // Compare the numeric values instead of the strings
+        return Integer.compare(num1, num2);
+    }
+
 
     public void setContracts(List<Contract> contracts) {
         this.contracts = contracts;
     }
+
 
 
     public Contract getSelectedItem() {
@@ -176,4 +195,11 @@ public class ManageContracts extends HttpServlet implements Serializable {
         this.updatedContract = updatedContract;
     }
 
+    public List<SortMeta> getSortBy() {
+        return sortBy;
+    }
+
+    public List<Contract> getContracts() {
+        return contracts;
+    }
 }
