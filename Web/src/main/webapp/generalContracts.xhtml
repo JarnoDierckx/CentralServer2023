@@ -100,7 +100,7 @@
             </p:dataTable>
         </div>
     </h:form>
-    <p:commandButton title="refresh page" action="#{ManageContracts.getContracts()}" oncomplete="setTimeout(function(){ location.reload(); });"/>
+    <p:commandButton title="refresh page" action="#{ManageContracts.retrieveContracts()}" oncomplete="setTimeout(function(){ location.reload(); });"/>
     <h:form target="_blank">
         <p:commandButton title="Create new contract" action="#{contractBean.PrepareCreateContract()}" ajax="false"/>
     </h:form>

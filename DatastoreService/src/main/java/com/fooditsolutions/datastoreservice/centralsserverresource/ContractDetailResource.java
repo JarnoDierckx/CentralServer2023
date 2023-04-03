@@ -68,8 +68,8 @@ public class ContractDetailResource {
                         field.setAccessible(true);
                         Object value1 = field.get(originalContractDetail);
                         Object value2 = field.get(contractDetail[i]);
-                        if (value1 != null && value2 != null) {
-                            if (!value1.equals(value2)) {
+                        if (value2 != null) {
+                            if (value1==null || !value1.equals(value2)) {
                                 if (newDetail) {
                                     field.set(detailDifferences[i], value2);
                                 } else {
@@ -145,6 +145,12 @@ public class ContractDetailResource {
             contractDetail.setPurchase_price((BigDecimal) jsonContracts.getJSONObject(i).opt("PURCHASE_PRICE"));
             contractDetail.setIndex_Start((BigDecimal) jsonContracts.getJSONObject(i).opt("INDEX_START"));
             contractDetail.setRenewal((String) jsonContracts.getJSONObject(i).opt("RENEWAL"));
+            if (jsonContracts.getJSONObject(i).opt("JGR") != null) {
+                contractDetail.setJgr((int) jsonContracts.getJSONObject(i).opt("JGR"));
+            }
+            contractDetail.setJgr_not_indexed((BigDecimal) jsonContracts.getJSONObject(i).opt("JGR_NOT_INDEXED"));
+            contractDetail.setJgr_indexed((BigDecimal) jsonContracts.getJSONObject(i).opt("JGR_INDEXED"));
+
 
             contractDetails.add(contractDetail);
         }

@@ -38,8 +38,9 @@ public class ManageContracts extends HttpServlet implements Serializable {
     private List<SortMeta> sortBy;
 
     /**
-     * executes getContracts when generalContracts.xhtml is loaded.
+     * Executes getContracts when generalContracts.xhtml is loaded.
      * This makes sure all contracts are on the page when it is loaded.
+     * It also initializes the List used to sort items.
      */
     @PostConstruct
     public void init(){
@@ -51,7 +52,6 @@ public class ManageContracts extends HttpServlet implements Serializable {
             throw new RuntimeException(e);
         }
         sortBy = new ArrayList<>();
-        sortBy.add(SortMeta.builder().field("contract_number").order(SortOrder.ASCENDING).build());
     }
 
     /**
@@ -92,7 +92,7 @@ public class ManageContracts extends HttpServlet implements Serializable {
      * @return redirects the user to the contractDetails.xhtml
      */
     public String ContractDetails() throws IOException {
-        details=getContractDetails(selectedItem.id);
+        details=getContractDetails(selectedItem.id,false);
         return "contractDetails.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
@@ -102,8 +102,8 @@ public class ManageContracts extends HttpServlet implements Serializable {
      * The received value is then parsed to a string.
      * @return the string is then further parsed to the ContractDetail class as the return value
      */
-    public ContractDetail[] getContractDetails(int id) throws IOException {
-        String responseContractDetails = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract/"+id+"/contractdetails?checkCS=true");
+    public ContractDetail[] getContractDetails(int id, boolean checkCS) throws IOException {
+        String responseContractDetails = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract/"+id+"/contractdetails?checkCS="+checkCS);
 
         System.out.println("ResponseString: "+responseContractDetails);
 
@@ -115,6 +115,7 @@ public class ManageContracts extends HttpServlet implements Serializable {
 
     /**
      * Creates a session object for the user and puts the object of the contract they selected in it, so it can be retrieved and used later on.
+     * Also deletes an existing contract and Editcontracts attribute that may already exist in the session.
      * @return redirects the user to editContract.xhtml
      */
     public String editContract(){
@@ -147,6 +148,10 @@ public class ManageContracts extends HttpServlet implements Serializable {
                 || filterContract.getClient().getName().contains(filterText);
     }
 
+    /**
+     * Takes two string values, parses them to integers and compares them.
+     * @return Integer.compare, to check which one is higher/lower.
+     */
     public int customSortFunction(String nr1, String nr2) {
         // Convert the string value to a number for comparison
         int num1 = parseInt(nr1, 10);
@@ -160,8 +165,6 @@ public class ManageContracts extends HttpServlet implements Serializable {
     public void setContracts(List<Contract> contracts) {
         this.contracts = contracts;
     }
-
-
 
     public Contract getSelectedItem() {
         return selectedItem;

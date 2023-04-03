@@ -39,6 +39,7 @@ public class EditContracts implements Serializable {
     private List<ContractDetail> updatingContractDetailsList=new ArrayList<>();
     private ModuleId[] moduleIds;
     private int counter;
+    private String warningModule="";
 
     /**
      *The function creates a session object, checks if one already exists and then retrieves the Contract object created before this class and the webpage it manages
@@ -61,7 +62,7 @@ public class EditContracts implements Serializable {
             e.printStackTrace();
         }
         ManageContracts manageContracts=new ManageContracts();
-        updatingContractDetails=manageContracts.getContractDetails(updatingContract.id);
+        updatingContractDetails=manageContracts.getContractDetails(updatingContract.id,true);
         counter=0;
         for (ContractDetail detail:updatingContractDetails){
             if (detail.getID()==0){
@@ -108,6 +109,9 @@ public class EditContracts implements Serializable {
         //System.out.println(detailString);
 
         HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract/detail", jsonString);
+        for (ContractDetail contractDetail:updatingContractDetailsList){
+            contractDetail.setWhatToDo("");
+        }
     }
 
     public ModuleId[] retrieveModuleIds() throws JsonProcessingException {
@@ -129,6 +133,23 @@ public class EditContracts implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         ContractDetail editedDetail = context.getApplication().evaluateExpressionGet(context, "#{detail}", ContractDetail.class);
         if (editedDetail != null){
+            for (ContractDetail detail: updatingContractDetailsList){
+                if (newValue.equals(detail.getModule_DBB_ID()) && editedDetail.getID() != detail.getID()){
+                    System.out.println("This contract already has this module.");
+                    warningModule="This contract already has this module.";
+                }else {
+                    warningModule="";
+                }
+            }
+            for (ModuleId moduleId: moduleIds){
+                if (moduleId.getDbb_id().equals(newValue)){
+                    for (ContractDetail detail: updatingContractDetailsList) {
+                        if (detail.getID() == editedDetail.getID()) {
+                            detail.setModuleId(moduleId);
+                        }
+                    }
+                }
+            }
             if (editedDetail.getID()>0){
                 for (ContractDetail detail: updatingContractDetailsList){
                     if (detail.getID()== editedDetail.getID()){
@@ -204,5 +225,13 @@ public class EditContracts implements Serializable {
 
     public void setModuleIds(ModuleId[] moduleIds) {
         this.moduleIds = moduleIds;
+    }
+
+    public String getWarningModule() {
+        return warningModule;
+    }
+
+    public void setWarningModule(String warningModule) {
+        this.warningModule = warningModule;
     }
 }

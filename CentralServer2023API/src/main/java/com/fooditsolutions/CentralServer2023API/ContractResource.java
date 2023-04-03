@@ -51,10 +51,10 @@ public class ContractResource {
     }
 
     @GET
-    @Path("/{contactId}")
+    @Path("/{contractId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public Contract getContact(@PathParam("contactId") String contractID) throws IOException {
+    public Contract getContact(@PathParam("contractId") String contractID) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         String responseContract = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice()+"/contract/"+contractID);
@@ -75,7 +75,6 @@ public class ContractResource {
     public List<ContractDetail> getContractDetails(@PathParam("ContractID") String contractID,
                                                    @QueryParam("checkCS") boolean checkCS) throws IOException, ServletException {
         Contract contract = getContact(contractID);
-        List<ContractDetail> contractDetailList = new ArrayList<>();
 
         System.out.println("Starting read in ContractResource");
         String responseContractDetails = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice()+"/contractDetail/"+contractID);
@@ -85,9 +84,7 @@ public class ContractResource {
          byte[] jsonData = responseContractDetails.getBytes();
         ContractDetail[] contractDetails = mapper.readValue(jsonData, ContractDetail[].class);
 
-        for(ContractDetail c:contractDetails){
-            contractDetailList.add(c);
-        }
+        List<ContractDetail> contractDetailList = new ArrayList<>(Arrays.asList(contractDetails));
 
         if(checkCS){
             List<CompareContractCS> compareContractCSList = getCSDif(contract.getId());
