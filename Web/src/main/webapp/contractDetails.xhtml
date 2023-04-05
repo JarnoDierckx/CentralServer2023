@@ -13,7 +13,7 @@
 <h:body>
     <h:form>
         <div class="card">
-            <p:dataTable var="contract" value="#{ManageContracts.selectedItem}" widgetVar="contractTable">
+            <p:dataTable var="contract" value="#{ManageContractBean.selectedItem}" widgetVar="contractTable">
 
                 <p:column headerText="contract number">
                     <h:outputText value="#{contract.contract_number}">
@@ -83,34 +83,34 @@
         </div>
 
         <div class="card">
-            <p:dataTable var="detail" value="#{ManageContracts.details}">
-                <p:column headerText="Module id">
+            <p:dataTable var="detail" value="#{ManageContractBean.detailList}" sortMode="single">
+                <p:column headerText="Module id" sortBy="#{detail.moduleId.name}">
                     #{detail.moduleId.name}
                 </p:column>
-                <p:column headerText="purchase date">
+                <p:column headerText="purchase date" sortBy="#{detail.purchase_Date}">
                     <h:outputText value="#{detail.purchase_Date}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="quantity">
+                <p:column headerText="quantity" sortBy="#{detail.amount}">
                     #{detail.amount}
                 </p:column>
-                <p:column headerText="purchase price">
+                <p:column headerText="purchase price" sortBy="#{detail.purchase_price}">
                     #{detail.purchase_price}
                 </p:column>
-                <p:column headerText="index start">
+                <p:column headerText="index start" sortBy="#{detail.index_Start}">
                     #{detail.index_Start}
                 </p:column>
-                <p:column headerText="renewal">
+                <p:column headerText="renewal" sortBy="#{detail.renewal}">
                     #{detail.renewal}
                 </p:column>
-                <p:column headerText="jgr not indexed">
+                <p:column headerText="jgr not indexed" sortBy="#{detail.jgr_not_indexed}">
                     #{detail.jgr_not_indexed}
                 </p:column>
-                <p:column headerText="jgr indexed">
+                <p:column headerText="jgr indexed" sortBy="#{detail.jgr_indexed}">
                     #{detail.jgr_indexed}
                 </p:column>
-                <p:column headerText="%jgr">
+                <p:column headerText="%jgr" sortBy="#{detail.jgr}">
                     #{detail.jgr}
                 </p:column>
             </p:dataTable>

@@ -8,27 +8,23 @@ import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.web.model.*;
 import org.apache.commons.beanutils.BeanUtils;
 import org.primefaces.event.CellEditEvent;
+import org.primefaces.model.SortMeta;
 
 
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.view.ViewScoped;
 import javax.servlet.http.HttpSession;
-import javax.ws.rs.client.Entity;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 @ManagedBean
 @SessionScoped
-public class EditContracts implements Serializable {
+public class EditContractBean implements Serializable {
 
     private Contract selectedContract;
     //This is the one that goes to the webpage
@@ -40,6 +36,7 @@ public class EditContracts implements Serializable {
     private ModuleId[] moduleIds;
     private int counter;
     private String warningModule="";
+    private List<SortMeta> sortBy;
 
     /**
      *The function creates a session object, checks if one already exists and then retrieves the Contract object created before this class and the webpage it manages
@@ -61,8 +58,8 @@ public class EditContracts implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ManageContracts manageContracts=new ManageContracts();
-        updatingContractDetails=manageContracts.getContractDetails(updatingContract.id,true);
+        ManageContractBean manageContractBean =new ManageContractBean();
+        updatingContractDetails= manageContractBean.getContractDetails(updatingContract.id,true);
         counter=0;
         for (ContractDetail detail:updatingContractDetails){
             if (detail.getID()==0){
@@ -72,6 +69,7 @@ public class EditContracts implements Serializable {
         }
         updatingContractDetailsList= Arrays.asList(updatingContractDetails);
         moduleIds=retrieveModuleIds();
+        sortBy = new ArrayList<>();
     }
 
     public void updateAll() throws IOException{
@@ -129,6 +127,7 @@ public class EditContracts implements Serializable {
     public void onCellEdit(CellEditEvent event) {
         Object oldValue = event.getOldValue();
         Object newValue = event.getNewValue();
+        warningModule="";
 
         FacesContext context = FacesContext.getCurrentInstance();
         ContractDetail editedDetail = context.getApplication().evaluateExpressionGet(context, "#{detail}", ContractDetail.class);
@@ -136,9 +135,7 @@ public class EditContracts implements Serializable {
             for (ContractDetail detail: updatingContractDetailsList){
                 if (newValue.equals(detail.getModule_DBB_ID()) && editedDetail.getID() != detail.getID()){
                     System.out.println("This contract already has this module.");
-                    warningModule="This contract already has this module.";
-                }else {
-                    warningModule="";
+                    warningModule=" This contract already has this module.";
                 }
             }
             for (ModuleId moduleId: moduleIds){
@@ -233,5 +230,9 @@ public class EditContracts implements Serializable {
 
     public void setWarningModule(String warningModule) {
         this.warningModule = warningModule;
+    }
+
+    public List<SortMeta> getSortBy() {
+        return sortBy;
     }
 }

@@ -6,36 +6,43 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.web.model.*;
-import lombok.Getter;
-import lombok.Setter;
 import org.primefaces.event.CellEditEvent;
 
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @ManagedBean
 @SessionScoped
-public class ContractBean implements Serializable {
+public class CreateContractBean implements Serializable {
     private Contract newContract;
     private Client client;
     private Client[] clients;
     private Bjr bjr;
     private Bjr[] bjrs;
     private ModuleId[] modules;
+    private Index[] cpis;
 
     @PostConstruct
-    public void init(){
+    public void init() throws JsonProcessingException {
         newContract=new Contract();
         client=new Client();
         bjr=new Bjr();
+        PrepareCreateContract();
     }
 
     /**
@@ -45,6 +52,7 @@ public class ContractBean implements Serializable {
     public String PrepareCreateContract() throws JsonProcessingException {
         bjrs =retrieveBjr();
         clients=retrieveClients();
+        cpis=retrieveIndex();
         return "createContract.xhtml?faces-redirect=true";
     }
 
@@ -84,11 +92,29 @@ public class ContractBean implements Serializable {
         return mapper.readValue(response, Bjr[].class);
     }
 
-    public void onCellEdit(CellEditEvent event) {
-        Object oldValue = event.getOldValue();
-        Object newValue = event.getNewValue();
+    public Index[] retrieveIndex() throws JsonProcessingException {
+        String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_indexservice()+"/index");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.readValue(response, Index[].class);
+    }
 
-        System.out.println(newValue);
+    public void updateCPI() throws IOException, ScriptException, NoSuchMethodException {
+        if (newContract.start_date != null && newContract.base_index_year > 0){
+            Date startDate = newContract.start_date;
+            DateFormat df = new SimpleDateFormat("MMMM yyyy");
+            String month =df.format(startDate);
+            for (Index index:cpis){
+                if (Objects.equals(index.getBase(), newContract.getBase_index_year() + " = 100") && index.getMonth().equals(month)){
+                    newContract.index_start=index.getCI();
+                    ScriptEngineManager manager=new ScriptEngineManager();
+                    ScriptEngine engine=manager.getEngineByName("javascript");
+                    engine.eval(Files.newBufferedReader(Paths.get("C:\\Users\\reports\\IdeaProjects\\CentralServer2023\\Web\\src\\main\\java\\com\\fooditsolutions\\web\\scripts\\Jsfunctions.js"), StandardCharsets.UTF_8));
+                    Invocable inv = (Invocable) engine;
+                    inv.invokeFunction("updateIndexStart", newContract.index_start);
+                }
+            }
+        }
     }
 
 

@@ -7,7 +7,6 @@ import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.web.model.Contract;
 import com.fooditsolutions.web.model.ContractDetail;
 import org.primefaces.model.SortMeta;
-import org.primefaces.model.SortOrder;
 import org.primefaces.util.LangUtils;
 
 import javax.annotation.ManagedBean;
@@ -27,14 +26,15 @@ import static java.lang.Integer.parseInt;
 
 @ManagedBean
 @SessionScoped
-public class ManageContracts extends HttpServlet implements Serializable {
+public class ManageContractBean extends HttpServlet implements Serializable {
     @Inject
-    private EditContracts editContracts;
+    private EditContractBean editContractBean;
     private List<Contract> contracts;
     private Contract[] contracts2;
     private Contract selectedItem;
     private Contract updatedContract;
     private ContractDetail[] details;
+    private List<ContractDetail> detailList;
     private List<SortMeta> sortBy;
 
     /**
@@ -93,6 +93,7 @@ public class ManageContracts extends HttpServlet implements Serializable {
      */
     public String ContractDetails() throws IOException {
         details=getContractDetails(selectedItem.id,false);
+        detailList= Arrays.asList(details);
         return "contractDetails.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
@@ -124,13 +125,21 @@ public class ManageContracts extends HttpServlet implements Serializable {
             //selectedItem = (Contract) session.getAttribute("contract");
             session.removeAttribute("contract");
         }
-        if (session.getAttribute("EditContracts")!=null){
-            session.removeAttribute("EditContracts");
+        if (session.getAttribute("EditContractBean")!=null){
+            session.removeAttribute("EditContractBean");
         }
 
 
         session.setAttribute("contract", selectedItem);
         return "editContract.xhtml?faces-redirect=true";
+    }
+    public String createContract(){
+        HttpSession session= (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        if (session.getAttribute("createContractBean")!=null){
+            session.removeAttribute("createContractBean");
+        }
+
+        return "createContract.xhtml?faces-redirect=true";
     }
 
     /**
@@ -204,5 +213,9 @@ public class ManageContracts extends HttpServlet implements Serializable {
 
     public List<Contract> getContracts() {
         return contracts;
+    }
+
+    public List<ContractDetail> getDetailList() {
+        return detailList;
     }
 }

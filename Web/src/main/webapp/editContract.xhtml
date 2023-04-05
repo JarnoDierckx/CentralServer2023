@@ -12,13 +12,13 @@
 <h:body>
   <h:form>
     <div class="card">
-      <p:dataTable var="edit" value="#{EditContracts.updatingContract}" paginator="true" paginatorTemplate="{Save}" paginatorPosition="bottom" editable="true" editMode="cell">
+      <p:dataTable var="edit" value="#{EditContractBean.updatingContract}" paginator="true" paginatorTemplate="{Save}" paginatorPosition="bottom" editable="true" editMode="cell">
 
-        <p:ajax event="cellEdit" listener="#{EditContracts.onCellEdit}"/>
+        <p:ajax event="cellEdit" listener="#{EditContractBean.onCellEdit}"/>
 
         <f:facet name="{Save}">
           <p:commandButton title="Save Changes">
-            <f:ajax listener="#{EditContracts.updateAll()}"/>
+            <f:ajax listener="#{EditContractBean.updateAll()}"/>
           </p:commandButton >
         </f:facet>
         <f:facet name="header">
@@ -249,20 +249,22 @@
 
 
       <div class="card">
-        <p:dataTable id="detailsTable" widgetVar="detailsTableWidget" var="detail" value="#{EditContracts.updatingContractDetailsList}" paginator="true" paginatorPosition="both"
-                     paginatorTemplate="{addRow}"
-                     editable="true" editMode="cell">
-          <p:ajax event="cellEdit" listener="#{EditContracts.onCellEdit}"/>
+        <p:dataTable id="detailsTable" widgetVar="detailsTableWidget" var="detail" value="#{EditContractBean.updatingContractDetailsList}" paginator="true" paginatorPosition="both"
+                     paginatorTemplate="{addRow} {Warning}" editable="true" editMode="cell" sortMode="single">
+
+          <p:ajax event="cellEdit" listener="#{EditContractBean.onCellEdit}" update="warning"/>
+
           <f:facet name="{addRow}">
-            <p:commandButton value="Add new detail" action="#{EditContracts.addRow}" update="detailsTable"/>
+            <p:commandButton value="Add new detail" action="#{EditContractBean.addRow}" update="detailsTable"/>
           </f:facet>
+
           <f:facet name="{Warning}">
-            <p:outputLabel value="#{EditContracts.warningModule}">
-              <f:ajax event="blur" listener="#{EditContracts.onCellEdit}" render="@form"/>
+            <p:outputLabel id="warning" value="#{EditContractBean.warningModule}" style="color: red">
+              <f:ajax event="blur" listener="#{EditContractBean.onCellEdit}" render="@form" update="warning"/>
             </p:outputLabel>
           </f:facet>
 
-          <p:column headerText="Module">
+          <p:column headerText="Module" sortBy="#{detail.moduleId.name}">
             <p:cellEditor>
               <f:facet name="output">
                 <h:outputText value="#{detail.moduleId.name}"/>
@@ -270,14 +272,14 @@
               <f:facet name="input">
 
                 <p:selectOneMenu value="#{detail.module_DBB_ID}">
-                  <f:selectItems value="#{EditContracts.moduleIds}" var="M" itemLabel="#{M.name}" itemValue="#{M.dbb_id}"/>
+                  <f:selectItems value="#{EditContractBean.moduleIds}" var="M" itemLabel="#{M.name}" itemValue="#{M.dbb_id}"/>
                 </p:selectOneMenu>
 
               </f:facet>
             </p:cellEditor>
           </p:column>
 
-          <p:column headerText="purchase date">
+          <p:column headerText="purchase date" sortBy="#{detail.purchase_Date}">
             <p:cellEditor>
               <f:facet name="output">
                 <h:outputText value="#{detail.purchase_Date}">
@@ -292,7 +294,7 @@
             </p:cellEditor>
           </p:column>
 
-          <p:column headerText="quantity">
+          <p:column headerText="quantity" sortBy="#{detail.amount}">
             <p:cellEditor>
               <f:facet name="output">
                 <h:outputText value="#{detail.amount}"/>
@@ -303,7 +305,7 @@
             </p:cellEditor>
           </p:column>
 
-          <p:column headerText="purchase price">
+          <p:column headerText="purchase price" sortBy="#{detail.purchase_price}">
             <p:cellEditor>
               <f:facet name="output">
                 <h:outputText value="#{detail.purchase_price}"/>
@@ -314,7 +316,7 @@
             </p:cellEditor>
           </p:column>
 
-          <p:column headerText="index start">
+          <p:column headerText="index start" sortBy="#{detail.index_Start}">
             <p:cellEditor>
               <f:facet name="output">
                 <h:outputText value="#{detail.index_Start}"/>
@@ -325,7 +327,7 @@
             </p:cellEditor>
           </p:column>
 
-          <p:column headerText="renewal">
+          <p:column headerText="renewal" sortBy="#{detail.renewal}">
             <p:cellEditor>
               <f:facet name="output">
                 <h:outputText value="#{detail.renewal}"/>
@@ -336,7 +338,7 @@
             </p:cellEditor>
           </p:column>
 
-          <p:column headerText="jgr not indexed">
+          <p:column headerText="jgr not indexed" sortBy="#{detail.jgr_not_indexed}">
             <p:cellEditor>
               <f:facet name="output">
                 <h:outputText value="#{detail.jgr_not_indexed}"/>
@@ -347,7 +349,7 @@
             </p:cellEditor>
           </p:column>
 
-          <p:column headerText="jgr indexed">
+          <p:column headerText="jgr indexed" sortBy="#{detail.jgr_indexed}">
             <p:cellEditor>
               <f:facet name="output">
                 <h:outputText value="#{detail.jgr_indexed}"/>
@@ -358,7 +360,7 @@
             </p:cellEditor>
           </p:column>
 
-          <p:column headerText="%jgr">
+          <p:column headerText="%jgr" sortBy="#{detail.jgr}">
             <p:cellEditor>
               <f:facet name="output">
                 <h:outputText value="#{detail.jgr}"/>

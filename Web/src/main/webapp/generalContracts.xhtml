@@ -15,7 +15,7 @@
 
     <h:form target="_blank">
         <div class="card">
-            <p:dataTable var="contract" value="#{ManageContracts.contracts}" widgetVar="contractTable" globalFilterFunction="#{ManageContracts.globalFilterFunction}" allowUnsorting="true" sortMode="single">
+            <p:dataTable var="contract" value="#{ManageContractBean.contracts}" widgetVar="contractTable" globalFilterFunction="#{ManageContractBean.globalFilterFunction}" sortMode="single">
                 <f:facet name="header">
                     <div class="flex justify-content-end">
                         <p:inputText id="globalFilter" onkeyup="PF('contractTable').filter()" style="width:300px"
@@ -24,12 +24,12 @@
                 </f:facet>
 
                 <p:column style="width:3rem;text-align: center">
-                    <p:commandButton icon="pi pi-search" title="View" action="#{ManageContracts.ContractDetails()}" ajax="false" emptyMessage="No contracts found with given criteria">
-                        <f:setPropertyActionListener value="#{contract}" target="#{ManageContracts.selectedItem}"/>
+                    <p:commandButton icon="pi pi-search" title="View" action="#{ManageContractBean.ContractDetails()}" ajax="false" emptyMessage="No contracts found with given criteria">
+                        <f:setPropertyActionListener value="#{contract}" target="#{ManageContractBean.selectedItem}"/>
                     </p:commandButton >
                 </p:column>
 
-                <p:column headerText="contract number" sortBy="#{contract.contract_number}" sortFunction="#{ManageContracts.customSortFunction}">
+                <p:column headerText="contract number" sortBy="#{contract.contract_number}" sortFunction="#{ManageContractBean.customSortFunction}">
                     #{contract.contract_number}
                 </p:column>
                 <p:column headerText="Client" sortBy="#{contract.client.name}">
@@ -92,17 +92,17 @@
                 </p:column>
 
                 <p:column style="width:2rem;text-align: center">
-                    <p:commandButton title="Edit" action="#{ManageContracts.editContract}" ajax="false">
-                        <f:setPropertyActionListener value="#{contract}" target="#{ManageContracts.selectedItem}"/>
+                    <p:commandButton title="Edit" action="#{ManageContractBean.editContract}" ajax="false">
+                        <f:setPropertyActionListener value="#{contract}" target="#{ManageContractBean.selectedItem}"/>
                     </p:commandButton >
                 </p:column>
 
             </p:dataTable>
         </div>
     </h:form>
-    <p:commandButton title="refresh page" action="#{ManageContracts.retrieveContracts()}" oncomplete="setTimeout(function(){ location.reload(); });"/>
+    <p:commandButton title="refresh page" action="#{ManageContractBean.retrieveContracts()}" oncomplete="setTimeout(function(){ location.reload(); });"/>
     <h:form target="_blank">
-        <p:commandButton title="Create new contract" action="#{contractBean.PrepareCreateContract()}" ajax="false"/>
+        <p:commandButton title="Create new contract" action="#{ManageContractBean.createContract()}" ajax="false"/>
     </h:form>
 </h:body>
 </html>

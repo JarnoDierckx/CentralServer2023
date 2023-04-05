@@ -20,18 +20,18 @@
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>ManageContracts</managed-bean-name>
-        <managed-bean-class>com.fooditsolutions.web.bean.ManageContracts</managed-bean-class>
+        <managed-bean-name>ManageContractBean</managed-bean-name>
+        <managed-bean-class>com.fooditsolutions.web.bean.ManageContractBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>EditContracts</managed-bean-name>
-        <managed-bean-class>com.fooditsolutions.web.bean.EditContracts</managed-bean-class>
+        <managed-bean-name>EditContractBean</managed-bean-name>
+        <managed-bean-class>com.fooditsolutions.web.bean.EditContractBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
     <managed-bean>
-        <managed-bean-name>CreateContracts</managed-bean-name>
-        <managed-bean-class>com.fooditsolutions.web.bean.ContractBean</managed-bean-class>
+        <managed-bean-name>CreateContractBean</managed-bean-name>
+        <managed-bean-class>com.fooditsolutions.web.bean.CreateContractBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
     </managed-bean>
 </faces-config>
