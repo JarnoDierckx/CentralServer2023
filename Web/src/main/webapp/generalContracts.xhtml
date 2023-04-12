@@ -15,13 +15,22 @@
 
     <h:form target="_blank">
         <div class="card">
-            <p:dataTable var="contract" value="#{ManageContractBean.contracts}" widgetVar="contractTable" globalFilterFunction="#{ManageContractBean.globalFilterFunction}" sortMode="single">
+
+            <p:dataTable id="generalTable" var="contract" value="#{ManageContractBean.contracts}" widgetVar="contractTable"  globalFilterFunction="#{ManageContractBean.globalFilterFunction}" sortMode="single">
                 <f:facet name="header">
                     <div class="flex justify-content-end">
                         <p:inputText id="globalFilter" onkeyup="PF('contractTable').filter()" style="width:300px"
                                      placeholder="Search using global function" />
                     </div>
+                    <p:selectBooleanCheckbox >
+                        <p:ajax update="generalTable"/>
+                    </p:selectBooleanCheckbox>
                 </f:facet>
+
+                <ui:remove>
+                    <p:column filterBy="#{contract._active}" filterValue="#{ManageContractBean.activeFilter}"/>
+                </ui:remove>
+
 
                 <p:column style="width:3rem;text-align: center">
                     <p:commandButton icon="pi pi-search" title="View" action="#{ManageContractBean.ContractDetails()}" ajax="false" emptyMessage="No contracts found with given criteria">
@@ -29,65 +38,62 @@
                     </p:commandButton >
                 </p:column>
 
-                <p:column headerText="contract number" sortBy="#{contract.contract_number}" sortFunction="#{ManageContractBean.customSortFunction}">
+                <p:column headerText="Contract number" sortBy="#{contract.contract_number}" sortFunction="#{ManageContractBean.customSortFunction}">
                     #{contract.contract_number}
                 </p:column>
                 <p:column headerText="Client" sortBy="#{contract.client.name}">
                     #{contract.client.name}
                 </p:column>
-                <p:column headerText="BJR" sortBy="#{contract.bjr.name}">
-                    #{contract.bjr.name}
-                </p:column>
-                <p:column headerText="start date" sortBy="#{contract.start_date}">
+                <p:column headerText="Start date" sortBy="#{contract.start_date}">
                     <h:outputText value="#{contract.start_date}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="end date" sortBy="#{contract.end_date}">
+                <p:column headerText="End date" sortBy="#{contract.end_date}">
                     <h:outputText value="#{contract.end_date}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="source" sortBy="#{contract.source}">
+                <p:column headerText="Source" sortBy="#{contract.source}">
                     #{contract.source}
                 </p:column>
-                <p:column headerText="invoice frequency" sortBy="#{contract.invoice_frequency}">
+                <p:column headerText="Invoice frequency" sortBy="#{contract.invoice_frequency}">
                     #{contract.invoice_frequency}
                 </p:column>
-                <p:column headerText="index frequency" sortBy="#{contract.index_frequency}">
+                <p:column headerText="Index frequency" sortBy="#{contract.index_frequency}">
                     #{contract.index_frequency}
                 </p:column>
-                <p:column headerText="base index year" sortBy="#{contract.base_index_year}">
+                <p:column headerText="Base year index" sortBy="#{contract.base_index_year}">
                     #{contract.base_index_year}
                 </p:column>
-                <p:column headerText="index start" sortBy="#{contract.index_start}">
+                <p:column headerText="Starting index value" sortBy="#{contract.index_start}">
                     #{contract.index_start}
                 </p:column>
-                <p:column headerText="index last invoice" sortBy="#{contract.index_last_invoice}">
+                <p:column headerText="Index last invoice" sortBy="#{contract.index_last_invoice}">
                     #{contract.index_last_invoice}
                 </p:column>
-                <p:column headerText="amount last invoice" sortBy="#{contract.amount_last_invoice}">
+                <p:column headerText="Amount last invoice" sortBy="#{contract.amount_last_invoice}">
                     #{contract.amount_last_invoice}
                 </p:column>
-                <p:column headerText="last invoice number" sortBy="#{contract.last_invoice_number}">
+                <p:column headerText="Last invoice number" sortBy="#{contract.last_invoice_number}">
                     #{contract.last_invoice_number}
                 </p:column>
-                <p:column headerText="last invoice date" sortBy="#{contract.last_invoice_date}">
+                <p:column headerText="Last invoice date" sortBy="#{contract.last_invoice_date}">
                     <h:outputText value="#{contract.last_invoice_date}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="last invoice period start" sortBy="#{contract.last_invoice_period_start}">
+                <p:column headerText="Last invoice period start" sortBy="#{contract.last_invoice_period_start}">
                     <h:outputText value="#{contract.last_invoice_period_start}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="last invoice period end" sortBy="#{contract.last_invoice_period_end}">
+                <p:column headerText="Last invoice period end" sortBy="#{contract.last_invoice_period_end}">
                     <h:outputText value="#{contract.last_invoice_period_end}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="jgr" sortBy="#{contract.jgr}">
+                <p:column headerText="%jgr" sortBy="#{contract.jgr}">
                     #{contract.jgr}
                 </p:column>
 

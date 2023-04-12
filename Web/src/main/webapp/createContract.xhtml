@@ -14,6 +14,13 @@
 <div class="card">
     <h:form styleClass="grid">
         <div class="CS2023Container">
+            <section>
+                <h:outputText value="Server id"/>
+                <p:inputText value="#{createContractBean.server_id}">
+                    <p:ajax event="blur" listener="#{createContractBean.updateClient()}"/>
+                </p:inputText>
+            </section>
+
             <section >
                 <h:outputText value="Contract number"/><br/>
                 <p:inputText value="#{createContractBean.newContract.contract_number}" required="true"/>
@@ -23,13 +30,6 @@
                 <h:outputText value="Client"/><br/>
                 <p:selectOneMenu value="#{createContractBean.newContract.client_id}">
                     <f:selectItems value="#{createContractBean.clients}" var="c" itemLabel="#{c.name}" itemValue="#{c.DBB_ID}"/>
-                </p:selectOneMenu>
-            </section>
-
-            <section>
-                <h:outputText value="BRJ"/><br/>
-                <p:selectOneMenu value="#{createContractBean.newContract.bjr_id}">
-                    <f:selectItems value="#{createContractBean.bjrs}" var="b" itemLabel="#{b.name}" itemValue="#{b.id}"/>
                 </p:selectOneMenu>
             </section>
 
@@ -49,82 +49,38 @@
             </section>
 
             <section>
-                <h:outputText value="Source"/><br/>
-                <h:selectOneMenu value="#{createContractBean.newContract.source}">
-                    <f:selectItem itemValue="CS" itemLabel="CS" />
-                    <f:selectItem itemValue="M" itemLabel="M" />
-                </h:selectOneMenu>
-            </section>
-
-            <section>
                 <h:outputText value="Invoice frequency"/><br/>
-                <h:selectOneMenu value="#{createContractBean.newContract.invoice_frequency}">
+                <p:selectOneMenu value="#{createContractBean.newContract.invoice_frequency}">
                     <f:selectItem itemValue="J" itemLabel="J" />
                     <f:selectItem itemValue="M" itemLabel="M" />
                     <f:selectItem itemValue="W" itemLabel="W" />
-                </h:selectOneMenu>
+                </p:selectOneMenu>
             </section>
 
             <section>
                 <h:outputText value="Index frequency"/><br/>
-                <h:selectOneMenu value="#{createContractBean.newContract.index_frequency}">
+                <p:selectOneMenu value="#{createContractBean.newContract.index_frequency}">
                     <f:selectItem itemValue="J" itemLabel="J" />
                     <f:selectItem itemValue="M" itemLabel="M" />
                     <f:selectItem itemValue="W" itemLabel="W" />
-                </h:selectOneMenu>
+                </p:selectOneMenu>
             </section>
 
             <section>
-                <h:outputText value="Base index year"/><br/>
+                <h:outputText value="Base year index"/><br/>
                 <p:inputText value="#{createContractBean.newContract.base_index_year}">
                     <p:ajax event="blur" listener="#{createContractBean.updateCPI()}" render="indexStart"/>
                 </p:inputText>
             </section>
 
             <section>
-                <h:outputText value="Index start" id="indexStart"/><br/>
+                <h:outputText value="Starting index value" id="indexStart"/><br/>
                 <p:inputText value="#{createContractBean.newContract.index_start}" required="true">
                 </p:inputText>
             </section>
 
             <section>
-                <h:outputText value="Index last invoice"/><br/>
-                <p:inputText value="#{createContractBean.newContract.index_last_invoice}"/>
-            </section>
-
-            <section>
-                <h:outputText value="Amount last invoice"/><br/>
-                <p:inputText value="#{createContractBean.newContract.amount_last_invoice}"/>
-            </section>
-
-            <section>
-                <h:outputText value="Last invoice number"/><br/>
-                <p:inputText value="#{createContractBean.newContract.last_invoice_number}"/>
-            </section>
-
-            <section>
-                <h:outputText value="Last invoice date"/><br/>
-                <p:calendar  value="#{createContractBean.newContract.last_invoice_date}" pattern="yyyy-MM-dd">
-                    <f:convertDateTime pattern = "yyyy-MM-dd" />
-                </p:calendar>
-            </section>
-
-            <section>
-                <h:outputText value="Last invoice period start"/><br/>
-                <p:calendar  value="#{createContractBean.newContract.last_invoice_period_start}" pattern="yyyy-MM-dd">
-                    <f:convertDateTime pattern = "yyyy-MM-dd" />
-                </p:calendar>
-            </section>
-
-            <section>
-                <h:outputText value="Last invoice period end"/><br/>
-                <p:calendar  value="#{createContractBean.newContract.last_invoice_period_end}" pattern="yyyy-MM-dd">
-                    <f:convertDateTime pattern = "yyyy-MM-dd" />
-                </p:calendar>
-            </section>
-
-            <section>
-                <h:outputText value="jgr"/><br/>
+                <h:outputText value="%jgr"/><br/>
                 <p:inputText value="#{createContractBean.newContract.jgr}"/>
             </section>
         </div>

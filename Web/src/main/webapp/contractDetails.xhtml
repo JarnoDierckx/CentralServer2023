@@ -15,7 +15,7 @@
         <div class="card">
             <p:dataTable var="contract" value="#{ManageContractBean.selectedItem}" widgetVar="contractTable">
 
-                <p:column headerText="contract number">
+                <p:column headerText="Contract number">
                     <h:outputText value="#{contract.contract_number}">
                         <f:converter converterId="javax.faces.Integer" />
                     </h:outputText>
@@ -23,59 +23,56 @@
                 <p:column headerText="Client">
                     #{contract.client.name}
                 </p:column>
-                <p:column headerText="BJR">
-                    #{contract.bjr.name}
-                </p:column>
-                <p:column headerText="start date">
+                <p:column headerText="Start date">
                     <h:outputText value="#{contract.start_date}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="end date">
+                <p:column headerText="End date">
                     <h:outputText value="#{contract.end_date}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="source">
+                <p:column headerText="Source">
                     #{contract.source}
                 </p:column>
-                <p:column headerText="invoice frequency">
+                <p:column headerText="Invoice frequency">
                     #{contract.invoice_frequency}
                 </p:column>
-                <p:column headerText="index frequency">
+                <p:column headerText="Index frequency">
                     #{contract.index_frequency}
                 </p:column>
-                <p:column headerText="base index year">
+                <p:column headerText="Base year index">
                     #{contract.base_index_year}
                 </p:column>
-                <p:column headerText="index start">
+                <p:column headerText="Starting index value">
                     #{contract.index_start}
                 </p:column>
-                <p:column headerText="index last invoice">
+                <p:column headerText="Index last invoice">
                     #{contract.index_last_invoice}
                 </p:column>
-                <p:column headerText="amount last invoice">
+                <p:column headerText="Amount last invoice">
                     #{contract.amount_last_invoice}
                 </p:column>
-                <p:column headerText="last invoice number">
+                <p:column headerText="Last invoice number">
                     #{contract.last_invoice_number}
                 </p:column>
-                <p:column headerText="last invoice date">
+                <p:column headerText="Last invoice date">
                     <h:outputText value="#{contract.last_invoice_date}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="last invoice period start">
+                <p:column headerText="Last invoice period start">
                     <h:outputText value="#{contract.last_invoice_period_start}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="last invoice period end">
+                <p:column headerText="Last invoice period end">
                     <h:outputText value="#{contract.last_invoice_period_end}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="jgr">
+                <p:column headerText="%jgr">
                     #{contract.jgr}
                 </p:column>
 
@@ -98,7 +95,7 @@
                 <p:column headerText="purchase price" sortBy="#{detail.purchase_price}">
                     #{detail.purchase_price}
                 </p:column>
-                <p:column headerText="index start" sortBy="#{detail.index_Start}">
+                <p:column headerText="starting index value" sortBy="#{detail.index_Start}">
                     #{detail.index_Start}
                 </p:column>
                 <p:column headerText="renewal" sortBy="#{detail.renewal}">

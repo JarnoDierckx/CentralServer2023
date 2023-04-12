@@ -16,7 +16,7 @@ public class BjrResource {
 
     @GET
     @Produces("application/json")
-    public String getContracts() throws IOException {
+    public String getBjrs() throws IOException {
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/bjr?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         return responseString;
     }

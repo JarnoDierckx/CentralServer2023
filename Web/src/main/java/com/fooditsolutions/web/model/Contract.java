@@ -33,6 +33,7 @@ public class Contract {
     public String comments;
     public Date created;
     public Date updated;
+    public boolean is_active;
 
 
 }

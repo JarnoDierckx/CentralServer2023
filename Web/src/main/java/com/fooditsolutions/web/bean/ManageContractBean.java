@@ -36,6 +36,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     private ContractDetail[] details;
     private List<ContractDetail> detailList;
     private List<SortMeta> sortBy;
+    private boolean activeFilter = true;
 
     /**
      * Executes getContracts when generalContracts.xhtml is loaded.
@@ -154,7 +155,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
         Contract filterContract = (Contract) value;
         return filterContract.getContract_number().toLowerCase().contains(filterText)
-                || filterContract.getClient().getName().contains(filterText);
+                || filterContract.getClient().getName().toLowerCase().contains(filterText);
     }
 
     /**
@@ -217,5 +218,13 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     public List<ContractDetail> getDetailList() {
         return detailList;
+    }
+
+    public boolean isActiveFilter() {
+        return activeFilter;
+    }
+
+    public void setActiveFilter(boolean activeFilter) {
+        this.activeFilter = activeFilter;
     }
 }

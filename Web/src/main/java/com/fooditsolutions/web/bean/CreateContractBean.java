@@ -19,6 +19,7 @@ import javax.script.ScriptException;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -36,6 +37,8 @@ public class CreateContractBean implements Serializable {
     private Bjr[] bjrs;
     private ModuleId[] modules;
     private Index[] cpis;
+    private BigDecimal server_id;
+    private Server[] servers;
 
     @PostConstruct
     public void init() throws JsonProcessingException {
@@ -53,6 +56,7 @@ public class CreateContractBean implements Serializable {
         bjrs =retrieveBjr();
         clients=retrieveClients();
         cpis=retrieveIndex();
+        servers=retrieveServers();
         return "createContract.xhtml?faces-redirect=true";
     }
 
@@ -60,6 +64,10 @@ public class CreateContractBean implements Serializable {
      * Maps all values of newContract to a json object in a String and sends it to centralServerAPI.
      */
     public void createContract() throws IOException, ServletException {
+        if (!newContract.source.equals("CS")){
+            newContract.source="M";
+        }
+        newContract.is_active=true;
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         //Converting the Object to JSONString
@@ -68,6 +76,7 @@ public class CreateContractBean implements Serializable {
         System.out.println("Create: "+jsonString);
         HttpController.httpPost(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract", jsonString);
         newContract=new Contract();
+        server_id= BigDecimal.valueOf(0);
     }
 
     /**
@@ -99,6 +108,13 @@ public class CreateContractBean implements Serializable {
         return mapper.readValue(response, Index[].class);
     }
 
+    public Server[] retrieveServers() throws JsonProcessingException {
+        String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/server");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.readValue(response, Server[].class);
+    }
+
     public void updateCPI() throws IOException, ScriptException, NoSuchMethodException {
         if (newContract.start_date != null && newContract.base_index_year > 0){
             Date startDate = newContract.start_date;
@@ -112,6 +128,20 @@ public class CreateContractBean implements Serializable {
                     engine.eval(Files.newBufferedReader(Paths.get("C:\\Users\\reports\\IdeaProjects\\CentralServer2023\\Web\\src\\main\\java\\com\\fooditsolutions\\web\\scripts\\Jsfunctions.js"), StandardCharsets.UTF_8));
                     Invocable inv = (Invocable) engine;
                     inv.invokeFunction("updateIndexStart", newContract.index_start);
+                }
+            }
+        }
+    }
+
+    public void updateClient(){
+        for (Server server:servers){
+            if (server.getDBB_ID().equals(server_id)){
+                newContract.client_id=server.getCLIENT_DBB_ID();
+                newContract.source="CS";
+                for (Client client2:clients){
+                    if (server.getCLIENT_DBB_ID().equals(client2.getDBB_ID())){
+                        newContract.client=client2;
+                    }
                 }
             }
         }
@@ -164,5 +194,13 @@ public class CreateContractBean implements Serializable {
 
     public void setModules(ModuleId[] modules) {
         this.modules = modules;
+    }
+
+    public BigDecimal getServer_id() {
+        return server_id;
+    }
+
+    public void setServer_id(BigDecimal server_id) {
+        this.server_id = server_id;
     }
 }

@@ -93,8 +93,8 @@ public class ContractResource {
             field.setAccessible(true);
             Object value1 = field.get(originalContract);
             Object value2 = field.get(contract);
-            if (value1 != null && value2 != null) {
-                if (!value1.equals(value2)) {
+            if (value2 != null) {
+                if ( value1==null || !value1.equals(value2)) {
                     field.set(differences, value2);
                     counter++;
                 }
@@ -183,6 +183,7 @@ public class ContractResource {
             if (jsonContracts.getJSONObject(i).opt("UPDATED") != null) {
                 contract.setUpdated((Date) jsonContracts.getJSONObject(i).opt("UPDATED"));
             }
+            contract.set_active((boolean) jsonContracts.getJSONObject(i).opt("IS_ACTIVE"));
 
             contracts.add(contract);
         }

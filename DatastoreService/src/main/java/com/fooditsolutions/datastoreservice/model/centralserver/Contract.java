@@ -44,6 +44,7 @@ public class Contract extends Sqlmodel {
     public String comments;
     public Date created;
     public Date updated;
+    public boolean is_active;
 
 
 
