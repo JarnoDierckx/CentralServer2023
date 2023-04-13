@@ -142,7 +142,9 @@ public class ContractResource {
             contract.setId((int) jsonContracts.getJSONObject(i).opt("ID"));
             contract.setContract_number((String) jsonContracts.getJSONObject(i).opt("CONTRACT_NUMBER"));
             contract.setClient_id((BigDecimal) jsonContracts.getJSONObject(i).opt("CLIENT_ID"));
-            contract.setBjr_id((int) jsonContracts.getJSONObject(i).opt("BJR_ID"));
+            if (jsonContracts.getJSONObject(i).opt("BJR_ID") != null) {
+                contract.setBjr_id((int) jsonContracts.getJSONObject(i).opt("BJR_ID"));
+            }
             contract.setStart_date((Date) jsonContracts.getJSONObject(i).opt("START_DATE"));
             Util.structureSQL(contract.getStart_date());
             contract.setEnd_date((Date) jsonContracts.getJSONObject(i).opt("END_DATE"));
@@ -183,8 +185,9 @@ public class ContractResource {
             if (jsonContracts.getJSONObject(i).opt("UPDATED") != null) {
                 contract.setUpdated((Date) jsonContracts.getJSONObject(i).opt("UPDATED"));
             }
-            contract.set_active((boolean) jsonContracts.getJSONObject(i).opt("IS_ACTIVE"));
-
+            if (jsonContracts.getJSONObject(i).opt("IS_ACTIVE") != null) {
+                contract.set_active((boolean) jsonContracts.getJSONObject(i).opt("IS_ACTIVE"));
+            }
             contracts.add(contract);
         }
 

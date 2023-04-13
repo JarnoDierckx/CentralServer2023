@@ -15,11 +15,14 @@ import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @ManagedBean
@@ -37,6 +40,13 @@ public class EditContractBean implements Serializable {
     private int counter;
     private String warningModule="";
     private List<SortMeta> sortBy;
+    private Client[] clients;
+
+    private boolean isAfterCreate;
+    private java.util.Date purchaseDate;
+    private int quantity;
+    private BigDecimal startIndex;
+
 
     /**
      *The function creates a session object, checks if one already exists and then retrieves the Contract object created before this class and the webpage it manages
@@ -45,12 +55,29 @@ public class EditContractBean implements Serializable {
      * updatingContract can probably be received in the same way.
      */
     @PostConstruct
-    public void Init() throws IOException {
+    public void Init() throws IOException, ServletException {
         System.out.println("Edit contract");
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
                 .getExternalContext().getSession(false);
         if (session != null) {
-            selectedContract = (Contract) session.getAttribute("contract");
+            if (session.getAttribute("contract")!=null){
+                selectedContract = (Contract) session.getAttribute("contract");
+            }else{
+                selectedContract= retrieveLastContract();
+                isAfterCreate=true;
+                if (session.getAttribute("purchaseDate")!= null){
+                    purchaseDate= (Date) session.getAttribute("purchaseDate");
+                    session.removeAttribute("purchaseDate");
+                }
+                if (session.getAttribute("quantity")!= null){
+                    quantity= (int) session.getAttribute("quantity");
+                    session.removeAttribute("quantity");
+                }
+                if (session.getAttribute("startIndex")!= null){
+                    startIndex= (BigDecimal) session.getAttribute("startIndex");
+                    session.removeAttribute("startIndex");
+                }
+            }
         }
         updatingContract=new Contract();
         try {
@@ -65,11 +92,63 @@ public class EditContractBean implements Serializable {
             if (detail.getID()==0){
                 counter--;
                 detail.setID(counter);
+                if (isAfterCreate){
+                    if (purchaseDate != null){
+                        detail.setPurchase_Date(purchaseDate);
+                    }
+                    if (quantity != 0){
+                        detail.setAmount(quantity);
+                    }
+                    if (startIndex != null){
+                        detail.setIndex_Start(startIndex);
+                    }
+                    if (selectedContract.jgr != 0){
+                        detail.setJgr(selectedContract.jgr);
+                    }
+                    detail.setWhatToDo("C");
+                }
             }
         }
         updatingContractDetailsList= Arrays.asList(updatingContractDetails);
         moduleIds=retrieveModuleIds();
         sortBy = new ArrayList<>();
+        clients=retrieveClients();
+    }
+
+    public Contract retrieveLastContract() throws IOException, ServletException {
+        System.out.println("Starting read in ManageContracts");
+        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract");
+        System.out.println("getContracts: "+response);
+
+        byte[] jsonData = response.getBytes();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        Contract[] contracts2;
+        contracts2 = mapper.readValue(jsonData, Contract[].class);
+
+        int length= contracts2.length;
+        Contract contract2=contracts2[length-1];
+
+        if (contract2.start_date != null) {
+            contract2.start_date = new java.sql.Date(contract2.start_date.getTime());
+        }
+        if (contract2.last_invoice_date != null) {
+            contract2.last_invoice_date = new java.sql.Date(contract2.last_invoice_date.getTime());
+        }
+        if (contract2.last_invoice_period_start != null) {
+            contract2.last_invoice_period_start = new java.sql.Date(contract2.last_invoice_period_start.getTime());
+        }
+        if (contract2.last_invoice_period_end != null) {
+            contract2.last_invoice_period_end = new java.sql.Date(contract2.last_invoice_period_end.getTime());
+        }
+
+        return contract2;
+    }
+    public Client[] retrieveClients() throws JsonProcessingException {
+        String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/clients");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.readValue(response, Client[].class);
     }
 
     public void updateAll() throws IOException{
@@ -161,10 +240,10 @@ public class EditContractBean implements Serializable {
                 }
             }
         }
+
+        Contract editedContract= context.getApplication().evaluateExpressionGet(context, "#{contract}", Contract.class);
         System.out.println(newValue);
     }
-
-
 
     public void addRow() {
         ContractDetail detail = new ContractDetail();
@@ -234,5 +313,13 @@ public class EditContractBean implements Serializable {
 
     public List<SortMeta> getSortBy() {
         return sortBy;
+    }
+
+    public Client[] getClients() {
+        return clients;
+    }
+
+    public void setClients(Client[] clients) {
+        this.clients = clients;
     }
 }

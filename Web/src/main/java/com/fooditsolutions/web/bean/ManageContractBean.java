@@ -30,6 +30,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     @Inject
     private EditContractBean editContractBean;
     private List<Contract> contracts;
+    private List<Contract> filteredContracts;
     private Contract[] contracts2;
     private Contract selectedItem;
     private Contract updatedContract;
@@ -86,6 +87,12 @@ public class ManageContractBean extends HttpServlet implements Serializable {
             }
         }
         contracts= Arrays.asList(contracts2);
+        filteredContracts=new ArrayList<>();
+        for (Contract contract:contracts){
+            if (contract.is_active){
+                filteredContracts.add(contract);
+            }
+        }
     }
 
     /**
@@ -93,6 +100,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
      * @return redirects the user to the contractDetails.xhtml
      */
     public String ContractDetails() throws IOException {
+        detailList=new ArrayList<>();
         details=getContractDetails(selectedItem.id,false);
         detailList= Arrays.asList(details);
         return "contractDetails.xhtml?faces-redirect=true&includeViewParams=true";
@@ -171,6 +179,26 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return Integer.compare(num1, num2);
     }
 
+    public void updateActiveFilter() {
+        // Update the filter value based on the value of the checkbox
+        if (activeFilter) {
+            filteredContracts=new ArrayList<>();
+            for (Contract contract:contracts){
+                if (contract.is_active){
+                    filteredContracts.add(contract);
+                }
+            }
+        } else {
+            filteredContracts=new ArrayList<>();
+            for (Contract contract:contracts){
+                if (!contract.is_active){
+                    filteredContracts.add(contract);
+                }
+            }
+        }
+    }
+
+
 
     public void setContracts(List<Contract> contracts) {
         this.contracts = contracts;
@@ -226,5 +254,13 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     public void setActiveFilter(boolean activeFilter) {
         this.activeFilter = activeFilter;
+    }
+
+    public List<Contract> getFilteredContracts() {
+        return filteredContracts;
+    }
+
+    public void setFilteredContracts(List<Contract> filteredContracts) {
+        this.filteredContracts = filteredContracts;
     }
 }

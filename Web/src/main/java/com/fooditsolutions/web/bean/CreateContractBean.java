@@ -6,23 +6,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.web.model.*;
-import org.primefaces.event.CellEditEvent;
 
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ManagedBean;
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -40,6 +34,8 @@ public class CreateContractBean implements Serializable {
     private BigDecimal server_id;
     private Server[] servers;
 
+    private int quantity;
+
     @PostConstruct
     public void init() throws JsonProcessingException {
         newContract=new Contract();
@@ -50,20 +46,18 @@ public class CreateContractBean implements Serializable {
 
     /**
      * Retrieves all clients and bjr objects for later use.
-     * @return redirects user to the createContracts page
      */
-    public String PrepareCreateContract() throws JsonProcessingException {
+    public void PrepareCreateContract() throws JsonProcessingException {
         bjrs =retrieveBjr();
         clients=retrieveClients();
         cpis=retrieveIndex();
         servers=retrieveServers();
-        return "createContract.xhtml?faces-redirect=true";
     }
 
     /**
      * Maps all values of newContract to a json object in a String and sends it to centralServerAPI.
      */
-    public void createContract() throws IOException, ServletException {
+    public String createContract() throws IOException {
         if (!newContract.source.equals("CS")){
             newContract.source="M";
         }
@@ -75,8 +69,17 @@ public class CreateContractBean implements Serializable {
 
         System.out.println("Create: "+jsonString);
         HttpController.httpPost(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract", jsonString);
+
+        HttpSession session= (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        session.setAttribute("purchaseDate",newContract.start_date);
+        session.setAttribute("quantity", quantity);
+        session.setAttribute("startIndex", newContract.index_start);
+
         newContract=new Contract();
         server_id= BigDecimal.valueOf(0);
+        quantity=0;
+
+        return "editContract.xhtml?faces-redirect=true";
     }
 
     /**
@@ -115,7 +118,7 @@ public class CreateContractBean implements Serializable {
         return mapper.readValue(response, Server[].class);
     }
 
-    public void updateCPI() throws IOException, ScriptException, NoSuchMethodException {
+    public void updateCPI(){
         if (newContract.start_date != null && newContract.base_index_year > 0){
             Date startDate = newContract.start_date;
             DateFormat df = new SimpleDateFormat("MMMM yyyy");
@@ -123,11 +126,6 @@ public class CreateContractBean implements Serializable {
             for (Index index:cpis){
                 if (Objects.equals(index.getBase(), newContract.getBase_index_year() + " = 100") && index.getMonth().equals(month)){
                     newContract.index_start=index.getCI();
-                    ScriptEngineManager manager=new ScriptEngineManager();
-                    ScriptEngine engine=manager.getEngineByName("javascript");
-                    engine.eval(Files.newBufferedReader(Paths.get("C:\\Users\\reports\\IdeaProjects\\CentralServer2023\\Web\\src\\main\\java\\com\\fooditsolutions\\web\\scripts\\Jsfunctions.js"), StandardCharsets.UTF_8));
-                    Invocable inv = (Invocable) engine;
-                    inv.invokeFunction("updateIndexStart", newContract.index_start);
                 }
             }
         }
@@ -202,5 +200,13 @@ public class CreateContractBean implements Serializable {
 
     public void setServer_id(BigDecimal server_id) {
         this.server_id = server_id;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

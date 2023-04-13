@@ -12,12 +12,12 @@
 <h:body>
     <h:outputStylesheet library="css" name="create.css"/>
 <div class="card">
-    <h:form styleClass="grid">
+    <h:form styleClass="grid" id="createForm">
         <div class="CS2023Container">
             <section>
                 <h:outputText value="Server id"/>
                 <p:inputText value="#{createContractBean.server_id}">
-                    <p:ajax event="blur" listener="#{createContractBean.updateClient()}"/>
+                    <p:ajax event="blur" listener="#{createContractBean.updateClient()}" update="createForm"/>
                 </p:inputText>
             </section>
 
@@ -27,7 +27,7 @@
             </section>
 
             <section>
-                <h:outputText value="Client"/><br/>
+                <h:outputText value="Client" id="client"/><br/>
                 <p:selectOneMenu value="#{createContractBean.newContract.client_id}">
                     <f:selectItems value="#{createContractBean.clients}" var="c" itemLabel="#{c.name}" itemValue="#{c.DBB_ID}"/>
                 </p:selectOneMenu>
@@ -37,7 +37,7 @@
                 <h:outputText value="Start Date"/><br/>
                 <p:calendar  value="#{createContractBean.newContract.start_date}" pattern="yyyy-MM-dd">
                     <f:convertDateTime pattern = "yyyy-MM-dd" />
-                    <p:ajax event="blur" listener="#{createContractBean.updateCPI()}" render="indexStart"/>
+                    <p:ajax event="blur" listener="#{createContractBean.updateCPI()}" update="createForm"/>
                 </p:calendar>
             </section>
 
@@ -68,12 +68,15 @@
 
             <section>
                 <h:outputText value="Base year index"/><br/>
-                <p:inputText value="#{createContractBean.newContract.base_index_year}">
-                    <p:ajax event="blur" listener="#{createContractBean.updateCPI()}" render="indexStart"/>
-                </p:inputText>
+                <p:selectOneMenu value="#{createContractBean.newContract.base_index_year}">
+                    <f:selectItem itemValue="" itemLabel="" />
+                    <f:selectItem itemValue="1996" itemLabel="1996" />
+                    <f:selectItem itemValue="1988" itemLabel="1988" />
+                    <p:ajax event="change" listener="#{createContractBean.updateCPI()}" update="createForm"/>
+                </p:selectOneMenu>
             </section>
 
-            <section>
+            <section >
                 <h:outputText value="Starting index value" id="indexStart"/><br/>
                 <p:inputText value="#{createContractBean.newContract.index_start}" required="true">
                 </p:inputText>
@@ -82,6 +85,11 @@
             <section>
                 <h:outputText value="%jgr"/><br/>
                 <p:inputText value="#{createContractBean.newContract.jgr}"/>
+            </section>
+
+            <section>
+                <h:outputText value="Base quantity for modules"/>
+                <p:inputText value="#{createContractBean.quantity}"/>
             </section>
         </div>
         <p><h:commandButton value="Create" action="#{createContractBean.createContract}" /></p>

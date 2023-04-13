@@ -42,7 +42,11 @@
               <h:outputText value="#{edit.client.name}"/>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{edit.client.name}" style="width:100%"/>
+
+              <p:selectOneMenu value="#{edit.client_id}">
+                <f:selectItems value="#{EditContractBean.clients}" var="c" itemLabel="#{c.name}" itemValue="#{c.DBB_ID}"/>
+              </p:selectOneMenu>
+
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -242,16 +246,14 @@
         <p:dataTable id="detailsTable" widgetVar="detailsTableWidget" var="detail" value="#{EditContractBean.updatingContractDetailsList}" paginator="true" paginatorPosition="both"
                      paginatorTemplate="{addRow} {Warning}" editable="true" editMode="cell" sortMode="single">
 
-          <p:ajax event="cellEdit" listener="#{EditContractBean.onCellEdit}" update="warning"/>
+          <p:ajax event="cellEdit" listener="#{EditContractBean.onCellEdit}" update="detailsTable"/>
 
           <f:facet name="{addRow}">
             <p:commandButton value="Add new detail" action="#{EditContractBean.addRow}" update="detailsTable"/>
           </f:facet>
 
           <f:facet name="{Warning}">
-            <p:outputLabel id="warning" value="#{EditContractBean.warningModule}" style="color: red">
-              <f:ajax event="blur" listener="#{EditContractBean.onCellEdit}" render="@form" update="warning"/>
-            </p:outputLabel>
+            <br/><p:outputLabel id="warning" value="#{EditContractBean.warningModule}" style="color: red"/>
           </f:facet>
 
           <p:column headerText="Module" sortBy="#{detail.moduleId.name}">
@@ -262,7 +264,9 @@
               <f:facet name="input">
 
                 <p:selectOneMenu value="#{detail.module_DBB_ID}">
-                  <f:selectItems value="#{EditContractBean.moduleIds}" var="M" itemLabel="#{M.name}" itemValue="#{M.dbb_id}"/>
+                  <f:selectItems value="#{EditContractBean.moduleIds}" var="M" itemLabel="#{M.name}" itemValue="#{M.dbb_id}">
+
+                  </f:selectItems>
                 </p:selectOneMenu>
 
               </f:facet>
@@ -360,6 +364,7 @@
               </f:facet>
             </p:cellEditor>
           </p:column>
+
         </p:dataTable>
       </div>
   </h:form>
