@@ -56,6 +56,8 @@ public class CreateContractBean implements Serializable {
 
     /**
      * Maps all values of newContract to a json object in a String and sends it to centralServerAPI.
+     * purchaseDate, quantity and startIndex are stored in the session so they can be used as base values for the contracts modules.
+     * The user is redirected to the edit contract page
      */
     public String createContract() throws IOException {
         if (!newContract.source.equals("CS")){
@@ -118,6 +120,9 @@ public class CreateContractBean implements Serializable {
         return mapper.readValue(response, Server[].class);
     }
 
+    /**
+     * Checks if both the start date and the index base year are filled in so it can autofill the starting index value based on those values.
+     */
     public void updateCPI(){
         if (newContract.start_date != null && newContract.base_index_year > 0){
             Date startDate = newContract.start_date;
@@ -131,6 +136,9 @@ public class CreateContractBean implements Serializable {
         }
     }
 
+    /**
+     * Autofills the client based on the server id, and marks the contract as a central server contract.
+     */
     public void updateClient(){
         for (Server server:servers){
             if (server.getDBB_ID().equals(server_id)){

@@ -53,6 +53,7 @@ public class EditContractBean implements Serializable {
      * where loaded. The Contract object is then put into updatingContract so that editContract.xhtml can put it into a form.
      * updatingContract's details are then also retrieved from the ManageContract class and put into updatingContractDetails before also being used in a form.
      * updatingContract can probably be received in the same way.
+     * It also retrieves the stored values if the user was redirected to edit contracts after creating a new contract.
      */
     @PostConstruct
     public void Init() throws IOException, ServletException {
@@ -115,8 +116,11 @@ public class EditContractBean implements Serializable {
         clients=retrieveClients();
     }
 
+    /**
+     * Used after a new contract has been made, retrieves the last/newest contract stored, so it can be properly edited.
+     * @return the last contract object in the retrieved array.
+     */
     public Contract retrieveLastContract() throws IOException, ServletException {
-        System.out.println("Starting read in ManageContracts");
         String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract");
         System.out.println("getContracts: "+response);
 
@@ -144,6 +148,11 @@ public class EditContractBean implements Serializable {
 
         return contract2;
     }
+
+    /**
+     * Sends a request to retrieve all stored clients.
+     * @return an array of all clients.
+     */
     public Client[] retrieveClients() throws JsonProcessingException {
         String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/clients");
         ObjectMapper mapper = new ObjectMapper();
@@ -174,6 +183,7 @@ public class EditContractBean implements Serializable {
     /**
      * Takes updatingContractDetails and parses it into a json string
      * An api call is then made to CentralServer2023API with the json string, so it can update the original contract details.
+     * All "whatToDo" values are reset, so it doesn't interfere with any sequential updates.
      */
     public void UpdateContractDetails() throws IOException {
         //Creating the ObjectMapper object
@@ -191,6 +201,10 @@ public class EditContractBean implements Serializable {
         }
     }
 
+    /**
+     * Sends a request for all stored software modules.
+     * @return an array of all modules
+     */
     public ModuleId[] retrieveModuleIds() throws JsonProcessingException {
         String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/module");
         ObjectMapper mapper = new ObjectMapper();
@@ -201,6 +215,8 @@ public class EditContractBean implements Serializable {
     /**
      * Gets called every time a cell is edited.
      * Discerns what objects need to be updated and what objects need to be inserted into the database.
+     * If the new value is a module id, a warning is given if that module is already in the list.
+     * The values for the module and client dropdowns are also properly updated so that the correct values are displayed.
      * The new value is also printed onto the console.
      */
     public void onCellEdit(CellEditEvent event) {
@@ -241,10 +257,21 @@ public class EditContractBean implements Serializable {
             }
         }
 
-        Contract editedContract= context.getApplication().evaluateExpressionGet(context, "#{contract}", Contract.class);
+        Contract editedContract= context.getApplication().evaluateExpressionGet(context, "#{edit}", Contract.class);
+        if (editedContract != null){
+            for (Client client: clients){
+                if (client.getDBB_ID().equals(newValue)){
+                    updatingContract.client=client;
+                    updatingContract.client_id=client.getDBB_ID();
+                }
+            }
+        }
         System.out.println(newValue);
     }
 
+    /**
+     * Adds a new detail object to the list used in the datatable.
+     */
     public void addRow() {
         ContractDetail detail = new ContractDetail();
         counter--;
@@ -253,6 +280,13 @@ public class EditContractBean implements Serializable {
         List<ContractDetail> newList = new ArrayList<>(updatingContractDetailsList);
         newList.add(detail);
         updatingContractDetailsList = newList;
+    }
+
+    /**
+     *sends a request with a contract id to delete the associated contract
+     */
+    public void deleteContract() throws IOException {
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract/"+updatingContract.id);
     }
 
     public Contract getSelectedContract() {

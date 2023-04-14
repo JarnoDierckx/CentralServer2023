@@ -127,22 +127,6 @@ public class HandleLogin {
         timer.schedule(task,(long) minutes *60*1000);
     }
 
-    public void createContract() throws IllegalAccessException {
-        Contract contract=new Contract();
-        if(contract_number != null && !contract_number.equals("")){
-            contract.setContract_number(contract_number);
-        }
-        if (source != null && !source.equals("")){
-            contract.setSource(source);
-        }
-        if (invoice_frequency != null && !invoice_frequency.equals("")){
-            contract.setInvoice_frequency(invoice_frequency);
-        }
-        if (index_frequency != null && !index_frequency.equals("")){
-            contract.setIndex_frequency(index_frequency);
-        }
-    }
-
 
     public String getEmail() {
         return email;

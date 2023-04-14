@@ -58,8 +58,9 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     /**
      * Sends a GET request forward for all contracts that are currently stored.
-     * The returned value is put into a string before it is turned into an array of Contract objects to be used by the datatable in generalContracts.xhtml
+     * The returned value is put into a string before it is turned into a list of Contract objects to be used by the datatable in generalContracts.xhtml
      * All the dates in each contract are returned as 'long' variables and are parsed to proper dates.
+     * filteredContracts is used to keep the active and inactive contracts apart
      */
     public void retrieveContracts() throws IOException, ServletException {
         System.out.println("Starting read in ManageContracts");
@@ -125,7 +126,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     /**
      * Creates a session object for the user and puts the object of the contract they selected in it, so it can be retrieved and used later on.
-     * Also deletes an existing contract and Editcontracts attribute that may already exist in the session.
+     * Also deletes any existing contract and Editcontracts attributes that may already exist in the session.
      * @return redirects the user to editContract.xhtml
      */
     public String editContract(){
@@ -137,11 +138,14 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         if (session.getAttribute("EditContractBean")!=null){
             session.removeAttribute("EditContractBean");
         }
-
-
         session.setAttribute("contract", selectedItem);
         return "editContract.xhtml?faces-redirect=true";
     }
+
+    /**
+     * First checks for an existing createContractBean and deletes it.
+     * @return redirects to the create contract page
+     */
     public String createContract(){
         HttpSession session= (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         if (session.getAttribute("createContractBean")!=null){
@@ -152,7 +156,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     }
 
     /**
-     * Takes the value in the search bar on generalContracts.xhtml and checks it against the values of several variables.
+     * Takes the value in the search bar on generalContracts.xhtml and checks the contract number and client name of each object.
      * If any values match the searched string, the entire object will then be shown in the datatable.
      */
     public boolean globalFilterFunction(Object value, Object filter, Locale locale) {
@@ -179,6 +183,9 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return Integer.compare(num1, num2);
     }
 
+    /**
+     * Fills the list used in the datatable to determine if only active/inactive contracts should be shown
+     */
     public void updateActiveFilter() {
         // Update the filter value based on the value of the checkbox
         if (activeFilter) {

@@ -45,8 +45,6 @@ public class ContractResource {
                 jsonContracts = DBFirebird.executeSQL(ds, "SELECT * FROM CONTRACT");
             }
         }
-
-
         return JsonToContract(jsonContracts);
     }
 
@@ -61,8 +59,6 @@ public class ContractResource {
                 jsonContracts = DBFirebird.executeSQL(ds, "SELECT * FROM CONTRACT WHERE ID="+contractId);
             }
         }
-
-
         return JsonToContract(jsonContracts).get(0);
     }
 
@@ -134,6 +130,32 @@ public class ContractResource {
         }
     }
 
+    /**
+     * Creates a sql statement based on the given contract id and executes it to delete the contract.
+     * unfinished
+     * @param datastoreKey is to specify which database to query.
+     * @param contractID is to specify which contract needs to be deleted.
+     */
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{ContractId}")
+    public void deleteContract(@QueryParam("datastoreKey")String datastoreKey, @PathParam("ContractId") int contractID){
+        String sql = "DELETE FROM CONTRACT WHERE ID ="+contractID;
+
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                //executeSQLInsert does the job just fine
+                DBFirebird.executeSQLInsert(ds, sql);
+                System.out.println("Delete successfull");
+            }
+        }
+    }
+
+    /**
+     * Takes a array of contracts in json format and one by one enters the contracts values into proper contract objects.
+     * @param jsonContracts the json array containg all the contracts
+     * @return A list of Contract objects
+     */
     public List<Contract> JsonToContract(JSONArray jsonContracts) {
         List<Contract> contracts = new ArrayList<>();
         for (int i = 0; i < jsonContracts.length(); i++) {

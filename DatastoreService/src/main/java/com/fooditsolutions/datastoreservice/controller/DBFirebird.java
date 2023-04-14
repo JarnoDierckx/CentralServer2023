@@ -72,7 +72,6 @@ public class DBFirebird {
     }
 
     public static void executeSQLUpdate(DatastoreObject ds, String query){
-        JSONArray jsonResult = new JSONArray();
         try {
             Class.forName("org.firebirdsql.jdbc.FBDriver");
 
@@ -128,4 +127,5 @@ public class DBFirebird {
             throw new RuntimeException(e);
         }
     }
+
 }

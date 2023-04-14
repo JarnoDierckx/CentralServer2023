@@ -93,5 +93,13 @@ public class HttpController {
         System.out.println("POST Response Code :  " + connection.getResponseCode());
         System.out.println("POST Response Message : " + connection.getResponseMessage());
     }
+    public static void httpDelete(String urlString) throws IOException{
+        URL url = new URL(urlString);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("DELETE");
+
+        int responseCode = connection.getResponseCode();
+        System.out.println("Delete" + connection);
+    }
 
 }
