@@ -60,7 +60,7 @@ public class CreateContractBean implements Serializable {
      * The user is redirected to the edit contract page
      */
     public String createContract() throws IOException {
-        if (newContract.server_DBB_ID == null){
+        if (newContract.getServer_ID() == null){
             newContract.source="M";
         }else {
             newContract.source="CS";
@@ -143,7 +143,7 @@ public class CreateContractBean implements Serializable {
      */
     public void updateClient(){
         for (Server server:servers){
-            if (server.getDBB_ID().equals(newContract.server_DBB_ID)){
+            if (server.getID().equals(newContract.getServer_ID())){
                 newContract.client_id=server.getCLIENT_DBB_ID();
                 for (Client client2:clients){
                     if (server.getCLIENT_DBB_ID().equals(client2.getDBB_ID())){

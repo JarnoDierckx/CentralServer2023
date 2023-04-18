@@ -18,7 +18,6 @@ public class HttpController {
 
         if (responseCode == HttpURLConnection.HTTP_OK) { // success
             BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            System.out.println("in " + in);
 
             StringBuilder response = new StringBuilder();
 
@@ -52,7 +51,6 @@ public class HttpController {
 
             if (responseCode == HttpURLConnection.HTTP_OK) { // success
                 BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                System.out.println("in " + in);
 
                 StringBuilder response = new StringBuilder();
 

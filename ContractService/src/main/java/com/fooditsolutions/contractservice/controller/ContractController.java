@@ -41,20 +41,21 @@ public class ContractController {
         Server[] servers=mapper.readValue(jsonServers,Server[].class);
 
         //JSONArray jsonArray = new JSONArray(jsonContracts);
-        for(int i=0; i < contracts2.length; i++){
-            contracts2[i].is_active=false;
-            if (contracts2[i].server_DBB_ID != null){
-                for (Server server:servers){
-                    if (Objects.equals(contracts2[i].server_DBB_ID, server.getDBB_ID())){
-                        contracts2[i].is_active=true;
+        for (Contract contract : contracts2) {
+            contract.is_active = false;
+            if (contract.server_ID != null) {
+                for (Server server : servers) {
+                    if (Objects.equals(contract.server_ID, server.getID())) {
+                        contract.is_active = true;
+                        break;
                     }
                 }
             }
 
-            contracts2[i].setClient(clients.get(contracts2[i].getClient_id()));
-            contracts2[i].setBjr(bjrs.get(contracts2[i].getBjr_id()));
+            contract.setClient(clients.get(contract.getClient_id()));
+            contract.setBjr(bjrs.get(contract.getBjr_id()));
             //contract.setName((String) jsonArray.getJSONObject(i).get("name"));
-            contracts.add(contracts2[i]);
+            contracts.add(contract);
         }
         return contracts;
     }

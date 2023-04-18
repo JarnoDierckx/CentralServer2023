@@ -16,7 +16,7 @@
         <div class="CS2023Container">
             <section>
                 <h:outputText value="Server id"/>
-                <p:inputText value="#{createContractBean.newContract.server_DBB_ID}">
+                <p:inputText value="#{createContractBean.newContract.server_ID}">
                     <p:ajax event="blur" listener="#{createContractBean.updateClient()}" update="createForm"/>
                 </p:inputText>
             </section>

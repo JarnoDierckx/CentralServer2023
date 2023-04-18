@@ -211,7 +211,7 @@ public class ContractResource {
             if (jsonContracts.getJSONObject(i).opt("IS_ACTIVE") != null) {
                 contract.set_active((boolean) jsonContracts.getJSONObject(i).opt("IS_ACTIVE"));
             }
-            contract.setServer_DBB_ID((BigDecimal) jsonContracts.getJSONObject(i).opt("SERVER_DBB_ID"));
+            contract.setServer_ID((String) jsonContracts.getJSONObject(i).opt("SERVER_ID"));
             contracts.add(contract);
         }
 

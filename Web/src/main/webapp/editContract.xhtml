@@ -279,8 +279,8 @@
               </f:facet>
               <f:facet name="input">
                   <p:selectOneMenu value="#{detail.module_DBB_ID}" rendered="#{detail.ID==0}" immediate="true">
-                    <f:selectItems value="#{EditContractBean.moduleIds}" var="M" itemLabel="#{M.name}" itemValue="#{M.dbb_id}">
-                    </f:selectItems>
+                    <f:selectItems value="#{EditContractBean.moduleIds}" var="M" itemLabel="#{M.name}" itemValue="#{M.dbb_id}"/>
+                    <p:ajax update="@this" />
                   </p:selectOneMenu>
                 <h:outputText value="#{detail.moduleId.name}" rendered="#{detail.ID!=0}" style="#{detail.ID lt 0 ? 'color: red;' : 'color: black;'}"/>
               </f:facet>
@@ -379,6 +379,11 @@
             </p:cellEditor>
           </p:column>
 
+          <p:column style="width: min-content">
+            <p:commandButton value="Delete" rendered="#{detail.whatToDo.contains('N')}">
+              <p:ajax listener="#{EditContractBean.removeRow()}" update="detailsTable"/>
+            </p:commandButton>
+          </p:column>
         </p:dataTable>
       </div>
   </h:form>

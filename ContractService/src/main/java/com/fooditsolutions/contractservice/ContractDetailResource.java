@@ -51,9 +51,9 @@ public class ContractDetailResource {
         List<ContractDetail> detailsToCreate=new ArrayList<>();
         for (int i=0;i<contractDetails.length;i++){
             if (contractDetails[i].getWhatToDo() !=null){
-                if (contractDetails[i].getWhatToDo().equals("U")){
+                if (contractDetails[i].getWhatToDo().contains("U")){
                     detailsToUpdate.add(contractDetails[i]);
-                }else if(contractDetails[i].getWhatToDo().equals("C")){
+                }else if(contractDetails[i].getWhatToDo().contains("C")){
                     detailsToCreate.add(contractDetails[i]);
                 }
             }
