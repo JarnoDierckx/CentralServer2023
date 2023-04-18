@@ -56,12 +56,14 @@ public class CreateContractBean implements Serializable {
 
     /**
      * Maps all values of newContract to a json object in a String and sends it to centralServerAPI.
-     * purchaseDate, quantity and startIndex are stored in the session so they can be used as base values for the contracts modules.
+     * purchaseDate, quantity and startIndex are stored in the session, so they can be used as base values for the contracts modules.
      * The user is redirected to the edit contract page
      */
     public String createContract() throws IOException {
-        if (!newContract.source.equals("CS")){
+        if (newContract.server_DBB_ID == null){
             newContract.source="M";
+        }else {
+            newContract.source="CS";
         }
         newContract.is_active=true;
         ObjectMapper mapper = new ObjectMapper();
@@ -141,9 +143,8 @@ public class CreateContractBean implements Serializable {
      */
     public void updateClient(){
         for (Server server:servers){
-            if (server.getDBB_ID().equals(server_id)){
+            if (server.getDBB_ID().equals(newContract.server_DBB_ID)){
                 newContract.client_id=server.getCLIENT_DBB_ID();
-                newContract.source="CS";
                 for (Client client2:clients){
                     if (server.getCLIENT_DBB_ID().equals(client2.getDBB_ID())){
                         newContract.client=client2;

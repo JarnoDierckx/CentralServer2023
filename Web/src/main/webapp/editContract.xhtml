@@ -32,10 +32,12 @@
             <f:ajax listener="#{EditContractBean.updateAll()}"/>
           </p:commandButton >
         </f:facet>
+        <ui:remove>
+          <f:facet name="{delete}">
+            <p:commandButton title="Delete Contract" onclick="showConfirmation()"/>
+          </f:facet>
+        </ui:remove>
 
-        <f:facet name="{delete}">
-          <p:commandButton title="Delete Contract" onclick="showConfirmation()"/>
-        </f:facet>
 
         <p:column headerText="Contract number">
           <p:cellEditor>
@@ -279,8 +281,8 @@
                   <f:selectItems value="#{EditContractBean.moduleIds}" var="M" itemLabel="#{M.name}" itemValue="#{M.dbb_id}">
                   </f:selectItems>
                 </p:selectOneMenu>
-
               </f:facet>
+
             </p:cellEditor>
           </p:column>
 

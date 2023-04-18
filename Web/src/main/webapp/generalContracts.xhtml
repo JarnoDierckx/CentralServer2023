@@ -22,6 +22,7 @@
                         <p:inputText id="globalFilter" onkeyup="PF('contractTable').filter()" style="width:300px"
                                      placeholder="Search using global function" />
                     </div>
+                    <p:outputLabel value="active/inactive"/>
                     <p:selectBooleanCheckbox value="#{ManageContractBean.activeFilter}">
                         <p:ajax update="generalTable" listener="#{ManageContractBean.updateActiveFilter}" />
                     </p:selectBooleanCheckbox>

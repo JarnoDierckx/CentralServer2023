@@ -20,10 +20,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @ManagedBean
 @SessionScoped
@@ -117,8 +114,8 @@ public class EditContractBean implements Serializable {
     }
 
     /**
-     * Used after a new contract has been made, retrieves the last/newest contract stored, so it can be properly edited.
-     * @return the last contract object in the retrieved array.
+     * Used after a new contract has been made, retrieves the newest contract stored, so it can be properly edited.
+     * @return the contract object with the highest id, as this would be the newest.
      */
     public Contract retrieveLastContract() throws IOException, ServletException {
         String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract");
@@ -130,9 +127,9 @@ public class EditContractBean implements Serializable {
         Contract[] contracts2;
         contracts2 = mapper.readValue(jsonData, Contract[].class);
 
-        int length= contracts2.length;
-        Contract contract2=contracts2[length-1];
+        List<Contract> contractList= Arrays.asList(contracts2);
 
+        Contract contract2=contractList.stream().max(Comparator.comparing(Contract::getId)).orElseThrow(NoSuchElementException::new);
         if (contract2.start_date != null) {
             contract2.start_date = new java.sql.Date(contract2.start_date.getTime());
         }
@@ -287,6 +284,10 @@ public class EditContractBean implements Serializable {
      */
     public void deleteContract() throws IOException {
         HttpController.httpDelete(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract/"+updatingContract.id);
+    }
+
+    public void useless(){
+
     }
 
     public Contract getSelectedContract() {

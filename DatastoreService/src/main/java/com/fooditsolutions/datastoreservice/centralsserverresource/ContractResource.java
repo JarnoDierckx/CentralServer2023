@@ -121,6 +121,7 @@ public class ContractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     public void createContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract) {
         String sql = contract.getInsertStatement();
+        System.out.println("sql statement "+sql);
 
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
@@ -136,7 +137,7 @@ public class ContractResource {
      * @param datastoreKey is to specify which database to query.
      * @param contractID is to specify which contract needs to be deleted.
      */
-    @DELETE
+    /*@DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{ContractId}")
     public void deleteContract(@QueryParam("datastoreKey")String datastoreKey, @PathParam("ContractId") int contractID){
@@ -149,7 +150,7 @@ public class ContractResource {
                 System.out.println("Delete successfull");
             }
         }
-    }
+    }*/
 
     /**
      * Takes a array of contracts in json format and one by one enters the contracts values into proper contract objects.
@@ -210,6 +211,7 @@ public class ContractResource {
             if (jsonContracts.getJSONObject(i).opt("IS_ACTIVE") != null) {
                 contract.set_active((boolean) jsonContracts.getJSONObject(i).opt("IS_ACTIVE"));
             }
+            contract.setServer_DBB_ID((BigDecimal) jsonContracts.getJSONObject(i).opt("SERVER_DBB_ID"));
             contracts.add(contract);
         }
 

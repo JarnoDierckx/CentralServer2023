@@ -35,5 +35,6 @@ public class Contract {
     public Date created;
     public Date updated;
     public boolean is_active;
+    public BigDecimal server_DBB_ID;
 
 }
