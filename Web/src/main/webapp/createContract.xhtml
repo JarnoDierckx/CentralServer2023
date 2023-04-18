@@ -37,7 +37,8 @@
                 <h:outputText value="Start Date"/><br/>
                 <p:calendar  value="#{createContractBean.newContract.start_date}" pattern="yyyy-MM-dd">
                     <f:convertDateTime pattern = "yyyy-MM-dd" />
-                    <p:ajax event="blur" listener="#{createContractBean.updateCPI()}" update="createForm"/>
+                    <p:ajax event="dateSelect" listener="#{createContractBean.updateCPI()}" update="createForm"/>
+                    <p:ajax event="change" listener="#{createContractBean.updateCPI()}" update="createForm"/>
                 </p:calendar>
             </section>
 

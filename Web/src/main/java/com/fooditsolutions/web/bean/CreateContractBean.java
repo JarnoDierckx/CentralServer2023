@@ -131,7 +131,7 @@ public class CreateContractBean implements Serializable {
             DateFormat df = new SimpleDateFormat("MMMM yyyy");
             String month =df.format(startDate);
             for (Index index:cpis){
-                if (Objects.equals(index.getBase(), newContract.getBase_index_year() + " = 100") && index.getMonth().equals(month)){
+                if (Objects.equals(index.getBase(), newContract.getBase_index_year() + " = 100") && index.getMonth().toLowerCase().equals(month.toLowerCase())){
                     newContract.index_start=index.getCI();
                 }
             }

@@ -14,8 +14,10 @@ import org.primefaces.model.SortMeta;
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.Serializable;
@@ -196,6 +198,8 @@ public class EditContractBean implements Serializable {
         for (ContractDetail contractDetail:updatingContractDetailsList){
             contractDetail.setWhatToDo("");
         }
+        ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+        ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
     }
 
     /**
@@ -217,8 +221,14 @@ public class EditContractBean implements Serializable {
      * The new value is also printed onto the console.
      */
     public void onCellEdit(CellEditEvent event) {
+        //newvalue and oldvalue are somehow an array now with 2 items if you edit the module field, so I need to get the first one in order for the rest of the code to work.
         Object oldValue = event.getOldValue();
         Object newValue = event.getNewValue();
+        if (newValue.getClass().equals(ArrayList.class)){
+            List<java.lang.Object> newValueList;
+            newValueList= (List<Object>) newValue;
+            newValue=newValueList.get(0);
+        }
         warningModule="";
 
         FacesContext context = FacesContext.getCurrentInstance();
@@ -235,6 +245,10 @@ public class EditContractBean implements Serializable {
                     for (ContractDetail detail: updatingContractDetailsList) {
                         if (detail.getID() == editedDetail.getID()) {
                             detail.setModuleId(moduleId);
+                            if (detail.getID()==0){
+                                counter--;
+                                detail.setID(counter);
+                            }
                         }
                     }
                 }
@@ -271,11 +285,9 @@ public class EditContractBean implements Serializable {
      */
     public void addRow() {
         ContractDetail detail = new ContractDetail();
-        counter--;
-        detail.setID(counter);
         detail.setContract_ID(updatingContract.id);
         List<ContractDetail> newList = new ArrayList<>(updatingContractDetailsList);
-        newList.add(detail);
+        newList.add(0,detail);
         updatingContractDetailsList = newList;
     }
 

@@ -88,9 +88,9 @@
               </h:outputText>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{edit.end_date}" style="width:100%">
+              <p:calendar value="#{edit.end_date}" style="width:100%" pattern="yyyy-MM-dd">
                 <f:convertDateTime pattern = "yyyy-MM-dd" />
-              </p:inputText>
+              </p:calendar>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -273,16 +273,17 @@
           <p:column headerText="Module" sortBy="#{detail.moduleId.name}">
             <p:cellEditor>
               <f:facet name="output">
-                <h:outputText value="#{detail.moduleId.name}"/>
+                <h:outputText value="#{detail.moduleId.name}" style="#{detail.ID lt 0 ? 'color: red;' : 'color: black;'}" rendered="#{detail.ID!=0}"/>
+                <h:outputText value="Click to choose a module" style="color: mediumseagreen" rendered="#{detail.ID==0}"/>
+
               </f:facet>
               <f:facet name="input">
-
-                <p:selectOneMenu value="#{detail.module_DBB_ID}">
-                  <f:selectItems value="#{EditContractBean.moduleIds}" var="M" itemLabel="#{M.name}" itemValue="#{M.dbb_id}">
-                  </f:selectItems>
-                </p:selectOneMenu>
+                  <p:selectOneMenu value="#{detail.module_DBB_ID}" rendered="#{detail.ID==0}" immediate="true">
+                    <f:selectItems value="#{EditContractBean.moduleIds}" var="M" itemLabel="#{M.name}" itemValue="#{M.dbb_id}">
+                    </f:selectItems>
+                  </p:selectOneMenu>
+                <h:outputText value="#{detail.moduleId.name}" rendered="#{detail.ID!=0}" style="#{detail.ID lt 0 ? 'color: red;' : 'color: black;'}"/>
               </f:facet>
-
             </p:cellEditor>
           </p:column>
 
