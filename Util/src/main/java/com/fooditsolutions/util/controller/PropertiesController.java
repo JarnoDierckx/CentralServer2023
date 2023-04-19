@@ -30,6 +30,7 @@ public class PropertiesController {
             property.setBase_url_centralserver2023api(prop.getProperty("BASE_URL_CENTRALSERVER2023API"));
             property.setBase_url_moduleservice(prop.getProperty("BASE_URL_MODULESERVICE"));
             property.setBase_url_indexservice(prop.getProperty("BASE_URL_INDEXSERVICE"));
+            property.setBase_url_historyservice(prop.getProperty("BASE_URL_HISTORYSERVICE"));
 
         }catch (Exception ex){
             System.out.println("Exception: " + ex);
