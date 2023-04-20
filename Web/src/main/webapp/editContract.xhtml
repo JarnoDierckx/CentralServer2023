@@ -380,8 +380,8 @@
           </p:column>
 
           <p:column style="width: min-content">
-            <p:commandButton value="Delete" rendered="#{detail.whatToDo.contains('N')}">
-              <p:ajax listener="#{EditContractBean.removeRow()}" update="detailsTable"/>
+            <p:commandButton value="Delete" rendered="#{detail.whatToDo.contains('N') || detail.source == 'M'}">
+              <p:ajax listener="#{EditContractBean.pressDelete()}" update="detailsTable"/>
             </p:commandButton>
           </p:column>
         </p:dataTable>

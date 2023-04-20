@@ -30,6 +30,5 @@ public class ContractDetail extends Sqlmodel {
     private BigDecimal jgr_not_indexed;
     private BigDecimal jgr_indexed;
     private String whatToDo;
-
-
+    private String source;
 }

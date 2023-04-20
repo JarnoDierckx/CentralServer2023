@@ -126,6 +126,19 @@ public class ContractDetailResource {
         }
     }
 
+    @DELETE
+    @Path("/{id}")
+    public void deleteContractDetails(@QueryParam("datastoreKey") String datastoreKey, @PathParam("id") int id){
+        String sql = "DELETE FROM CONTRACT_DETAIL WHERE ID ="+id;
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                //executeSQLInsert does the job just fine
+                DBFirebird.executeSQLInsert(ds, sql);
+                System.out.println("Delete successfull");
+            }
+        }
+    }
+
     /**
      * Takes a jsonArray object, loops over every object in it and maps it to the corresponding fields in the ContractDetail class
      * @return A List<ContractDetail> item is returned.
@@ -150,7 +163,7 @@ public class ContractDetailResource {
             }
             contractDetail.setJgr_not_indexed((BigDecimal) jsonContracts.getJSONObject(i).opt("JGR_NOT_INDEXED"));
             contractDetail.setJgr_indexed((BigDecimal) jsonContracts.getJSONObject(i).opt("JGR_INDEXED"));
-
+            contractDetail.setSource((String) jsonContracts.getJSONObject(i).opt("SOURCE"));
 
             contractDetails.add(contractDetail);
         }

@@ -92,4 +92,9 @@ public class ContractDetailResource {
 
         HttpController.httpPost(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
     }
+    @DELETE
+    @Path("/{id}")
+    public void deleteContractDetails(@PathParam("id") int id) throws IOException {
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail/"+id+"?datastoreKey="+PropertiesController.getProperty().getDatastore());
+    }
 }

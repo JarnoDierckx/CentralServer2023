@@ -93,6 +93,7 @@ public class EditContractBean implements Serializable {
             if (detail.getID() == 0) {
                 counter--;
                 detail.setID(counter);
+                detail.setSource("CS");
                 if (isAfterCreate) {
                     if (purchaseDate != null) {
                         detail.setPurchase_Date(purchaseDate);
@@ -222,6 +223,10 @@ public class EditContractBean implements Serializable {
         return tempArray;
     }
 
+    public void removeContractDetail(int id) throws IOException {
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract/detail/"+id);
+    }
+
     /**
      * Gets called every time a cell is edited.
      * Discerns what objects need to be updated and what objects need to be inserted into the database.
@@ -296,10 +301,28 @@ public class EditContractBean implements Serializable {
         ContractDetail detail = new ContractDetail();
         detail.setContract_ID(updatingContract.id);
         detail.setWhatToDo("N" + counterWhatToDo);
+        detail.setSource("M");
         counterWhatToDo++;
         List<ContractDetail> newList = new ArrayList<>(updatingContractDetailsList);
         newList.add(0, detail);
         updatingContractDetailsList = newList;
+    }
+
+    public void pressDelete() throws IOException {
+        FacesContext context = FacesContext.getCurrentInstance();
+        ContractDetail editedDetail = context.getApplication().evaluateExpressionGet(context, "#{detail}", ContractDetail.class);
+        if (editedDetail.getID()==0){
+            removeRow();
+        }else {
+            List<ContractDetail> newList = new ArrayList<>(updatingContractDetailsList);
+            for (ContractDetail detail : newList) {
+                if (detail.getID()==editedDetail.getID()) {
+                    updatingContractDetailsList.remove(detail);
+                    removeContractDetail(editedDetail.getID());
+                    break;
+                }
+            }
+        }
     }
 
     public void removeRow() {
@@ -311,7 +334,6 @@ public class EditContractBean implements Serializable {
                 break;
             }
         }
-
     }
 
     /**
