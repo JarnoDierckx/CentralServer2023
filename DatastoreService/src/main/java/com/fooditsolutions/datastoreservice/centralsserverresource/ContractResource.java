@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.datastoreservice.controller.DBFirebird;
 import com.fooditsolutions.datastoreservice.controller.Datastores;
 import com.fooditsolutions.datastoreservice.controller.Util;
+import com.fooditsolutions.datastoreservice.model.centralserver.Client;
 import com.fooditsolutions.datastoreservice.model.centralserver.Contract;
 import com.fooditsolutions.datastoreservice.model.DatastoreObject;
 import com.fooditsolutions.datastoreservice.model.centralserver.ContractDetail;
@@ -91,8 +92,12 @@ public class ContractResource {
             Object value2 = field.get(contract);
             if (value2 != null) {
                 if ( value1==null || !value1.equals(value2)) {
-                    field.set(differences, value2);
-                    counter++;
+                    if (!(value2.getClass().equals(Client.class)) && !(value2.equals(true))){
+                        field.set(differences, value2);
+                        counter++;
+                    }
+
+
                 }
             }
         }

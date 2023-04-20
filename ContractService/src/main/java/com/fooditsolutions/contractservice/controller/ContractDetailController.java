@@ -54,14 +54,15 @@ public class ContractDetailController {
 
     public static ContractDetail calculate(ContractDetail contractDetail) throws IOException {
         if (contractDetail.getPurchase_price() != null && contractDetail.getJgr() > 0){
-            BigDecimal calculation1=contractDetail.getPurchase_price().multiply(BigDecimal.valueOf(contractDetail.getJgr()).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP));
-            contractDetail.setJgr_not_indexed(calculation1);
+            BigDecimal calculation1=(BigDecimal.valueOf(contractDetail.getJgr()).divide(BigDecimal.valueOf(100),2, RoundingMode.HALF_UP));
+            BigDecimal calculation2=contractDetail.getPurchase_price().multiply(calculation1);
+            contractDetail.setJgr_not_indexed(calculation2);
             ContractResource contractResource=new ContractResource();
             Contract contract = contractResource.getContract(contractDetail.getContract_ID());
             if (contract.getIndex_last_invoice() != null && contractDetail.getIndex_Start() != null){
-                BigDecimal calculation2=(contractDetail.getJgr_not_indexed().multiply(contract.index_last_invoice));
-                BigDecimal calculation3=calculation2.divide(contractDetail.getIndex_Start(), RoundingMode.HALF_UP);
-                contractDetail.setJgr_indexed(calculation3);
+                BigDecimal calculation3=(contractDetail.getJgr_not_indexed().multiply(contract.index_last_invoice));
+                BigDecimal calculation4=calculation3.divide(contractDetail.getIndex_Start(), RoundingMode.HALF_UP);
+                contractDetail.setJgr_indexed(calculation4);
             }
         }
 

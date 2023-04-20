@@ -49,6 +49,7 @@ public class EditContractBean implements Serializable {
     private java.util.Date purchaseDate;
     private int quantity;
     private BigDecimal startIndex;
+    private String renewal;
 
 
     /**
@@ -81,6 +82,10 @@ public class EditContractBean implements Serializable {
                     startIndex = (BigDecimal) session.getAttribute("startIndex");
                     session.removeAttribute("startIndex");
                 }
+                if (session.getAttribute("renewal")!=null){
+                    renewal=(String) session.getAttribute("renewal");
+                    session.removeAttribute("renewal");
+                }
             }
         }
         updatingContract = new Contract();
@@ -109,6 +114,9 @@ public class EditContractBean implements Serializable {
                     }
                     if (selectedContract.jgr != 0) {
                         detail.setJgr(selectedContract.jgr);
+                    }
+                    if (renewal != null){
+                        detail.setRenewal(renewal);
                     }
                     detail.setWhatToDo("C");
                 }
