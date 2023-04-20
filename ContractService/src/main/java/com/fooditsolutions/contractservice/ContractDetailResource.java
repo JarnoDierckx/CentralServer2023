@@ -55,6 +55,8 @@ public class ContractDetailResource {
                     detailsToUpdate.add(contractDetails[i]);
                 }else if(contractDetails[i].getWhatToDo().contains("C")){
                     detailsToCreate.add(contractDetails[i]);
+                } else if (contractDetails[i].getWhatToDo().contains("D")) {
+                    deleteContractDetails(contractDetails[i].getID());
                 }
             }
         }

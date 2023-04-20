@@ -189,6 +189,7 @@ public class EditContractBean implements Serializable {
      * All "whatToDo" values are reset, so it doesn't interfere with any sequential updates.
      */
     public void UpdateContractDetails() throws IOException {
+
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -202,6 +203,8 @@ public class EditContractBean implements Serializable {
         for (ContractDetail contractDetail : updatingContractDetailsList) {
             contractDetail.setWhatToDo("");
         }
+        HttpSession session= (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        session.removeAttribute("EditContractBean");
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
     }
@@ -308,17 +311,19 @@ public class EditContractBean implements Serializable {
         updatingContractDetailsList = newList;
     }
 
-    public void pressDelete() throws IOException {
+    public void pressDelete(){
         FacesContext context = FacesContext.getCurrentInstance();
         ContractDetail editedDetail = context.getApplication().evaluateExpressionGet(context, "#{detail}", ContractDetail.class);
         if (editedDetail.getID()==0){
             removeRow();
         }else {
-            List<ContractDetail> newList = new ArrayList<>(updatingContractDetailsList);
-            for (ContractDetail detail : newList) {
+            for (ContractDetail detail : updatingContractDetailsList) {
                 if (detail.getID()==editedDetail.getID()) {
-                    updatingContractDetailsList.remove(detail);
-                    removeContractDetail(editedDetail.getID());
+                    if (detail.getWhatToDo() == null || detail.getWhatToDo().equals("")){
+                        detail.setWhatToDo("D");
+                    }else {
+                        detail.setWhatToDo("");
+                    }
                     break;
                 }
             }

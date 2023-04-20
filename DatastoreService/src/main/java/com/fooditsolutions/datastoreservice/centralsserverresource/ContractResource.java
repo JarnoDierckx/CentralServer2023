@@ -164,7 +164,7 @@ public class ContractResource {
 
             contract.setId((int) jsonContracts.getJSONObject(i).opt("ID"));
             contract.setContract_number((String) jsonContracts.getJSONObject(i).opt("CONTRACT_NUMBER"));
-            contract.setClient_id( BigDecimal.valueOf((Long)jsonContracts.getJSONObject(i).opt("CLIENT_ID")));
+            contract.setClient_id((BigDecimal) jsonContracts.getJSONObject(i).opt("CLIENT_ID"));
             if (jsonContracts.getJSONObject(i).opt("BJR_ID") != null) {
                 contract.setBjr_id((int) jsonContracts.getJSONObject(i).opt("BJR_ID"));
             }

@@ -21,6 +21,7 @@
 </script>
 
 <h:body>
+  <h:outputStylesheet library="css" name="editPageStyle.css"/>
   <h:form>
     <div class="card">
       <p:dataTable var="edit" value="#{EditContractBean.updatingContract}" paginator="true" paginatorTemplate="{Save} {delete}" paginatorPosition="bottom" editable="true" editMode="cell">
@@ -380,7 +381,8 @@
           </p:column>
 
           <p:column style="width: min-content">
-            <p:commandButton value="Delete" rendered="#{detail.whatToDo.contains('N') || detail.source == 'M'}">
+            <p:commandButton value="#{(detail.whatToDo.contains('D')) ? 'Undo' : 'Delete'}" rendered="#{detail.whatToDo.contains('N') || detail.source == 'M'}"
+                             styleClass="#{(detail.whatToDo.contains('D')) ? 'ui-button-secondary' : 'ui-button-danger'}">
               <p:ajax listener="#{EditContractBean.pressDelete()}" update="detailsTable"/>
             </p:commandButton>
           </p:column>
