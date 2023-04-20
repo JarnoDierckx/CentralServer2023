@@ -13,6 +13,7 @@
         <module name="IndexService" />
         <module name="DatastoreService" />
         <module name="ContractService" />
+        <module name="HistoryService" />
         <module name="Util" />
         <module name="AuthenticationService" />
       </profile>
