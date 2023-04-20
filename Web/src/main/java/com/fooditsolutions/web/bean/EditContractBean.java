@@ -22,6 +22,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @ManagedBean
@@ -41,6 +43,7 @@ public class EditContractBean implements Serializable {
     private String warningModule = "";
     private List<SortMeta> sortBy;
     private Client[] clients;
+    private Index[] cpis;
 
     private boolean isAfterCreate;
     private java.util.Date purchaseDate;
@@ -115,6 +118,7 @@ public class EditContractBean implements Serializable {
         moduleIds = retrieveModuleIds();
         sortBy = new ArrayList<>();
         clients = retrieveClients();
+        cpis=retrieveIndex();
     }
 
     /**
@@ -224,6 +228,13 @@ public class EditContractBean implements Serializable {
         tempModuleList.add(emptyModule);*/
         ModuleId[] tempArray= tempModuleList.toArray(new ModuleId[0]);
         return tempArray;
+    }
+
+    public Index[] retrieveIndex() throws JsonProcessingException {
+        String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_indexservice()+"/index");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.readValue(response, Index[].class);
     }
 
     public void removeContractDetail(int id) throws IOException {
@@ -337,6 +348,19 @@ public class EditContractBean implements Serializable {
             if (detail.getWhatToDo().equals(editedDetail.getWhatToDo())) {
                 updatingContractDetailsList.remove(detail);
                 break;
+            }
+        }
+    }
+
+    public void updateCPILastInvoice(){
+        if (updatingContract.getLast_invoice_date() != null && updatingContract.base_index_year > 0){
+            Date date = updatingContract.getLast_invoice_date();
+            DateFormat df = new SimpleDateFormat("MMMM yyyy");
+            String month =df.format(date);
+            for (Index index:cpis){
+                if (Objects.equals(index.getBase(), updatingContract.getBase_index_year() + " = 100") && index.getMonth().toLowerCase().equals(month.toLowerCase())){
+                    updatingContract.setIndex_last_invoice(index.getCI());
+                }
             }
         }
     }

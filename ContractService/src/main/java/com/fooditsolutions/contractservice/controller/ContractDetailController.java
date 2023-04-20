@@ -3,6 +3,7 @@ package com.fooditsolutions.contractservice.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fooditsolutions.contractservice.ContractResource;
 import com.fooditsolutions.contractservice.model.Client;
 import com.fooditsolutions.contractservice.model.Contract;
 import com.fooditsolutions.contractservice.model.ContractDetail;
@@ -11,8 +12,10 @@ import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.google.gson.*;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Dictionary;
@@ -47,5 +50,22 @@ public class ContractDetailController {
 
         }
         return  contractsDetails;
+    }
+
+    public static ContractDetail calculate(ContractDetail contractDetail) throws IOException {
+        if (contractDetail.getPurchase_price() != null && contractDetail.getJgr() > 0){
+            BigDecimal calculation1=contractDetail.getPurchase_price().multiply(BigDecimal.valueOf(contractDetail.getJgr()).divide(BigDecimal.valueOf(100), RoundingMode.HALF_UP));
+            contractDetail.setJgr_not_indexed(calculation1);
+            ContractResource contractResource=new ContractResource();
+            Contract contract = contractResource.getContract(contractDetail.getContract_ID());
+            if (contract.getIndex_last_invoice() != null && contractDetail.getIndex_Start() != null){
+                BigDecimal calculation2=(contractDetail.getJgr_not_indexed().multiply(contract.index_last_invoice));
+                BigDecimal calculation3=calculation2.divide(contractDetail.getIndex_Start(), RoundingMode.HALF_UP);
+                contractDetail.setJgr_indexed(calculation3);
+            }
+        }
+
+
+        return contractDetail;
     }
 }

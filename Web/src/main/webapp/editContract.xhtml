@@ -24,7 +24,7 @@
   <h:outputStylesheet library="css" name="editPageStyle.css"/>
   <h:form>
     <div class="card">
-      <p:dataTable var="edit" value="#{EditContractBean.updatingContract}" paginator="true" paginatorTemplate="{Save} {delete}" paginatorPosition="bottom" editable="true" editMode="cell">
+      <p:dataTable id="contractTable" var="edit" value="#{EditContractBean.updatingContract}" paginator="true" paginatorTemplate="{Save} {delete}" paginatorPosition="bottom" editable="true" editMode="cell">
 
         <p:ajax event="cellEdit" listener="#{EditContractBean.onCellEdit}"/>
 
@@ -166,7 +166,7 @@
         <p:column headerText="Index last invoice">
           <p:cellEditor>
             <f:facet name="output">
-              <h:outputText value="#{edit.index_last_invoice}"/>
+              <h:outputText value="#{edit.index_last_invoice}" id="lastIndex"/>
             </f:facet>
             <f:facet name="input">
               <p:inputText value="#{edit.index_last_invoice}" style="width:100%"/>
@@ -204,9 +204,11 @@
               </h:outputText>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{edit.last_invoice_date}" style="width:100%">
+              <p:calendar  value="#{edit.last_invoice_date}" pattern="yyyy-MM-dd">
+                <p:ajax event="dateSelect" listener="#{EditContractBean.updateCPILastInvoice()}" update="lastIndex"/>
+                <p:ajax event="change" listener="#{EditContractBean.updateCPILastInvoice()}" update="lastIndex"/>
                 <f:convertDateTime pattern = "yyyy-MM-dd" />
-              </p:inputText>
+              </p:calendar>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -219,9 +221,9 @@
               </h:outputText>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{edit.last_invoice_period_start}" style="width:100%">
+              <p:calendar  value="#{edit.last_invoice_period_start}" pattern="yyyy-MM-dd">
                 <f:convertDateTime pattern = "yyyy-MM-dd" />
-              </p:inputText>
+              </p:calendar>
             </f:facet>
           </p:cellEditor>
         </p:column>
@@ -234,9 +236,9 @@
               </h:outputText>
             </f:facet>
             <f:facet name="input">
-              <p:inputText value="#{edit.last_invoice_period_end}" style="width:100%">
+              <p:calendar  value="#{edit.last_invoice_period_end}" pattern="yyyy-MM-dd">
                 <f:convertDateTime pattern = "yyyy-MM-dd" />
-              </p:inputText>
+              </p:calendar>
             </f:facet>
           </p:cellEditor>
         </p:column>

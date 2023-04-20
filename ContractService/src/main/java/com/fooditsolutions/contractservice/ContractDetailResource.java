@@ -28,14 +28,18 @@ public class ContractDetailResource {
     @Path("/{ContractID}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public List<ContractDetail> getContractDetails(@PathParam("ContractID") String contractID) throws JsonProcessingException {
+    public List<ContractDetail> getContractDetails(@PathParam("ContractID") String contractID) throws IOException {
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail/"+ contractID +"?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         System.out.println("getContractDetails: "+responseString);
 
         List<ContractDetail> contractDetails = ContractDetailController.createContractDetailInformation(responseString);
+        List<ContractDetail> newContractDetails= new ArrayList<>();
+        for (ContractDetail contractDetail: contractDetails){
+            contractDetail=ContractDetailController.calculate(contractDetail);
+            newContractDetails.add(contractDetail);
+        }
 
-
-        return contractDetails;
+        return newContractDetails;
     }
 
     /**
