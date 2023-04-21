@@ -20,16 +20,16 @@
                 <f:facet name="header">
                     <div class="flex justify-content-end">
                         <p:inputText id="globalFilter" onkeyup="PF('contractTable').filter()" style="width:300px"
-                                     placeholder="Search using global function" />
+                                     placeholder="Search contract numbers and clients" />
                     </div>
-                    <p:outputLabel value="active/inactive"/>
-                    <p:selectBooleanCheckbox value="#{ManageContractBean.activeFilter}">
+                    <p:outputLabel value="show inactive contracts:"/>
+                    <p:selectBooleanCheckbox value="#{ManageContractBean.inActiveFilter}">
                         <p:ajax update="generalTable" listener="#{ManageContractBean.updateActiveFilter}" />
                     </p:selectBooleanCheckbox>
                 </f:facet>
 
                 <ui:remove>
-                    <p:column filterBy="#{contract.is_active}" filterValue="#{ManageContractBean.activeFilter}"/>
+                    <p:column filterBy="#{contract.is_active}" filterValue="#{ManageContractBean.inActiveFilter}"/>
                 </ui:remove>
 
 
@@ -39,7 +39,7 @@
                     </p:commandButton>
                 </p:column>
 
-                <p:column headerText="Contract number" sortBy="#{contract.contract_number}" sortFunction="#{ManageContractBean.customSortFunction}">
+                <p:column headerText="Contract number" sortBy="#{contract.contract_number}" >
                     #{contract.contract_number}
                 </p:column>
                 <p:column headerText="Client" sortBy="#{contract.client.name}">

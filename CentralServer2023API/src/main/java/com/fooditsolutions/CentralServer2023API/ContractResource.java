@@ -148,7 +148,7 @@ public class ContractResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public void createContract(Contract contract) throws IOException {
+    public String createContract(Contract contract) throws IOException {
 
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
@@ -156,7 +156,7 @@ public class ContractResource {
         //Converting the Object to JSONString
         String jsonString = mapper.writeValueAsString(contract);
 
-        HttpController.httpPost(PropertiesController.getProperty().getBase_url_contractservice()+"/contract", jsonString);
+        return HttpController.httpPost(PropertiesController.getProperty().getBase_url_contractservice()+"/contract", jsonString);
     }
 
     @Path("/detail")

@@ -37,7 +37,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     private ContractDetail[] details;
     private List<ContractDetail> detailList;
     private List<SortMeta> sortBy;
-    private boolean activeFilter = true;
+    private boolean inActiveFilter = false;
 
     /**
      * Executes getContracts when generalContracts.xhtml is loaded.
@@ -171,16 +171,23 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     }
 
     /**
-     * Takes two string values, parses them to integers and compares them.
-     * @return Integer.compare, to check which one is higher/lower.
+     * currently redundant
      */
-    public int customSortFunction(String nr1, String nr2) {
-        // Convert the string value to a number for comparison
-        int num1 = parseInt(nr1, 10);
-        int num2 = parseInt(nr2, 10);
-
-        // Compare the numeric values instead of the strings
-        return Integer.compare(num1, num2);
+    public int customSortFunction(String s1, String s2) {
+        if (s1.matches("\\d+") && s2.matches("\\d+")) {
+            // both strings are just numbers
+            return Integer.compare(Integer.parseInt(s1), Integer.parseInt(s2));
+        } else if (s1.matches("\\d+")) {
+            // s1 is just a number
+            return -1;
+        } else if (s2.matches("\\d+")) {
+            // s2 is just a number
+            return 1;
+        } else {
+            // neither string is just a number
+            // compare as strings
+            return s1.compareTo(s2);
+        }
     }
 
     /**
@@ -188,7 +195,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
      */
     public void updateActiveFilter() {
         // Update the filter value based on the value of the checkbox
-        if (activeFilter) {
+        if (!inActiveFilter) {
             filteredContracts=new ArrayList<>();
             for (Contract contract:contracts){
                 if (contract.is_active){
@@ -255,12 +262,12 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return detailList;
     }
 
-    public boolean isActiveFilter() {
-        return activeFilter;
+    public boolean isInActiveFilter() {
+        return inActiveFilter;
     }
 
-    public void setActiveFilter(boolean activeFilter) {
-        this.activeFilter = activeFilter;
+    public void setInActiveFilter(boolean inActiveFilter) {
+        this.inActiveFilter = inActiveFilter;
     }
 
     public List<Contract> getFilteredContracts() {

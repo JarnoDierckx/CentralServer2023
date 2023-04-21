@@ -124,16 +124,23 @@ public class ContractResource {
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void createContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract) {
+    @Produces("application/json")
+    public int createContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract) {
         String sql = contract.getInsertStatement();
         System.out.println("sql statement "+sql);
+        String sqlRead="SELECT ID FROM CONTRACT WHERE CONTRACT_NUMBER = '"+ contract.getContract_number()+"' AND CLIENT_ID = " + contract.getClient_id() + " AND SOURCE = '" + contract.getSource()+"'";
+        int ID;
+        JSONArray JSONID = new JSONArray();
 
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
                 DBFirebird.executeSQLInsert(ds, sql);
+                JSONID =DBFirebird.executeSQL(ds, sqlRead);
                 System.out.println("Insert successfull");
             }
         }
+        ID =(int)JSONID.getJSONObject(0).opt("ID");
+        return ID;
     }
 
     /**

@@ -72,13 +72,14 @@ public class CreateContractBean implements Serializable {
         String jsonString = mapper.writeValueAsString(newContract);
 
         System.out.println("Create: "+jsonString);
-        HttpController.httpPost(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract", jsonString);
+        String ID =HttpController.httpPost(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract", jsonString);
 
         HttpSession session= (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-        session.setAttribute("purchaseDate",newContract.start_date);
+        if (session.getAttribute("EditContractBean")!=null){
+            session.removeAttribute("EditContractBean");
+        }
+        session.setAttribute("ID",ID);
         session.setAttribute("quantity", quantity);
-        session.setAttribute("startIndex", newContract.index_start);
-        session.setAttribute("renewal", newContract.getInvoice_frequency());
 
         newContract=new Contract();
         server_id= BigDecimal.valueOf(0);

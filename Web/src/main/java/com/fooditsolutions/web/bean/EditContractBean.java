@@ -9,6 +9,7 @@ import com.fooditsolutions.web.model.*;
 import org.apache.commons.beanutils.BeanUtils;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.model.SortMeta;
+import org.primefaces.shaded.json.JSONArray;
 
 
 import javax.annotation.ManagedBean;
@@ -46,10 +47,8 @@ public class EditContractBean implements Serializable {
     private Index[] cpis;
 
     private boolean isAfterCreate;
-    private java.util.Date purchaseDate;
+    private int IDNewContract;
     private int quantity;
-    private BigDecimal startIndex;
-    private String renewal;
 
 
     /**
@@ -57,10 +56,10 @@ public class EditContractBean implements Serializable {
      * where loaded. The Contract object is then put into updatingContract so that editContract.xhtml can put it into a form.
      * updatingContract's details are then also retrieved from the ManageContract class and put into updatingContractDetails before also being used in a form.
      * updatingContract can probably be received in the same way.
-     * It also retrieves the stored values if the user was redirected to edit contracts after creating a new contract.
+     * It also retrieves the stored ID if the user was redirected after creating a contract to then retrieve the contract object that was just made.
      */
     @PostConstruct
-    public void Init() throws IOException, ServletException {
+    public void Init() throws IOException {
         System.out.println("Edit contract");
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
                 .getExternalContext().getSession(false);
@@ -68,24 +67,17 @@ public class EditContractBean implements Serializable {
             if (session.getAttribute("contract") != null) {
                 selectedContract = (Contract) session.getAttribute("contract");
             } else {
-                selectedContract = retrieveLastContract();
                 isAfterCreate = true;
-                if (session.getAttribute("purchaseDate") != null) {
-                    purchaseDate = (Date) session.getAttribute("purchaseDate");
-                    session.removeAttribute("purchaseDate");
+                if (session.getAttribute("ID") != null) {
+                    IDNewContract = Integer.parseInt((String) session.getAttribute("ID"));
+                    session.removeAttribute("ID");
+                    selectedContract = retrieveNewestContract();
                 }
-                if (session.getAttribute("quantity") != null) {
+                if (session.getAttribute("quantity")!=null){
                     quantity = (int) session.getAttribute("quantity");
                     session.removeAttribute("quantity");
                 }
-                if (session.getAttribute("startIndex") != null) {
-                    startIndex = (BigDecimal) session.getAttribute("startIndex");
-                    session.removeAttribute("startIndex");
-                }
-                if (session.getAttribute("renewal")!=null){
-                    renewal=(String) session.getAttribute("renewal");
-                    session.removeAttribute("renewal");
-                }
+
             }
         }
         updatingContract = new Contract();
@@ -103,20 +95,20 @@ public class EditContractBean implements Serializable {
                 detail.setID(counter);
                 detail.setSource("CS");
                 if (isAfterCreate) {
-                    if (purchaseDate != null) {
-                        detail.setPurchase_Date(purchaseDate);
+                    if (updatingContract.getStart_date() != null) {
+                        detail.setPurchase_Date(updatingContract.getStart_date());
                     }
                     if (quantity != 0) {
                         detail.setAmount(quantity);
                     }
-                    if (startIndex != null) {
-                        detail.setIndex_Start(startIndex);
+                    if (updatingContract.getIndex_start()!= null) {
+                        detail.setIndex_Start(updatingContract.getIndex_start());
                     }
-                    if (selectedContract.jgr != 0) {
-                        detail.setJgr(selectedContract.jgr);
+                    if (updatingContract.getJgr() != 0) {
+                        detail.setJgr(updatingContract.getJgr());
                     }
-                    if (renewal != null){
-                        detail.setRenewal(renewal);
+                    if (updatingContract.getInvoice_frequency() != null){
+                        detail.setRenewal(updatingContract.getInvoice_frequency());
                     }
                     detail.setWhatToDo("C");
                 }
@@ -132,21 +124,17 @@ public class EditContractBean implements Serializable {
     /**
      * Used after a new contract has been made, retrieves the newest contract stored, so it can be properly edited.
      *
-     * @return the contract object with the highest id, as this would be the newest.
+     * @return the contract matching the ID passed to this class by CreateContractBean.
      */
-    public Contract retrieveLastContract() throws IOException, ServletException {
-        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract");
+    public Contract retrieveNewestContract() throws IOException {
+        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/"+IDNewContract);
         System.out.println("getContracts: " + response);
 
         byte[] jsonData = response.getBytes();
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        Contract[] contracts2;
-        contracts2 = mapper.readValue(jsonData, Contract[].class);
-
-        List<Contract> contractList = Arrays.asList(contracts2);
-
-        Contract contract2 = contractList.stream().max(Comparator.comparing(Contract::getId)).orElseThrow(NoSuchElementException::new);
+        Contract contract2;
+        contract2 = mapper.readValue(jsonData, Contract.class);
         if (contract2.start_date != null) {
             contract2.start_date = new java.sql.Date(contract2.start_date.getTime());
         }

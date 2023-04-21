@@ -86,7 +86,7 @@ public class HandleLogin {
                     response.addCookie(cookie);
                     responseString=connection.getResponseMessage();
                     ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-                    externalContext.redirect(externalContext.getRequestContextPath() + "/generalContracts.xhtml?faces-redirect=true");
+                    externalContext.redirect(externalContext.getRequestContextPath() + "/homePage.xhtml?faces-redirect=true");
 
                 }else{
                     errorCount++;

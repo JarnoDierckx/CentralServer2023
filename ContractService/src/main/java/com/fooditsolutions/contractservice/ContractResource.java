@@ -85,7 +85,7 @@ public class ContractResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public void createContract(Contract contract) throws IOException {
+    public String createContract(Contract contract) throws IOException {
 
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
@@ -94,7 +94,7 @@ public class ContractResource {
         String jsonString = mapper.writeValueAsString(contract);
         System.out.println(jsonString);
 
-        HttpController.httpPost(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
+        return HttpController.httpPost(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
     }
 
     /*@DELETE
