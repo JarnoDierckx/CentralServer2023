@@ -5,10 +5,10 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
-<head>
+<h:head>
     <title>Home</title>
-</head>
-<body>
-    <h:commandButton value="Contracts" action="generalContracts.xhtml?faces-redirect=true"/>
-</body>
+</h:head>
+<h:body>
+    <p:commandButton value="Contracts" action="#{LandingPageBean.redirectToGeneralContracts()}"/>
+</h:body>
 </html>

@@ -254,9 +254,12 @@
           </p:cellEditor>
         </p:column>
       </p:dataTable>
-      <p:inputTextarea value="#{EditContractBean.updatingContract.comments}"/>
-    </div>
+      <section>
+        <p:outputLabel value="Comments:"/><br/>
+        <p:inputTextarea value="#{EditContractBean.updatingContract.comments}" autoResize="false" cols="50" rows="10"/>
+      </section>
 
+    </div>
 
 
       <div class="card">
@@ -299,6 +302,8 @@
               </f:facet>
               <f:facet name="input">
                 <p:calendar  value="#{detail.purchase_Date}" pattern="yyyy-MM-dd">
+                  <p:ajax event="dateSelect" listener="#{EditContractBean.updateCPIContractDetail(detail.ID)}" update="detailIndexStart"/>
+                  <p:ajax event="change" listener="#{EditContractBean.updateCPIContractDetail(detail.ID)}" update="detailIndexStart"/>
                   <f:convertDateTime pattern = "yyyy-MM-dd" />
                 </p:calendar>
               </f:facet>
@@ -330,7 +335,7 @@
           <p:column headerText="Starting index value" sortBy="#{detail.index_Start}">
             <p:cellEditor>
               <f:facet name="output">
-                <h:outputText value="#{detail.index_Start}"/>
+                <h:outputText value="#{detail.index_Start}" id="detailIndexStart"/>
               </f:facet>
               <f:facet name="input">
                 <p:inputText value="#{detail.index_Start}" style="width:100%"/>

@@ -151,6 +151,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         if (session.getAttribute("createContractBean")!=null){
             session.removeAttribute("createContractBean");
         }
+        session.setAttribute("allContracts",contracts2);
 
         return "createContract.xhtml?faces-redirect=true";
     }

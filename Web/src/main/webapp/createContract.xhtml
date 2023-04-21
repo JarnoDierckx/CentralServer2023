@@ -19,11 +19,15 @@
                 <p:inputText value="#{createContractBean.newContract.server_ID}">
                     <p:ajax event="blur" listener="#{createContractBean.updateClient()}" update="createForm"/>
                 </p:inputText>
+                <h:outputText value="#{createContractBean.server_IDWarning}" style="color: red"/>
             </section>
 
             <section >
                 <h:outputText value="Contract number"/><br/>
-                <p:inputText value="#{createContractBean.newContract.contract_number}" required="true"/>
+                <p:inputText value="#{createContractBean.newContract.contract_number}" required="true">
+                    <p:ajax event="blur" listener="#{createContractBean.checkContract_NumberUnique()}" update="createForm"/>
+                </p:inputText>
+                <h:outputText value="#{createContractBean.contract_numberWarning}" style="color: red"/>
             </section>
 
             <section>

@@ -33,11 +33,17 @@ public class CreateContractBean implements Serializable {
     private Index[] cpis;
     private BigDecimal server_id;
     private Server[] servers;
+    private Contract[] allContracts;
+    private String contract_numberWarning="";
+    private String server_IDWarning="";
 
     private int quantity;
 
     @PostConstruct
     public void init() throws JsonProcessingException {
+        HttpSession session= (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        allContracts= (Contract[]) session.getAttribute("allContracts");
+
         newContract=new Contract();
         client=new Client();
         bjr=new Bjr();
@@ -130,15 +136,22 @@ public class CreateContractBean implements Serializable {
     public void updateCPI(){
         if (newContract.start_date != null && newContract.base_index_year > 0){
             Date startDate = newContract.start_date;
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startDate);
+            calendar.add(Calendar.MONTH, -1); // subtract one month from the date
+            Date updatedDate = calendar.getTime();
+
             DateFormat df = new SimpleDateFormat("MMMM yyyy");
-            String month =df.format(startDate);
-            for (Index index:cpis){
-                if (Objects.equals(index.getBase(), newContract.getBase_index_year() + " = 100") && index.getMonth().toLowerCase().equals(month.toLowerCase())){
-                    newContract.index_start=index.getCI();
+            String month = df.format(updatedDate);
+
+            for (Index index : cpis){
+                if (Objects.equals(index.getBase(), newContract.getBase_index_year() + " = 100") && index.getMonth().equalsIgnoreCase(month)){
+                    newContract.index_start = index.getCI();
                 }
             }
         }
     }
+
 
     /**
      * Autofills the client based on the server id, and marks the contract as a central server contract.
@@ -152,6 +165,25 @@ public class CreateContractBean implements Serializable {
                         newContract.client=client2;
                     }
                 }
+            }
+        }
+        for (Contract contract: allContracts){
+            if (contract.getServer_ID() !=null && contract.getServer_ID().equals(newContract.getServer_ID())){
+                server_IDWarning="There is already a contract with this server";
+                break;
+            }else {
+                server_IDWarning="";
+            }
+        }
+    }
+
+    public void checkContract_NumberUnique(){
+        for (Contract contract: allContracts){
+            if (contract.getContract_number().equals(newContract.getContract_number())){
+                contract_numberWarning="This contract number already exists";
+                break;
+            }else {
+                contract_numberWarning="";
             }
         }
     }
@@ -219,5 +251,13 @@ public class CreateContractBean implements Serializable {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getContract_numberWarning() {
+        return contract_numberWarning;
+    }
+
+    public String getServer_IDWarning() {
+        return server_IDWarning;
     }
 }

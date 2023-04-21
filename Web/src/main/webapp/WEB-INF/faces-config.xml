@@ -8,7 +8,7 @@
         <from-view-id>/index.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>success</from-outcome>
-            <to-view-id>/generalContracts.xhtml</to-view-id>
+            <to-view-id>/homePage.xhtml</to-view-id>
             <redirect/>
         </navigation-case>
     </navigation-rule>
@@ -33,5 +33,10 @@
         <managed-bean-name>CreateContractBean</managed-bean-name>
         <managed-bean-class>com.fooditsolutions.web.bean.CreateContractBean</managed-bean-class>
         <managed-bean-scope>session</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>LandingPageBean</managed-bean-name>
+        <managed-bean-class>com.fooditsolutions.web.bean.LandingPageBean</managed-bean-class>
+        <managed-bean-scope>view</managed-bean-scope>
     </managed-bean>
 </faces-config>

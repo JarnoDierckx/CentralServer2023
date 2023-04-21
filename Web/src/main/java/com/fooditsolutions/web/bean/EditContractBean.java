@@ -73,7 +73,7 @@ public class EditContractBean implements Serializable {
                     session.removeAttribute("ID");
                     selectedContract = retrieveNewestContract();
                 }
-                if (session.getAttribute("quantity")!=null){
+                if (session.getAttribute("quantity") != null) {
                     quantity = (int) session.getAttribute("quantity");
                     session.removeAttribute("quantity");
                 }
@@ -101,13 +101,13 @@ public class EditContractBean implements Serializable {
                     if (quantity != 0) {
                         detail.setAmount(quantity);
                     }
-                    if (updatingContract.getIndex_start()!= null) {
+                    if (updatingContract.getIndex_start() != null) {
                         detail.setIndex_Start(updatingContract.getIndex_start());
                     }
                     if (updatingContract.getJgr() != 0) {
                         detail.setJgr(updatingContract.getJgr());
                     }
-                    if (updatingContract.getInvoice_frequency() != null){
+                    if (updatingContract.getInvoice_frequency() != null) {
                         detail.setRenewal(updatingContract.getInvoice_frequency());
                     }
                     detail.setWhatToDo("C");
@@ -118,7 +118,7 @@ public class EditContractBean implements Serializable {
         moduleIds = retrieveModuleIds();
         sortBy = new ArrayList<>();
         clients = retrieveClients();
-        cpis=retrieveIndex();
+        cpis = retrieveIndex();
     }
 
     /**
@@ -127,7 +127,7 @@ public class EditContractBean implements Serializable {
      * @return the contract matching the ID passed to this class by CreateContractBean.
      */
     public Contract retrieveNewestContract() throws IOException {
-        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/"+IDNewContract);
+        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/" + IDNewContract);
         System.out.println("getContracts: " + response);
 
         byte[] jsonData = response.getBytes();
@@ -203,8 +203,9 @@ public class EditContractBean implements Serializable {
         for (ContractDetail contractDetail : updatingContractDetailsList) {
             contractDetail.setWhatToDo("");
         }
-        HttpSession session= (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         session.removeAttribute("EditContractBean");
+        session.setAttribute("contract", updatingContract);
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
     }
@@ -222,19 +223,23 @@ public class EditContractBean implements Serializable {
         /*ModuleId emptyModule=new ModuleId();
         emptyModule.setName("Choose a module");
         tempModuleList.add(emptyModule);*/
-        ModuleId[] tempArray= tempModuleList.toArray(new ModuleId[0]);
+        ModuleId[] tempArray = tempModuleList.toArray(new ModuleId[0]);
         return tempArray;
     }
 
     public Index[] retrieveIndex() throws JsonProcessingException {
-        String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_indexservice()+"/index");
+        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_indexservice() + "/index");
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return mapper.readValue(response, Index[].class);
     }
 
     public void removeContractDetail(int id) throws IOException {
-        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract/detail/"+id);
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/detail/" + id);
+    }
+
+    public void handleComment() {
+        System.out.println(updatingContract.getComments());
     }
 
     /**
@@ -286,7 +291,7 @@ public class EditContractBean implements Serializable {
             } else if (editedDetail.getID() < 0) {
                 for (ContractDetail detail : updatingContractDetailsList) {
                     if (detail.getID() == editedDetail.getID()) {
-                        detail.setWhatToDo(detail.getWhatToDo()+"C");
+                        detail.setWhatToDo(detail.getWhatToDo() + "C");
                     }
                 }
             }
@@ -318,17 +323,17 @@ public class EditContractBean implements Serializable {
         updatingContractDetailsList = newList;
     }
 
-    public void pressDelete(){
+    public void pressDelete() {
         FacesContext context = FacesContext.getCurrentInstance();
         ContractDetail editedDetail = context.getApplication().evaluateExpressionGet(context, "#{detail}", ContractDetail.class);
-        if (editedDetail.getID()==0){
+        if (editedDetail.getID() == 0) {
             removeRow();
-        }else {
+        } else {
             for (ContractDetail detail : updatingContractDetailsList) {
-                if (detail.getID()==editedDetail.getID()) {
-                    if (detail.getWhatToDo() == null || detail.getWhatToDo().equals("")){
+                if (detail.getID() == editedDetail.getID()) {
+                    if (detail.getWhatToDo() == null || detail.getWhatToDo().equals("")) {
                         detail.setWhatToDo("D");
-                    }else {
+                    } else {
                         detail.setWhatToDo("");
                     }
                     break;
@@ -348,17 +353,35 @@ public class EditContractBean implements Serializable {
         }
     }
 
-    public void updateCPILastInvoice(){
-        if (updatingContract.getLast_invoice_date() != null && updatingContract.base_index_year > 0){
-            Date date = updatingContract.getLast_invoice_date();
-            DateFormat df = new SimpleDateFormat("MMMM yyyy");
-            String month =df.format(date);
-            for (Index index:cpis){
-                if (Objects.equals(index.getBase(), updatingContract.getBase_index_year() + " = 100") && index.getMonth().toLowerCase().equals(month.toLowerCase())){
-                    updatingContract.setIndex_last_invoice(index.getCI());
-                }
+    public void updateCPILastInvoice() {
+        if (updatingContract.getLast_invoice_date() != null && updatingContract.getBase_index_year() > 0) {
+            updatingContract.setIndex_last_invoice(updateCPI(updatingContract.getLast_invoice_date(),updatingContract.getBase_index_year()));
+        }
+    }
+
+    public void updateCPIContractDetail(int id) {
+        for (ContractDetail detail: updatingContractDetailsList){
+            if (detail.getID()==id){
+                detail.setIndex_Start(updateCPI(detail.getPurchase_Date(),updatingContract.getBase_index_year()));
             }
         }
+    }
+
+    public BigDecimal updateCPI(Date startDate, int baseYear) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        calendar.add(Calendar.MONTH, -1); // subtract one month from the date
+        Date updatedDate = calendar.getTime();
+
+        DateFormat df = new SimpleDateFormat("MMMM yyyy");
+        String month = df.format(updatedDate);
+
+        for (Index index : cpis) {
+            if (Objects.equals(index.getBase(), baseYear + " = 100") && index.getMonth().equalsIgnoreCase(month)) {
+                return index.getCI();
+            }
+        }
+        return null;
     }
 
     /**
