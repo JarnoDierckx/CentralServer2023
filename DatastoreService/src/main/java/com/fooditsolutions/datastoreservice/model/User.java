@@ -21,8 +21,8 @@ public class User extends Sqlmodel{
     @JsonbProperty("id")
     @Id
     int ID = 0;
-    @JsonbProperty("name")
-    String Name="";
+    @JsonbProperty("username")
+    String userName="";
     @JsonbProperty("password")
     String Password="";
     @JsonbProperty("email")

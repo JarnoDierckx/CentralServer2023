@@ -27,7 +27,7 @@ public class UserResource {
             for (int i = 0; i < jsonUsers.length(); i++) {
                 User user = new User();
                 user.setID((int) jsonUsers.getJSONObject(i).get("USER_ID"));
-                user.setName((String) jsonUsers.getJSONObject(i).get("USER_NAME"));
+                user.setUserName((String) jsonUsers.getJSONObject(i).get("USER_NAME"));
                 user.setPassword((String) jsonUsers.getJSONObject(i).get("PASSWD"));
                 user.setEmail((String) jsonUsers.getJSONObject(i).get("EMAIL"));
                 users.add(user);
@@ -49,7 +49,7 @@ public class UserResource {
         for (int i = 0; i < jsonUsers.length(); i++) {
             User user = new User();
             user.setID((int) jsonUsers.getJSONObject(i).get("USER_ID"));
-            user.setName((String) jsonUsers.getJSONObject(i).get("USER_NAME"));
+            user.setUserName((String) jsonUsers.getJSONObject(i).get("USER_NAME"));
             user.setPassword((String) jsonUsers.getJSONObject(i).get("PASSWD"));
             user.setEmail((String) jsonUsers.getJSONObject(i).get("EMAIL"));
             users.add(user);

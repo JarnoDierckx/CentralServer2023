@@ -1,6 +1,6 @@
 package com.fooditsolutions.moduleservice.controller;
 
-import com.fooditsolutions.moduleservice.model.Server;
+import com.fooditsolutions.util.model.Server;
 import org.json.JSONArray;
 
 import java.math.BigDecimal;

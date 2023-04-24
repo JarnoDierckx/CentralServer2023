@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import com.fooditsolutions.util.model.ModuleId;
 
 import java.math.BigDecimal;
 @Getter

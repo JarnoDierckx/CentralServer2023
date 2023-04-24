@@ -1,4 +1,4 @@
-package com.fooditsolutions.contractservice.model;
+package com.fooditsolutions.util.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

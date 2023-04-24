@@ -1,3 +1,15 @@
+com\fooditsolutions\util\enums\Action.class
+com\fooditsolutions\util\model\Index.class
+com\fooditsolutions\util\model\Server.class
 com\fooditsolutions\util\controller\HttpController.class
-com\fooditsolutions\util\model\Property.class
+com\fooditsolutions\util\model\Contract.class
+com\fooditsolutions\util\model\User.class
+com\fooditsolutions\util\model\Client.class
+com\fooditsolutions\util\model\ContractDetail.class
 com\fooditsolutions\util\controller\PropertiesController.class
+com\fooditsolutions\util\model\Bjr.class
+com\fooditsolutions\util\model\Module.class
+com\fooditsolutions\util\model\ModuleId.class
+com\fooditsolutions\util\enums\Source.class
+com\fooditsolutions\util\model\History.class
+com\fooditsolutions\util\model\Property.class

@@ -1,7 +1,6 @@
 package com.fooditsolutions.contractservice.controller;
 
-import com.fooditsolutions.contractservice.model.Bjr;
-import com.fooditsolutions.contractservice.model.ModuleId;
+import com.fooditsolutions.util.model.ModuleId;
 import org.json.JSONArray;
 
 import java.math.BigDecimal;

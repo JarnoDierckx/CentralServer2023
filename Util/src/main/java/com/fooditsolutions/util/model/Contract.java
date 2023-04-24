@@ -1,21 +1,29 @@
-package com.fooditsolutions.web.model;
+package com.fooditsolutions.util.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.json.bind.annotation.JsonbProperty;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.Date;
+
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Contract {
+    @Id
+    @JsonbProperty("id")
     public int id;
     public String contract_number;
     @JsonbProperty("client_id")
     public BigDecimal client_id;
     public Client client;
-    public int bjr_id;
     public Bjr bjr;
+    public int bjr_id;
     public Date start_date;
     public Date end_date;
     public String source;

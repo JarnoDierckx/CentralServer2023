@@ -1,6 +1,6 @@
 package com.fooditsolutions.CentralServer2023API;
 
-import com.fooditsolutions.CentralServer2023API.model.User;
+import com.fooditsolutions.util.model.User;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;

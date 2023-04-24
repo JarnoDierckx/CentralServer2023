@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
-import com.fooditsolutions.web.model.*;
+import com.fooditsolutions.util.model.Index;
+import com.fooditsolutions.util.model.*;
 import org.apache.commons.beanutils.BeanUtils;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.model.SortMeta;
-import org.primefaces.shaded.json.JSONArray;
 
 
 import javax.annotation.ManagedBean;
@@ -17,7 +17,6 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -87,7 +86,7 @@ public class EditContractBean implements Serializable {
             e.printStackTrace();
         }
         ManageContractBean manageContractBean = new ManageContractBean();
-        updatingContractDetails = manageContractBean.getContractDetails(updatingContract.id, true);
+        updatingContractDetails = manageContractBean.getContractDetails(updatingContract.getId(), true);
         counter = 0;
         for (ContractDetail detail : updatingContractDetails) {
             if (detail.getID() == 0) {

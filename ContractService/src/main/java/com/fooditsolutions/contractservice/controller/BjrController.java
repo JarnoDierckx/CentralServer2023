@@ -1,10 +1,8 @@
 package com.fooditsolutions.contractservice.controller;
 
-import com.fooditsolutions.contractservice.model.Bjr;
-import com.fooditsolutions.contractservice.model.Client;
+import com.fooditsolutions.util.model.Bjr;
 import org.json.JSONArray;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;

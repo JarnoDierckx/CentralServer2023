@@ -2,17 +2,14 @@ package com.fooditsolutions.contractservice.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fooditsolutions.contractservice.model.Bjr;
-import com.fooditsolutions.contractservice.model.Client;
-import com.fooditsolutions.contractservice.model.Contract;
-import com.fooditsolutions.contractservice.model.Server;
+import com.fooditsolutions.util.model.Bjr;
+import com.fooditsolutions.util.model.Client;
+import com.fooditsolutions.util.model.Contract;
+import com.fooditsolutions.util.model.Server;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
-import com.google.gson.*;
-import org.json.JSONArray;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.*;
 

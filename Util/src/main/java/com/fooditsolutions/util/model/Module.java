@@ -1,4 +1,4 @@
-package com.fooditsolutions.CentralServer2023API.model;
+package com.fooditsolutions.util.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

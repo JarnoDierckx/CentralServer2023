@@ -1,4 +1,4 @@
-package com.fooditsolutions.web.enums;
+package com.fooditsolutions.util.enums;
 
 public enum Source {
     FILE,

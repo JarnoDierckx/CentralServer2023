@@ -4,11 +4,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.CentralServer2023API.enums.ModuleCompare;
 import com.fooditsolutions.CentralServer2023API.model.CompareContractCS;
-import com.fooditsolutions.CentralServer2023API.model.Contract;
-import com.fooditsolutions.CentralServer2023API.model.ContractDetail;
-import com.fooditsolutions.CentralServer2023API.model.Module;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
+import com.fooditsolutions.util.model.*;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;

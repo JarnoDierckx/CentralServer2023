@@ -1,11 +1,9 @@
 package com.fooditsolutions.contractservice;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.contractservice.controller.ContractDetailController;
-import com.fooditsolutions.contractservice.model.Contract;
-import com.fooditsolutions.contractservice.model.ContractDetail;
+import com.fooditsolutions.util.model.ContractDetail;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 

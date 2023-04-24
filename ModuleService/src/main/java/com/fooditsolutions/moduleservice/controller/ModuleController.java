@@ -2,9 +2,7 @@ package com.fooditsolutions.moduleservice.controller;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fooditsolutions.moduleservice.model.Module;
-import com.fooditsolutions.moduleservice.model.ModuleId;
-import com.fooditsolutions.moduleservice.model.Server;
+import com.fooditsolutions.util.model.*;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 

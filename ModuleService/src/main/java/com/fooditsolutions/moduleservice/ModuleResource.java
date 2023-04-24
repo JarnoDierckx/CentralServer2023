@@ -1,7 +1,7 @@
 package com.fooditsolutions.moduleservice;
 
 import com.fooditsolutions.moduleservice.controller.ModuleController;
-import com.fooditsolutions.moduleservice.model.Module;
+import com.fooditsolutions.util.model.Module;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 

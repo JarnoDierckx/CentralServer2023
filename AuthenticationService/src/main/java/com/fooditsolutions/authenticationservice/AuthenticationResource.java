@@ -5,9 +5,9 @@ import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.authenticationservice.controller.Security;
 import com.fooditsolutions.authenticationservice.controller.SessionController;
 import com.fooditsolutions.authenticationservice.model.Session;
-import com.fooditsolutions.authenticationservice.model.User;
 import com.google.gson.Gson;
 import org.apache.commons.codec.digest.DigestUtils;
+import com.fooditsolutions.util.model.User;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
@@ -46,7 +46,7 @@ public class AuthenticationResource {
         Gson gson = new Gson();
         User[] users = gson.fromJson(responseString, User[].class);
         for (User user : users) {
-            if (user.getEmail().equals(loginUser.getEmail()) || user.getName().equals(loginUser.getEmail())) {
+            if (user.getEmail().equals(loginUser.getEmail()) || user.getUserName().equals(loginUser.getEmail())) {
                 loginUserID = user.getId();
                 System.out.println(loginUserID);
             }

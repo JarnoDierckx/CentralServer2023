@@ -1,7 +1,7 @@
-package com.fooditsolutions.web.model;
+package com.fooditsolutions.util.model;
 
 
-import com.fooditsolutions.web.enums.Source;
+import com.fooditsolutions.util.enums.Source;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
-import com.fooditsolutions.web.model.Contract;
-import com.fooditsolutions.web.model.ContractDetail;
+import com.fooditsolutions.util.model.*;
 import org.primefaces.model.SortMeta;
 import org.primefaces.util.LangUtils;
 
@@ -21,8 +20,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.*;
-
-import static java.lang.Integer.parseInt;
 
 @ManagedBean
 @SessionScoped

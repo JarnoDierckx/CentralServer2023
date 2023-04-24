@@ -2,8 +2,7 @@ package com.fooditsolutions.CentralServer2023API.controller;
 
 import com.fooditsolutions.CentralServer2023API.enums.ModuleCompare;
 import com.fooditsolutions.CentralServer2023API.model.CompareContractCS;
-import com.fooditsolutions.CentralServer2023API.model.ContractDetail;
-import com.fooditsolutions.CentralServer2023API.model.Module;
+import com.fooditsolutions.util.model.*;
 
 import java.math.BigDecimal;
 import java.util.*;

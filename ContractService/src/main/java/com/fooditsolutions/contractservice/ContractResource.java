@@ -2,24 +2,17 @@ package com.fooditsolutions.contractservice;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fooditsolutions.contractservice.controller.ClientController;
 import com.fooditsolutions.contractservice.controller.ContractController;
-import com.fooditsolutions.contractservice.model.Client;
-import com.fooditsolutions.contractservice.model.Contract;
-import com.fooditsolutions.contractservice.model.ContractDetail;
+import com.fooditsolutions.util.model.Contract;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.util.controller.HttpController;
-import com.google.gson.Gson;
 
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 
 @Path("/contract")
