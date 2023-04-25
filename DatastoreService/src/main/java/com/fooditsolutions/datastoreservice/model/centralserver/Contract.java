@@ -46,6 +46,7 @@ public class Contract extends Sqlmodel {
     public Date updated;
     public boolean is_active;
     public String server_ID;
+    public BigDecimal total_price;
 
 
 

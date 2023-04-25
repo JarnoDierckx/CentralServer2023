@@ -118,6 +118,15 @@ public class EditContractBean implements Serializable {
         sortBy = new ArrayList<>();
         clients = retrieveClients();
         cpis = retrieveIndex();
+
+        updatingContract.setTotal_price(BigDecimal.valueOf(0));
+        for (ContractDetail detail:updatingContractDetailsList){
+            if (detail.getJgr_indexed() != null){
+                updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_indexed()));
+            }else if(detail.getJgr_not_indexed() != null){
+                updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_not_indexed()));
+            }
+        }
     }
 
     /**
@@ -172,6 +181,15 @@ public class EditContractBean implements Serializable {
      * An api call is then made to CentralServer2023API with the json string, so it can update the original Contract.
      */
     public void updateContract() throws IOException {
+        updatingContract.setTotal_price(BigDecimal.valueOf(0));
+        for (ContractDetail detail:updatingContractDetailsList){
+            if (detail.getJgr_indexed() != null){
+                updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_indexed()));
+            }else if(detail.getJgr_not_indexed() != null){
+                updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_not_indexed()));
+            }
+        }
+
 
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();

@@ -1,5 +1,6 @@
 package com.fooditsolutions.web.bean;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
@@ -11,6 +12,7 @@ import org.primefaces.util.LangUtils;
 import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.*;
 
@@ -36,6 +39,11 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     private List<SortMeta> sortBy;
     private boolean inActiveFilter = false;
 
+    private Client[] clients;
+    private List<Client> clientList;
+    private BigDecimal yearlyFacturationAmount = BigDecimal.valueOf(0);
+    private BigDecimal MonthlyFacturationAmount = BigDecimal.valueOf(0);
+
     /**
      * Executes getContracts when generalContracts.xhtml is loaded.
      * This makes sure all contracts are on the page when it is loaded.
@@ -46,11 +54,20 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         try {
             PropertiesController.init();
             retrieveContracts();
+            clients=retrieveClients();
+            clientList= Arrays.asList(clients);
 
         } catch (IOException | ServletException e) {
             throw new RuntimeException(e);
         }
         sortBy = new ArrayList<>();
+        for (Contract contract: contracts2){
+            if (contract.is_active && contract.getInvoice_frequency().equals("J") && contract.getTotal_price() != null){
+                yearlyFacturationAmount=yearlyFacturationAmount.add(contract.getTotal_price());
+            }else if (contract.is_active && contract.getInvoice_frequency().equals("M") && contract.getTotal_price() != null){
+                MonthlyFacturationAmount=MonthlyFacturationAmount.add(contract.getTotal_price());
+            }
+        }
     }
 
     /**
@@ -91,6 +108,17 @@ public class ManageContractBean extends HttpServlet implements Serializable {
                 filteredContracts.add(contract);
             }
         }
+    }
+
+    /**
+     * retrieves all clients
+     * @return maps all values from the api response into an array of Client objects
+     */
+    public Client[] retrieveClients() throws JsonProcessingException {
+        String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/clients");
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.readValue(response, Client[].class);
     }
 
     /**
@@ -210,7 +238,16 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         }
     }
 
-
+    public List<Client> completeAutoComplete(String query) {
+        // Filter the list of suggestion objects based on the user's input
+        List<Client> filteredItems = new ArrayList<>();
+        for (Client item : clients) {
+            if (item.getName().toLowerCase().startsWith(query.toLowerCase())) {
+                filteredItems.add(item);
+            }
+        }
+        return filteredItems;
+    }
 
     public void setContracts(List<Contract> contracts) {
         this.contracts = contracts;
@@ -274,5 +311,29 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     public void setFilteredContracts(List<Contract> filteredContracts) {
         this.filteredContracts = filteredContracts;
+    }
+
+    public BigDecimal getYearlyFacturationAmount() {
+        return yearlyFacturationAmount;
+    }
+
+    public BigDecimal getMonthlyFacturationAmount() {
+        return MonthlyFacturationAmount;
+    }
+
+    public Client[] getClients() {
+        return clients;
+    }
+
+    public void setClients(Client[] clients) {
+        this.clients = clients;
+    }
+
+    public List<Client> getClientList() {
+        return clientList;
+    }
+
+    public void setClientList(List<Client> clientList) {
+        this.clientList = clientList;
     }
 }

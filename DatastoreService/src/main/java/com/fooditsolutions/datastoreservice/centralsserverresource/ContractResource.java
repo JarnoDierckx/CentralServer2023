@@ -224,6 +224,7 @@ public class ContractResource {
                 contract.set_active((boolean) jsonContracts.getJSONObject(i).opt("IS_ACTIVE"));
             }
             contract.setServer_ID((String) jsonContracts.getJSONObject(i).opt("SERVER_ID"));
+            contract.setTotal_price((BigDecimal) jsonContracts.getJSONObject(i).opt("TOTAL_PRICE"));
             contracts.add(contract);
         }
 

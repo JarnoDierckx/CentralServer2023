@@ -43,5 +43,6 @@ public class Contract {
     public Date updated;
     public boolean is_active;
     public String server_ID;
+    private BigDecimal total_price;
 
 }

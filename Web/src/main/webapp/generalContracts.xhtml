@@ -25,7 +25,8 @@
                     <p:outputLabel value="show inactive contracts:"/>
                     <p:selectBooleanCheckbox value="#{ManageContractBean.inActiveFilter}">
                         <p:ajax update="generalTable" listener="#{ManageContractBean.updateActiveFilter}" />
-                    </p:selectBooleanCheckbox>
+                    </p:selectBooleanCheckbox> <br/>
+                    <p:autoComplete value="#{ManageContractBean.clientList}" var="client" completeMethod="#{ManageContractBean.completeAutoComplete}" itemValue="#{client.DBB_ID}" itemLabel="#{client.name}" converter="#{clientConverter}" multiple="true" />
                 </f:facet>
 
                 <ui:remove>
@@ -61,12 +62,17 @@
                 <p:column headerText="Invoice frequency" sortBy="#{contract.invoice_frequency}">
                     #{contract.invoice_frequency}
                 </p:column>
-                <p:column headerText="Index frequency" sortBy="#{contract.index_frequency}">
-                    #{contract.index_frequency}
-                </p:column>
-                <p:column headerText="Base year index" sortBy="#{contract.base_index_year}">
-                    #{contract.base_index_year}
-                </p:column>
+                <ui:remove>
+                    <p:column headerText="Index frequency" sortBy="#{contract.index_frequency}">
+                        #{contract.index_frequency}
+                    </p:column>
+                </ui:remove>
+                <ui:remove>
+                    <p:column headerText="Base year index" sortBy="#{contract.base_index_year}">
+                        #{contract.base_index_year}
+                    </p:column>
+                </ui:remove>
+
                 <p:column headerText="Starting index value" sortBy="#{contract.index_start}">
                     #{contract.index_start}
                 </p:column>
@@ -97,6 +103,9 @@
                 <p:column headerText="%jgr" sortBy="#{contract.jgr}">
                     #{contract.jgr}
                 </p:column>
+                <p:column headerText="Total price" sortBy="#{contract.total_price}">
+                    #{contract.total_price}
+                </p:column>
 
                 <p:column style="width:2rem;text-align: center">
                     <p:commandButton title="Edit" action="#{ManageContractBean.editContract}" ajax="false">
@@ -111,5 +120,9 @@
     <h:form target="_blank">
         <p:commandButton title="Create new contract" action="#{ManageContractBean.createContract()}" ajax="false"/>
     </h:form>
+    <h:outputLabel value="Yearly facturation amount:"/>
+    <h:outputText value="#{ManageContractBean.yearlyFacturationAmount}"/><br/>
+    <h:outputLabel value="Monthly facturation amount:"/>
+    <h:outputText value="#{ManageContractBean.monthlyFacturationAmount}"/>
 </h:body>
 </html>

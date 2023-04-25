@@ -135,7 +135,6 @@
               <h:selectOneMenu value="#{edit.index_frequency}">
                 <f:selectItem itemValue="J" itemLabel="J" />
                 <f:selectItem itemValue="M" itemLabel="M" />
-                <f:selectItem itemValue="W" itemLabel="W" />
               </h:selectOneMenu>
             </f:facet>
           </p:cellEditor>
@@ -253,12 +252,23 @@
             </f:facet>
           </p:cellEditor>
         </p:column>
+
+        <p:column headerText="Total price">
+          <p:cellEditor>
+            <f:facet name="output">
+              <h:outputText value="#{edit.total_price}"/>
+            </f:facet>
+            <f:facet name="input">
+              <p:inputText value="#{edit.total_price}" style="width:100%"/>
+            </f:facet>
+          </p:cellEditor>
+        </p:column>
       </p:dataTable>
+
       <section>
         <p:outputLabel value="Comments:"/><br/>
         <p:inputTextarea value="#{EditContractBean.updatingContract.comments}" autoResize="false" cols="50" rows="10"/>
       </section>
-
     </div>
 
 
