@@ -22,11 +22,18 @@
                         <p:inputText id="globalFilter" onkeyup="PF('contractTable').filter()" style="width:300px"
                                      placeholder="Search contract numbers and clients" />
                     </div>
+
                     <p:outputLabel value="show inactive contracts:"/>
                     <p:selectBooleanCheckbox value="#{ManageContractBean.inActiveFilter}">
                         <p:ajax update="generalTable" listener="#{ManageContractBean.updateActiveFilter}" />
                     </p:selectBooleanCheckbox> <br/>
-                    <p:autoComplete value="#{ManageContractBean.clientList}" var="client" completeMethod="#{ManageContractBean.completeAutoComplete}" itemValue="#{client.DBB_ID}" itemLabel="#{client.name}" converter="#{clientConverter}" multiple="true" />
+                    <p:outputLabel value="Filter one or more clients:"/><br/>
+
+                    <p:autoComplete value="#{ManageContractBean.selectedClientList}" var="client" completeMethod="#{ManageContractBean.completeAutoComplete}" itemValue="#{client.DBB_ID}" itemLabel="#{client.name}"
+                                    converter="#{clientConverter}" multiple="true" forceSelection="true" itemSelectListener="#{ManageContractBean.onClientSelect}"/>
+                    <p:commandButton value="Filter clients">
+                        <p:ajax  event="click" update="generalTable" listener="#{ManageContractBean.updateActiveFilter()}"/>
+                    </p:commandButton>
                 </f:facet>
 
                 <ui:remove>

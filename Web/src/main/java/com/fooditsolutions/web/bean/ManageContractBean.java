@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.util.model.*;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.SortMeta;
 import org.primefaces.util.LangUtils;
 
@@ -41,6 +42,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     private Client[] clients;
     private List<Client> clientList;
+    private List<Client> selectedClientList =new ArrayList<>();
     private BigDecimal yearlyFacturationAmount = BigDecimal.valueOf(0);
     private BigDecimal MonthlyFacturationAmount = BigDecimal.valueOf(0);
 
@@ -195,6 +197,9 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return filterContract.getContract_number().toLowerCase().contains(filterText)
                 || filterContract.getClient().getName().toLowerCase().contains(filterText);
     }
+    public void autoCompleteFilter(){
+
+    }
 
     /**
      * currently redundant
@@ -220,23 +225,34 @@ public class ManageContractBean extends HttpServlet implements Serializable {
      * Fills the list used in the datatable to determine if only active/inactive contracts should be shown
      */
     public void updateActiveFilter() {
-        // Update the filter value based on the value of the checkbox
+        // Update the filter value based on the value of the checkbox and what clients are selected
         if (!inActiveFilter) {
             filteredContracts=new ArrayList<>();
             for (Contract contract:contracts){
-                if (contract.is_active){
-                    filteredContracts.add(contract);
+                for (Client client:selectedClientList){
+                    if (contract.is_active && contract.getClient_id().equals(client.getDBB_ID())){
+                        filteredContracts.add(contract);
+                    }
                 }
+
             }
         } else {
             filteredContracts=new ArrayList<>();
             for (Contract contract:contracts){
-                if (!contract.is_active){
-                    filteredContracts.add(contract);
+                for (Client client:selectedClientList){
+                    if (!contract.is_active && contract.getClient_id().equals(client.getDBB_ID())){
+                        filteredContracts.add(contract);
+                    }
                 }
+
             }
         }
     }
+
+    public void onClientSelect(SelectEvent<Client> event) {
+        selectedClientList.add(event.getObject());
+    }
+
 
     public List<Client> completeAutoComplete(String query) {
         // Filter the list of suggestion objects based on the user's input
@@ -335,5 +351,13 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     public void setClientList(List<Client> clientList) {
         this.clientList = clientList;
+    }
+
+    public List<Client> getSelectedClientList() {
+        return selectedClientList;
+    }
+
+    public void setSelectedClientList(List<Client> selectedClientList) {
+        this.selectedClientList = selectedClientList;
     }
 }
