@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.datastoreservice.controller.DBFirebird;
 import com.fooditsolutions.datastoreservice.controller.Datastores;
 import com.fooditsolutions.datastoreservice.controller.Util;
+import com.fooditsolutions.datastoreservice.model.centralserver.History;
+import com.fooditsolutions.util.controller.HttpController;
+import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.datastoreservice.model.centralserver.Client;
 import com.fooditsolutions.datastoreservice.model.centralserver.Contract;
 import com.fooditsolutions.datastoreservice.model.DatastoreObject;
@@ -125,7 +128,7 @@ public class ContractResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public int createContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract) {
+    public int createContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract) throws JsonProcessingException {
         String sql = contract.getInsertStatement();
         System.out.println("sql statement "+sql);
         String sqlRead="SELECT ID FROM CONTRACT WHERE CONTRACT_NUMBER = '"+ contract.getContract_number()+"' AND CLIENT_ID = " + contract.getClient_id() + " AND SOURCE = '" + contract.getSource()+"'";
@@ -139,7 +142,17 @@ public class ContractResource {
                 System.out.println("Insert successfull");
             }
         }
+
         ID =(int)JSONID.getJSONObject(0).opt("ID");
+        History history = new History();
+        history.setATTRIBUTE("contract");
+        history.setATTRIBUTE_ID(BigDecimal.valueOf(ID));
+        history.setH_ACTION("CREATE");
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        String jsonString = mapper.writeValueAsString(history);
+        HttpController.httpPost("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api"+"/history", jsonString);
         return ID;
     }
 
