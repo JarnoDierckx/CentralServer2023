@@ -127,6 +127,7 @@ public class EditContractBean implements Serializable {
                 updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_not_indexed()));
             }
         }
+        updateContract();
     }
 
     /**
@@ -181,15 +182,6 @@ public class EditContractBean implements Serializable {
      * An api call is then made to CentralServer2023API with the json string, so it can update the original Contract.
      */
     public void updateContract() throws IOException {
-        updatingContract.setTotal_price(BigDecimal.valueOf(0));
-        for (ContractDetail detail:updatingContractDetailsList){
-            if (detail.getJgr_indexed() != null){
-                updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_indexed()));
-            }else if(detail.getJgr_not_indexed() != null){
-                updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_not_indexed()));
-            }
-        }
-
 
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
@@ -206,6 +198,14 @@ public class EditContractBean implements Serializable {
      * All "whatToDo" values are reset, so it doesn't interfere with any sequential updates.
      */
     public void UpdateContractDetails() throws IOException {
+        updatingContract.setTotal_price(BigDecimal.valueOf(0));
+        for (ContractDetail detail:updatingContractDetailsList){
+            if (detail.getJgr_indexed() != null){
+                updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_indexed()));
+            }else if(detail.getJgr_not_indexed() != null){
+                updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_not_indexed()));
+            }
+        }
 
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
@@ -253,10 +253,6 @@ public class EditContractBean implements Serializable {
 
     public void removeContractDetail(int id) throws IOException {
         HttpController.httpDelete(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/detail/" + id);
-    }
-
-    public void handleComment() {
-        System.out.println(updatingContract.getComments());
     }
 
     /**
