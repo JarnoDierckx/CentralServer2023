@@ -61,8 +61,9 @@ public class ContractDetailController {
             if (contract.getIndex_last_invoice() != null && contractDetail.getIndex_Start() != null){
                 BigDecimal calculation3=(contractDetail.getJgr_not_indexed().multiply(contract.index_last_invoice));
                 BigDecimal calculation4=calculation3.divide(contractDetail.getIndex_Start(), RoundingMode.HALF_UP);
-                contractDetail.setJgr_indexed(calculation4);
+                contractDetail.setJgr_indexed(calculation4.setScale(2, RoundingMode.HALF_EVEN));
             }
+            contractDetail.setJgr_not_indexed(calculation2.setScale(2,RoundingMode.HALF_EVEN));
         }
 
 

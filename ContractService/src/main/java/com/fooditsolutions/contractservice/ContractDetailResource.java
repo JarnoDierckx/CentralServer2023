@@ -1,15 +1,19 @@
 package com.fooditsolutions.contractservice;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.contractservice.controller.ContractDetailController;
+import com.fooditsolutions.util.enums.Action;
 import com.fooditsolutions.util.model.ContractDetail;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
+import com.fooditsolutions.util.model.History;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +44,22 @@ public class ContractDetailResource {
         return newContractDetails;
     }
 
+    @GET
+    @Path("/singleDetail/{ContractDetailID}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
+    public ContractDetail getContractDetail(@PathParam("ContractDetailID") int contractDetailID) throws IOException {
+        String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail/"+ "singleDetail/"+ contractDetailID +"?datastoreKey="+ PropertiesController.getProperty().getDatastore());
+        List<ContractDetail> contractDetails=ContractDetailController.createContractDetailInformation(responseString);
+        List<ContractDetail> newContractDetails= new ArrayList<>();
+        for (ContractDetail contractDetail: contractDetails){
+            contractDetail=ContractDetailController.calculate(contractDetail);
+            newContractDetails.add(contractDetail);
+        }
+
+        return newContractDetails.get(0);
+    }
+
     /**
      * Receives al ContractDetail objects from the edit page.
      * Those with whatToDo set to 'U' are sent to the PUT endpoint in the datastore service.
@@ -48,7 +68,7 @@ public class ContractDetailResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public void updateContractDetails(ContractDetail[] contractDetails) throws IOException {
+    public void updateContractDetails(ContractDetail[] contractDetails) throws IOException, IllegalAccessException {
         List<ContractDetail> detailsToUpdate=new ArrayList<>();
         List<ContractDetail> detailsToCreate=new ArrayList<>();
         for (int i=0;i<contractDetails.length;i++){
@@ -62,18 +82,75 @@ public class ContractDetailResource {
                 }
             }
         }
-        ContractDetail[] detailsToCreateArray=new ContractDetail[detailsToCreate.size()];
-        createContractDetails(detailsToCreate.toArray(detailsToCreateArray));
+        if (detailsToCreate.size()>0){
+            ContractDetail[] detailsToCreateArray=new ContractDetail[detailsToCreate.size()];
+            createContractDetails(detailsToCreate.toArray(detailsToCreateArray));
+        }
 
         if (detailsToUpdate.size()>0){
+            ContractDetail[] originalContractDetails=new ContractDetail[detailsToUpdate.size()];
+            ContractDetail[] detailDifferences = new ContractDetail[detailsToUpdate.size()];
+            List<String> historyDesc=new ArrayList<>();
+            String desc="";
+
+            for (int i=0;i<detailsToUpdate.size();i++){
+                originalContractDetails[i]=getContractDetail(detailsToUpdate.get(i).getID());
+            }
+
+            for (int i = 0; i < detailsToUpdate.size(); i++) {
+                if (!desc.equals("")){
+                    desc=desc.substring(0,desc.length()-2);
+                    historyDesc.add(desc);
+                }
+                desc="";
+                for (ContractDetail originalContractDetail : originalContractDetails) {
+                    if (detailsToUpdate.get(i).getID() == originalContractDetail.getID()) {
+                        boolean newDetail = false;
+                        if (detailDifferences[i] == null) {
+                            detailDifferences[i] = new ContractDetail();
+                            detailDifferences[i].setID(detailsToUpdate.get(i).getID());
+                            newDetail = true;
+                        }
+                        Field[] fields = ContractDetail.class.getDeclaredFields();
+                        for (Field field : fields) {
+                            field.setAccessible(true);
+                            Object value1 = field.get(originalContractDetail);
+                            Object value2 = field.get(detailsToUpdate.get(i));
+                            if (value2 != null && !field.getName().equals("whatToDo") && !field.getClass().equals("moduleId")) {
+                                if (value1==null || !value1.equals(value2)) {
+                                    if (newDetail) {
+                                        field.set(detailDifferences[i], value2);
+                                    } else {
+                                        field.set(detailDifferences[i], value2);
+                                    }
+                                    desc+=field.getName()+": "+value1+" to "+value2+", ";
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             //Creating the ObjectMapper object
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             //Converting the Object to JSONString
-            String jsonString = mapper.writeValueAsString(detailsToUpdate);
+            String jsonString = mapper.writeValueAsString(detailDifferences);
             System.out.println(jsonString);
 
             HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
+
+            for (int i=0;i<detailDifferences.length;i++){
+                History history = new History();
+                history.setAttribute("contractDetail");
+                history.setAttribute_id(detailDifferences[i].getID());
+                history.setAction(Action.UPDATE);
+                history.setDescription(String.valueOf(historyDesc.get(i)));
+                history.setActor("Temp");
+
+                jsonString = mapper.writeValueAsString(history);
+                HttpController.httpPost("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api" + "/history", jsonString);
+            }
         }
 
 
@@ -94,7 +171,21 @@ public class ContractDetailResource {
         String jsonString = mapper.writeValueAsString(contractDetails);
         System.out.println(jsonString);
 
-        HttpController.httpPost(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
+        String responseString=HttpController.httpPost(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
+        System.out.println(responseString);
+
+        int[] ID=mapper.readValue(responseString, int[].class);
+        for (int j : ID) {
+            History history = new History();
+            history.setAttribute("contractDetail");
+            history.setAttribute_id(j);
+            history.setAction(Action.CREATE);
+            history.setActor("Temp");
+
+            jsonString = mapper.writeValueAsString(history);
+            HttpController.httpPost("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api" + "/history", jsonString);
+        }
+
     }
     @DELETE
     @Path("/{id}")

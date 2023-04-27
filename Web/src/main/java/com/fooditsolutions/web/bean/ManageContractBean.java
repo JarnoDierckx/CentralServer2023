@@ -39,7 +39,8 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     private List<ContractDetail> detailList;
     private List<SortMeta> sortBy;
     private boolean inActiveFilter = false;
-
+    private History[] allHistory;
+    private List<History> selectedHistory;
     private Client[] clients;
     private List<Client> clientList;
     private List<Client> selectedClientList =new ArrayList<>();
@@ -58,6 +59,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
             retrieveContracts();
             clients=retrieveClients();
             clientList= Arrays.asList(clients);
+            allHistory=retrieveHistory();
 
         } catch (IOException | ServletException e) {
             throw new RuntimeException(e);
@@ -131,6 +133,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         detailList=new ArrayList<>();
         details=getContractDetails(selectedItem.id,false);
         detailList= Arrays.asList(details);
+        selectedHistory=addSelectedHistory(allHistory);
         return "contractDetails.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
@@ -149,6 +152,14 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         return mapper.readValue(responseContractDetails,ContractDetail[].class);
+    }
+
+    public History[] retrieveHistory() throws JsonProcessingException {
+        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/history/");
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.readValue(response, History[].class);
     }
 
     /**
@@ -197,8 +208,20 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return filterContract.getContract_number().toLowerCase().contains(filterText)
                 || filterContract.getClient().getName().toLowerCase().contains(filterText);
     }
-    public void autoCompleteFilter(){
 
+    public List<History> addSelectedHistory(History[] history){
+        List<History> selectedHistory=new ArrayList<>();
+        for (History h: history){
+            if (h.getAttribute_id()==selectedItem.getId()){
+                selectedHistory.add(h);
+            }
+            for (ContractDetail detail: details){
+                if (detail.getID()==h.getAttribute_id()){
+                    selectedHistory.add(h);
+                }
+            }
+        }
+        return selectedHistory;
     }
 
     /**

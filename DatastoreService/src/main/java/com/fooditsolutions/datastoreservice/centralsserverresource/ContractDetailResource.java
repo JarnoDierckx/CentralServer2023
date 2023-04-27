@@ -8,10 +8,9 @@ import org.json.JSONArray;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +34,20 @@ public class ContractDetailResource {
         return JsonToContractDetail(jsonContracts);
     }
 
+    @GET
+    @Path("/singleDetail/{ContractDetailID}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
+    public List<ContractDetail> getContractDetail(@PathParam("ContractDetailID") String contractDetailID, @QueryParam("datastoreKey") String datastoreKey){
+        JSONArray jsonContractDetail=new JSONArray();
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                jsonContractDetail = DBFirebird.executeSQL(ds, "SELECT * FROM CONTRACT_DETAIL WHERE ID = '"+contractDetailID+"'");
+            }
+        }
+        return JsonToContractDetail(jsonContractDetail);
+    }
+
     /**
      * Endpoint called to update the details of a contract. The differences between the received objects and those
      * currently in the database are taken out so only those variables are send to the database.
@@ -44,48 +57,12 @@ public class ContractDetailResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void updateContractDetails(@QueryParam("datastoreKey") String datastoreKey, ContractDetail[] contractDetail) throws IllegalAccessException {
-        JSONArray jsonContracts = new JSONArray();
-        for (DatastoreObject ds : Datastores.getDatastores()) {
-            if (datastoreKey.equals(ds.getKey())) {
-                jsonContracts = DBFirebird.executeSQL(ds, "SELECT * FROM CONTRACT_DETAIL WHERE CONTRACT_ID = '"+contractDetail[0].getContract_ID()+"'");
-            }
-        }
-        List<ContractDetail> originalContractDetails = JsonToContractDetail(jsonContracts);
-        ContractDetail[] detailDifferences = new ContractDetail[contractDetail.length];
 
 
+        String[] sql = new String[contractDetail.length];
         for (int i = 0; i < contractDetail.length; i++) {
-            for (ContractDetail originalContractDetail : originalContractDetails) {
-                if (contractDetail[i].getID() == originalContractDetail.getID()) {
-                    boolean newDetail = false;
-                    if (detailDifferences[i] == null) {
-                        detailDifferences[i] = new ContractDetail();
-                        detailDifferences[i].setID(contractDetail[i].getID());
-                        newDetail = true;
-                    }
-                    Field[] fields = ContractDetail.class.getDeclaredFields();
-                    for (Field field : fields) {
-                        field.setAccessible(true);
-                        Object value1 = field.get(originalContractDetail);
-                        Object value2 = field.get(contractDetail[i]);
-                        if (value2 != null) {
-                            if (value1==null || !value1.equals(value2)) {
-                                if (newDetail) {
-                                    field.set(detailDifferences[i], value2);
-                                } else {
-                                    field.set(detailDifferences[i], value2);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        String[] sql = new String[detailDifferences.length];
-        for (int i = 0; i < detailDifferences.length; i++) {
-            if (detailDifferences[i] != null) {
-                sql[i] = detailDifferences[i].getUpdateStatement();
+            if (contractDetail[i] != null) {
+                sql[i] = contractDetail[i].getUpdateStatement();
             }
         }
 
@@ -103,16 +80,50 @@ public class ContractDetailResource {
 
     /**
      * Receives an array of ContractDetail objects that need to be inserted into the database.
-     * @param datastoreKey is to specify and access the required database.
+     *
+     * @param datastoreKey    is to specify and access the required database.
      * @param contractDetails is looped over. Each object gets its own query string that gets looped over to execute each one.
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void createContractDetails(@QueryParam("datastoreKey") String datastoreKey, ContractDetail[] contractDetails){
+    @Produces("application/json")
+    public int[] createContractDetails(@QueryParam("datastoreKey") String datastoreKey, ContractDetail[] contractDetails){
         String[] sql=new String[contractDetails.length];
         for (int i=0;i< contractDetails.length;i++){
             sql[i]=contractDetails[i].getInsertStatement();
         }
+        List<String> sqlRead=new ArrayList<>();
+        for (ContractDetail contractDetail : contractDetails) {
+            String contractID = "SELECT ID FROM CONTRACT_DETAIL WHERE CONTRACT_ID = '" + contractDetail.getContract_ID();
+            String moduleDBBID;
+            String purchaseDate;
+            String purchasePrice;
+            if (contractDetail.getModule_DBB_ID() != null){
+                moduleDBBID="' AND MODULE_DBB_ID = " + contractDetail.getModule_DBB_ID();
+            }else {
+                moduleDBBID="' AND MODULE_DBB_ID is null";
+            }
+            if (contractDetail.getPurchase_Date() != null){
+                SimpleDateFormat sdf = new SimpleDateFormat(
+                        "dd.MM.yyyy");
+                purchaseDate=" AND PURCHASE_DATE = '" + sdf.format(contractDetail.getPurchase_Date());
+            }else {
+                purchaseDate=" AND PURCHASE_DATE is null";
+            }
+            if (contractDetail.getPurchase_price() !=null && contractDetail.getPurchase_Date() != null){//dates need to be surrounded by ''
+                purchasePrice= "' AND PURCHASE_PRICE = " + contractDetail.getPurchase_price();
+            }else if(contractDetail.getPurchase_price() !=null && contractDetail.getPurchase_Date() == null){
+                purchasePrice= " AND PURCHASE_PRICE = " + contractDetail.getPurchase_price();
+            } else if (contractDetail.getPurchase_price() ==null && contractDetail.getPurchase_Date() != null) {
+                purchasePrice= "' AND PURCHASE_PRICE IS NULL";
+            } else {
+                purchasePrice= " AND PURCHASE_PRICE IS NULL";
+            }
+
+            sqlRead.add(contractID + moduleDBBID + purchaseDate + purchasePrice);
+        }
+        int[] ID=new int[sqlRead.size()];
+        JSONArray[] JSONID = new JSONArray[sqlRead.size()];
 
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
@@ -121,9 +132,16 @@ public class ContractDetailResource {
                         DBFirebird.executeSQLInsert(ds, s);
                     }
                 }
+                for (int i=0;i<sqlRead.size();i++){
+                    JSONID[i]=DBFirebird.executeSQL(ds, sqlRead.get(i));
+                }
                 System.out.println("Insert successful");
             }
         }
+        for (int i=0;i<JSONID.length;i++){
+            ID[i] = (int) JSONID[i].getJSONObject(0).opt("ID");
+        }
+        return ID;
     }
 
     @DELETE

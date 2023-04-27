@@ -56,11 +56,11 @@ public class ContractResource {
     @Produces("application/json")
     @Path("/{ContractId}")
     public Contract getContract(@PathParam("ContractId") int contractId,
-            @QueryParam("datastoreKey") String datastoreKey) {
+                                @QueryParam("datastoreKey") String datastoreKey) {
         JSONArray jsonContracts = new JSONArray();
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
-                jsonContracts = DBFirebird.executeSQL(ds, "SELECT * FROM CONTRACT WHERE ID="+contractId);
+                jsonContracts = DBFirebird.executeSQL(ds, "SELECT * FROM CONTRACT WHERE ID=" + contractId);
             }
         }
         return JsonToContract(jsonContracts).get(0);
@@ -76,44 +76,12 @@ public class ContractResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     public void updateContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract) throws IllegalAccessException, InstantiationException {
-        JSONArray jsonContract = new JSONArray();
+        String sql = contract.getUpdateStatement();
+
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
-                jsonContract = DBFirebird.executeSQL(ds, "SELECT * FROM CONTRACT WHERE ID LIKE " + contract.id);
-            }
-        }
-
-        List<Contract> contracts = JsonToContract(jsonContract);
-        Contract originalContract = contracts.get(0);
-
-        Contract differences = new Contract();
-        Field[] fields = originalContract.getClass().getDeclaredFields();
-        int counter=0;
-        for (Field field : fields) {
-            field.setAccessible(true);
-            Object value1 = field.get(originalContract);
-            Object value2 = field.get(contract);
-            if (value2 != null) {
-                if ( value1==null || !value1.equals(value2)) {
-                    if (!(value2.getClass().equals(Client.class)) && !(value2.equals(true))){
-                        field.set(differences, value2);
-                        counter++;
-                    }
-
-
-                }
-            }
-        }
-        if (counter>0){
-            differences.id=contract.id;
-
-            String sql = differences.getUpdateStatement();
-
-            for (DatastoreObject ds : Datastores.getDatastores()) {
-                if (datastoreKey.equals(ds.getKey())) {
-                    DBFirebird.executeSQLUpdate(ds, sql);
-                    System.out.println("update successfull");
-                }
+                DBFirebird.executeSQLUpdate(ds, sql);
+                System.out.println("update successfull");
             }
         }
     }
@@ -130,29 +98,21 @@ public class ContractResource {
     @Produces("application/json")
     public int createContract(@QueryParam("datastoreKey") String datastoreKey, Contract contract) throws JsonProcessingException {
         String sql = contract.getInsertStatement();
-        System.out.println("sql statement "+sql);
-        String sqlRead="SELECT ID FROM CONTRACT WHERE CONTRACT_NUMBER = '"+ contract.getContract_number()+"' AND CLIENT_ID = " + contract.getClient_id() + " AND SOURCE = '" + contract.getSource()+"'";
+        System.out.println("sql statement " + sql);
+        String sqlRead = "SELECT ID FROM CONTRACT WHERE CONTRACT_NUMBER = '" + contract.getContract_number() + "' AND CLIENT_ID = " + contract.getClient_id() + " AND SOURCE = '" + contract.getSource() + "'";
         int ID;
         JSONArray JSONID = new JSONArray();
 
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
                 DBFirebird.executeSQLInsert(ds, sql);
-                JSONID =DBFirebird.executeSQL(ds, sqlRead);
+                JSONID = DBFirebird.executeSQL(ds, sqlRead);
                 System.out.println("Insert successfull");
             }
         }
 
-        ID =(int)JSONID.getJSONObject(0).opt("ID");
-        History history = new History();
-        history.setATTRIBUTE("contract");
-        history.setATTRIBUTE_ID(BigDecimal.valueOf(ID));
-        history.setH_ACTION("CREATE");
+        ID = (int) JSONID.getJSONObject(0).opt("ID");
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        String jsonString = mapper.writeValueAsString(history);
-        HttpController.httpPost("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api"+"/history", jsonString);
         return ID;
     }
 
@@ -179,6 +139,7 @@ public class ContractResource {
 
     /**
      * Takes a array of contracts in json format and one by one enters the contracts values into proper contract objects.
+     *
      * @param jsonContracts the json array containg all the contracts
      * @return A list of Contract objects
      */
