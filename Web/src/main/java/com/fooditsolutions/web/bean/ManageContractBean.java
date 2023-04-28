@@ -102,7 +102,6 @@ public class ManageContractBean extends HttpServlet implements Serializable {
             }
             if (contract.last_invoice_period_end != null) {
                 contract.last_invoice_period_end = new Date(contract.last_invoice_period_end.getTime());
-
             }
         }
         contracts= Arrays.asList(contracts2);
@@ -382,5 +381,9 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     public void setSelectedClientList(List<Client> selectedClientList) {
         this.selectedClientList = selectedClientList;
+    }
+
+    public List<History> getSelectedHistory() {
+        return selectedHistory;
     }
 }

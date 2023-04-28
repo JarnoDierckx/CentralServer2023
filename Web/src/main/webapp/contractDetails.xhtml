@@ -62,22 +62,25 @@
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="Last invoice period start">
-                    <h:outputText value="#{contract.last_invoice_period_start}">
-                        <f:convertDateTime pattern = "yyyy-MM-dd" />
-                    </h:outputText>
-                </p:column>
-                <p:column headerText="Last invoice period end">
-                    <h:outputText value="#{contract.last_invoice_period_end}">
-                        <f:convertDateTime pattern = "yyyy-MM-dd" />
-                    </h:outputText>
-                </p:column>
+                <ui:remove>
+                    <p:column headerText="Last invoice period start">
+                        <h:outputText value="#{contract.last_invoice_period_start}">
+                            <f:convertDateTime pattern = "yyyy-MM-dd" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Last invoice period end">
+                        <h:outputText value="#{contract.last_invoice_period_end}">
+                            <f:convertDateTime pattern = "yyyy-MM-dd" />
+                        </h:outputText>
+                    </p:column>
+                </ui:remove>
+
                 <p:column headerText="%jgr">
                     #{contract.jgr}
                 </p:column>
 
             </p:dataTable>
-            <h:outputText value="#{ManageContractBean.selectedItem.comments}" />
+            <h:outputText value="#{ManageContractBean.selectedItem.comments}" style="width: 250px; height: 100px"/>
         </div>
 
         <div class="card">
@@ -113,6 +116,26 @@
                 </p:column>
             </p:dataTable>
         </div>
+        <p:dataTable var="history" value="#{ManageContractBean.selectedHistory}">
+            <p:column headerText="Contract/Detail:">
+                #{history.attribute}
+            </p:column>
+            <p:column headerText="Item:">
+                #{history.attribute_id}
+            </p:column>
+            <p:column headerText="Action:">
+                #{history.action}
+            </p:column>
+            <p:column headerText="Actor:">
+                #{history.actor}
+            </p:column>
+            <p:column headerText="Timestamp">
+                #{history.ts}
+            </p:column>
+            <p:column headerText="Description:">
+                #{history.description}
+            </p:column>
+        </p:dataTable>
     </h:form>
 </h:body>
 </html>

@@ -14,7 +14,7 @@ public class HistoryResource {
     @GET
     @Produces("application/json")
     public String retrieveHistory(){
-        String response= HttpController.httpGet(PropertiesController.getProperty().getBase_url_historyservice()+"/history");
+        String response= HttpController.httpGet("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api"+"/history");
         return response;
     }
 

@@ -98,11 +98,6 @@ public class ContractDetailResource {
             }
 
             for (int i = 0; i < detailsToUpdate.size(); i++) {
-                if (!desc.equals("")){
-                    desc=desc.substring(0,desc.length()-2);
-                    historyDesc.add(desc);
-                }
-                desc="";
                 for (ContractDetail originalContractDetail : originalContractDetails) {
                     if (detailsToUpdate.get(i).getID() == originalContractDetail.getID()) {
                         boolean newDetail = false;
@@ -116,7 +111,7 @@ public class ContractDetailResource {
                             field.setAccessible(true);
                             Object value1 = field.get(originalContractDetail);
                             Object value2 = field.get(detailsToUpdate.get(i));
-                            if (value2 != null && !field.getName().equals("whatToDo") && !field.getClass().equals("moduleId")) {
+                            if (value2 != null && !field.getName().equals("moduleId") && !field.getName().equals("whatToDo")) {
                                 if (value1==null || !value1.equals(value2)) {
                                     if (newDetail) {
                                         field.set(detailDifferences[i], value2);
@@ -129,6 +124,11 @@ public class ContractDetailResource {
                         }
                     }
                 }
+                if (!desc.equals("")){
+                    desc=desc.substring(0,desc.length()-2);
+                    historyDesc.add(desc);
+                }
+                desc="";
             }
 
             //Creating the ObjectMapper object

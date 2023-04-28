@@ -33,7 +33,7 @@ public class HistoryResource {
     public List<History> getHistory(@QueryParam("full") boolean full) throws IOException {
 
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/history?datastoreKey="+ PropertiesController.getProperty().getDatastore());
-        System.out.println("getContracts: "+responseString);
+        System.out.println("HistoryService: "+responseString);
         List<History> result = new ArrayList<>();
         result = HistoryController.createHistoryInformation(responseString);
         result = HistoryController.getFull(full,result);
@@ -46,7 +46,7 @@ public class HistoryResource {
     public List<History> getHistoryAttribute(@PathParam("ATTRIBUTE") String attribute,
                                              @QueryParam("full") boolean full) throws IOException {
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/history/"+attribute+"?datastoreKey="+ PropertiesController.getProperty().getDatastore());
-        System.out.println("getContracts: "+responseString);
+        System.out.println("HistoryService: "+responseString);
         List<History> result = new ArrayList<>();
         result = HistoryController.createHistoryInformation(responseString);
         result = HistoryController.getFull(full,result);
@@ -63,7 +63,7 @@ public class HistoryResource {
                                                @QueryParam("full") boolean full) throws IOException {
 
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/history/"+attribute+"/"+ attributeid+"?datastoreKey="+ PropertiesController.getProperty().getDatastore());
-        System.out.println("getContracts: "+responseString);
+        System.out.println("HistoryService: "+responseString);
         List<History> result = new ArrayList<>();
         result = HistoryController.createHistoryInformation(responseString);
         result = HistoryController.getFull(full,result);
@@ -81,7 +81,7 @@ public class HistoryResource {
         Timestamp ts = new Timestamp(System.currentTimeMillis());
         history.setTs(ts.toString());
         String jsonString = mapper.writeValueAsString(history);
-        System.out.println(jsonString);
+        System.out.println("HistoryService " +jsonString);
 
         HttpController.httpPost(PropertiesController.getProperty().getBase_url_datastoreservice()+"/history?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
 
