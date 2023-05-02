@@ -39,6 +39,7 @@ public class ServerResource{
             object.setDBB_ID((BigDecimal) jsonValues.getJSONObject(i).get("DBB_ID"));
             object.setID((String) jsonValues.getJSONObject(i).get("ID"));
             object.setCLIENT_DBB_ID((BigDecimal) jsonValues.getJSONObject(i).get("CLIENT_DBB_ID"));
+            object.setTrial((boolean) jsonValues.getJSONObject(i).get("ISTRIAL"));
             objectList.add(object);
         }
 

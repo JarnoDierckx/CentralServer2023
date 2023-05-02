@@ -24,7 +24,7 @@ public class Module extends Sqlmodel {
         private String Name = "";
         private Date Validuntil = new Date();
         private int Modules_Index = 0;
-
+        private boolean isTrial;
 
 
 

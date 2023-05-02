@@ -2,9 +2,7 @@ package com.fooditsolutions.datastoreservice.model;
 
 
 import com.fooditsolutions.datastoreservice.controller.Util;
-import com.fooditsolutions.datastoreservice.model.centralserver.Bjr;
 import com.fooditsolutions.datastoreservice.model.centralserver.Client;
-import com.fooditsolutions.datastoreservice.model.centralserver.ContractDetail;
 import com.fooditsolutions.datastoreservice.model.centralserver.ModuleId;
 
 import javax.persistence.Id;
@@ -35,7 +33,7 @@ public class Sqlmodel {
                 Annotation annotation = f.getAnnotation(Id.class);
                 if (!(annotation instanceof Id)) {
                     Object o = runGetter(f, this);
-                    if (o != null && !Objects.equals(o, 0) && !Objects.equals(o, 0.00) && !(o instanceof Client) && !(o instanceof Bjr) && !(o instanceof ModuleId) && !f.getName().equals("whatToDo")) {
+                    if (o != null && !Objects.equals(o, 0) && !Objects.equals(o, 0.00) && !(o instanceof Client) && !(o instanceof ModuleId) && !f.getName().equals("whatToDo")) {
                         if (!sqlInserInto.toString().equals("")) {
                             sqlInserInto.append(",");
                             sqlValues.append(",");
@@ -106,7 +104,7 @@ public class Sqlmodel {
                     }
                 } else {
                     Object o = runGetter(f, this);
-                    if (o != null && !Objects.equals(o, 0) && !Objects.equals(o, 0.00) && !(o instanceof Client) && !(o instanceof Bjr) && !(o instanceof ModuleId) && !f.getName().equals("whatToDo")) {
+                    if (o != null && !Objects.equals(o, 0) && !Objects.equals(o, 0.00) && !(o instanceof Client) && !(o instanceof ModuleId) && !f.getName().equals("whatToDo")) {
                         if (!sqlSet.toString().equals("")) {
                             sqlSet.append(",");
 

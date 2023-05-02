@@ -97,11 +97,8 @@ public class ManageContractBean extends HttpServlet implements Serializable {
             if (contract.last_invoice_date != null) {
                 contract.last_invoice_date = new Date(contract.last_invoice_date.getTime());
             }
-            if (contract.last_invoice_period_start != null) {
-                contract.last_invoice_period_start = new Date(contract.last_invoice_period_start.getTime());
-            }
-            if (contract.last_invoice_period_end != null) {
-                contract.last_invoice_period_end = new Date(contract.last_invoice_period_end.getTime());
+            if (contract.next_invoice_date != null) {
+                contract.next_invoice_date = new Date(contract.next_invoice_date.getTime());
             }
         }
         contracts= Arrays.asList(contracts2);
@@ -154,7 +151,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     }
 
     public History[] retrieveHistory() throws JsonProcessingException {
-        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/history/");
+        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/history?full=true");
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

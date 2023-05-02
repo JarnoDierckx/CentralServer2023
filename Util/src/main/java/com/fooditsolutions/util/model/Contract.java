@@ -22,8 +22,6 @@ public class Contract {
     @JsonbProperty("client_id")
     public BigDecimal client_id;
     public Client client;
-    public Bjr bjr;
-    public int bjr_id;
     public Date start_date;
     public Date end_date;
     public String source;
@@ -35,12 +33,9 @@ public class Contract {
     public BigDecimal amount_last_invoice;
     public int last_invoice_number;
     public Date last_invoice_date;
-    public Date last_invoice_period_start;
-    public Date last_invoice_period_end;
+    public Date next_invoice_date;
     public int jgr;
     public String comments;
-    public Date created;
-    public Date updated;
     public boolean is_active;
     public String server_ID;
     private BigDecimal total_price;

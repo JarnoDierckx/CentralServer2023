@@ -12,6 +12,7 @@
 </h:head>
 
 <h:body>
+    <ui:include src="header.xhtml"/>
 
     <h:form target="_blank">
         <div class="card">
@@ -97,16 +98,13 @@
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="Last invoice period start" sortBy="#{contract.last_invoice_period_start}">
-                    <h:outputText value="#{contract.last_invoice_period_start}">
+
+                <p:column headerText="Next invoice date" sortBy="#{contract.next_invoice_date}">
+                    <h:outputText value="#{contract.next_invoice_date}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <p:column headerText="Last invoice period end" sortBy="#{contract.last_invoice_period_end}">
-                    <h:outputText value="#{contract.last_invoice_period_end}">
-                        <f:convertDateTime pattern = "yyyy-MM-dd" />
-                    </h:outputText>
-                </p:column>
+
                 <p:column headerText="%jgr" sortBy="#{contract.jgr}">
                     #{contract.jgr}
                 </p:column>

@@ -26,8 +26,6 @@ public class CreateContractBean implements Serializable {
     private Contract newContract;
     private Client client;
     private Client[] clients;
-    private Bjr bjr;
-    private Bjr[] bjrs;
     private ModuleId[] modules;
     private Index[] cpis;
     private BigDecimal server_id;
@@ -45,15 +43,13 @@ public class CreateContractBean implements Serializable {
 
         newContract=new Contract();
         client=new Client();
-        bjr=new Bjr();
         PrepareCreateContract();
     }
 
     /**
-     * Retrieves all clients and bjr objects for later use.
+     * Retrieves all clients for later use.
      */
     public void PrepareCreateContract() throws JsonProcessingException {
-        bjrs =retrieveBjr();
         clients=retrieveClients();
         cpis=retrieveIndex();
         servers=retrieveServers();
@@ -102,17 +98,6 @@ public class CreateContractBean implements Serializable {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return mapper.readValue(response, Client[].class);
-    }
-
-    /**
-     * retrieves all bjr objects
-     * @return maps all values from the api response into an array of Bjr objects
-     */
-    public Bjr[] retrieveBjr() throws JsonProcessingException {
-        String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/bjr");
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return mapper.readValue(response, Bjr[].class);
     }
 
     public Index[] retrieveIndex() throws JsonProcessingException {
@@ -210,22 +195,6 @@ public class CreateContractBean implements Serializable {
 
     public void setClients(Client[] clients) {
         this.clients = clients;
-    }
-
-    public Bjr getBjr() {
-        return bjr;
-    }
-
-    public void setBjr(Bjr brj) {
-        this.bjr = bjr;
-    }
-
-    public Bjr[] getBjrs() {
-        return bjrs;
-    }
-
-    public void setBjrs(Bjr[] bjrs) {
-        this.bjrs = bjrs;
     }
 
     public ModuleId[] getModules() {

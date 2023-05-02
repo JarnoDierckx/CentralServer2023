@@ -150,11 +150,8 @@ public class EditContractBean implements Serializable {
         if (contract2.last_invoice_date != null) {
             contract2.last_invoice_date = new java.sql.Date(contract2.last_invoice_date.getTime());
         }
-        if (contract2.last_invoice_period_start != null) {
-            contract2.last_invoice_period_start = new java.sql.Date(contract2.last_invoice_period_start.getTime());
-        }
-        if (contract2.last_invoice_period_end != null) {
-            contract2.last_invoice_period_end = new java.sql.Date(contract2.last_invoice_period_end.getTime());
+        if (contract2.next_invoice_date != null) {
+            contract2.next_invoice_date = new java.sql.Date(contract2.next_invoice_date.getTime());
         }
 
         return contract2;

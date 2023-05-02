@@ -48,6 +48,7 @@ import java.util.List;
                 module.setSERVER_DBB_ID((BigDecimal) jsonModuleIds.getJSONObject(i).get("SERVER_DBB_ID"));
                 module.setModules_Index((int) jsonModuleIds.getJSONObject(i).get("MODULES_INDEX"));
                 module.setValiduntil((Date)jsonModuleIds.getJSONObject(i).get("VALIDUNTIL"));
+                module.setTrial((boolean) jsonModuleIds.getJSONObject(i).get("ISTRIAL"));
                 moduleList.add(module);
             }
 

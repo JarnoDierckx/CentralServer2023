@@ -62,18 +62,12 @@
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>
-                <ui:remove>
-                    <p:column headerText="Last invoice period start">
-                        <h:outputText value="#{contract.last_invoice_period_start}">
-                            <f:convertDateTime pattern = "yyyy-MM-dd" />
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="Last invoice period end">
-                        <h:outputText value="#{contract.last_invoice_period_end}">
-                            <f:convertDateTime pattern = "yyyy-MM-dd" />
-                        </h:outputText>
-                    </p:column>
-                </ui:remove>
+
+                <p:column headerText="Next invoice date">
+                    <h:outputText value="#{contract.next_invoice_date}">
+                        <f:convertDateTime pattern = "yyyy-MM-dd" />
+                    </h:outputText>
+                </p:column>
 
                 <p:column headerText="%jgr">
                     #{contract.jgr}

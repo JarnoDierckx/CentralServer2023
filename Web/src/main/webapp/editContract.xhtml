@@ -212,39 +212,20 @@
           </p:cellEditor>
         </p:column>
 
-        <ui:remove>
-          <p:column headerText="Last invoice period start">
-            <p:cellEditor>
-              <f:facet name="output">
-                <h:outputText value="#{edit.last_invoice_period_start}">
-                  <f:convertDateTime pattern = "yyyy-MM-dd" />
-                </h:outputText>
-              </f:facet>
-              <f:facet name="input">
-                <p:calendar  value="#{edit.last_invoice_period_start}" pattern="yyyy-MM-dd">
-                  <f:convertDateTime pattern = "yyyy-MM-dd" />
-                </p:calendar>
-              </f:facet>
-            </p:cellEditor>
-          </p:column>
-
-          <p:column headerText="Last invoice period end">
-            <p:cellEditor>
-              <f:facet name="output">
-                <h:outputText value="#{edit.last_invoice_period_end}">
-                  <f:convertDateTime pattern = "yyyy-MM-dd" />
-                </h:outputText>
-              </f:facet>
-              <f:facet name="input">
-                <p:calendar  value="#{edit.last_invoice_period_end}" pattern="yyyy-MM-dd">
-                  <f:convertDateTime pattern = "yyyy-MM-dd" />
-                </p:calendar>
-              </f:facet>
-            </p:cellEditor>
-          </p:column>
-        </ui:remove>
-
-        <p:column headerText="Next invoice date"/>
+        <p:column headerText="Next invoice date">
+          <p:cellEditor>
+            <f:facet name="output">
+              <h:outputText value="#{edit.next_invoice_date}">
+                <f:convertDateTime pattern = "yyyy-MM-dd" />
+              </h:outputText>
+            </f:facet>
+            <f:facet name="input">
+              <p:calendar  value="#{edit.next_invoice_date}" pattern="yyyy-MM-dd">
+                <f:convertDateTime pattern = "yyyy-MM-dd" />
+              </p:calendar>
+            </f:facet>
+          </p:cellEditor>
+        </p:column>
 
 
         <p:column headerText="%jgr">

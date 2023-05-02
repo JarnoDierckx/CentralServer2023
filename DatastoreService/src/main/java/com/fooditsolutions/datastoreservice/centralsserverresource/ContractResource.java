@@ -151,9 +151,6 @@ public class ContractResource {
             contract.setId((int) jsonContracts.getJSONObject(i).opt("ID"));
             contract.setContract_number((String) jsonContracts.getJSONObject(i).opt("CONTRACT_NUMBER"));
             contract.setClient_id((BigDecimal) jsonContracts.getJSONObject(i).opt("CLIENT_ID"));
-            if (jsonContracts.getJSONObject(i).opt("BJR_ID") != null) {
-                contract.setBjr_id((int) jsonContracts.getJSONObject(i).opt("BJR_ID"));
-            }
             contract.setStart_date((Date) jsonContracts.getJSONObject(i).opt("START_DATE"));
             Util.structureSQL(contract.getStart_date());
             contract.setEnd_date((Date) jsonContracts.getJSONObject(i).opt("END_DATE"));
@@ -178,22 +175,13 @@ public class ContractResource {
             if (jsonContracts.getJSONObject(i).opt("LAST_INVOICE_DATE") != null) {
                 contract.setLast_invoice_date((Date) jsonContracts.getJSONObject(i).opt("LAST_INVOICE_DATE"));
             }
-            if (jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_START") != null) {
-                contract.setLast_invoice_period_start((Date) jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_START"));
-            }
-            if (jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_END") != null) {
-                contract.setLast_invoice_period_end((Date) jsonContracts.getJSONObject(i).opt("LAST_INVOICE_PERIOD_END"));
+            if (jsonContracts.getJSONObject(i).opt("NEXT_INVOICE_DATE") != null) {
+                contract.setLast_invoice_date((Date) jsonContracts.getJSONObject(i).opt("NEXT_INVOICE_DATE"));
             }
             if (jsonContracts.getJSONObject(i).opt("JGR") != null) {
                 contract.setJgr((int) jsonContracts.getJSONObject(i).opt("JGR"));
             }
             contract.setComments((String) jsonContracts.getJSONObject(i).opt("COMMENTS"));
-            if (jsonContracts.getJSONObject(i).opt("CREATED") != null) {
-                contract.setCreated((Date) jsonContracts.getJSONObject(i).opt("CREATED"));
-            }
-            if (jsonContracts.getJSONObject(i).opt("UPDATED") != null) {
-                contract.setUpdated((Date) jsonContracts.getJSONObject(i).opt("UPDATED"));
-            }
             if (jsonContracts.getJSONObject(i).opt("IS_ACTIVE") != null) {
                 contract.set_active((boolean) jsonContracts.getJSONObject(i).opt("IS_ACTIVE"));
             }
