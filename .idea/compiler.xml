@@ -12,6 +12,7 @@
         <module name="CentralServer2023API" />
         <module name="IndexService" />
         <module name="DatastoreService" />
+        <module name="ServerService" />
         <module name="ContractService" />
         <module name="HistoryService" />
         <module name="Util" />

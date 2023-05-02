@@ -45,6 +45,8 @@ public class ServerResource{
         return objectList;
     }
 
+
+
     @GET
     @Produces("application/json")
     @Path("/all")

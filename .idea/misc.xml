@@ -22,6 +22,7 @@
         <option value="$PROJECT_DIR$/ModuleService/pom.xml" />
         <option value="$PROJECT_DIR$/IndexService/pom.xml" />
         <option value="$PROJECT_DIR$/HistoryService/pom.xml" />
+        <option value="$PROJECT_DIR$/ServerService/pom.xml" />
       </list>
     </option>
   </component>
