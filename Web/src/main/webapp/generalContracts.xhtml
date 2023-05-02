@@ -14,6 +14,7 @@
 <h:body>
     <ui:include src="header.xhtml"/>
 
+
     <h:form target="_blank">
         <div class="card">
 
@@ -30,10 +31,11 @@
                     </p:selectBooleanCheckbox> <br/>
                     <p:outputLabel value="Filter one or more clients:"/><br/>
 
-                    <p:autoComplete value="#{ManageContractBean.selectedClientList}" var="client" completeMethod="#{ManageContractBean.completeAutoComplete}" itemValue="#{client.DBB_ID}" itemLabel="#{client.name}"
-                                    converter="#{clientConverter}" multiple="true" forceSelection="true" itemSelectListener="#{ManageContractBean.onClientSelect}"/>
+                    <p:autoComplete var="client" value="#{ManageContractBean.selectedClientList}" completeMethod="#{ManageContractBean.completeAutoComplete}" itemValue="#{client}" itemLabel="#{client.name}"
+                                    converter="#{clientConverter}" multiple="true" />
+
                     <p:commandButton value="Filter clients">
-                        <p:ajax  event="click" update="generalTable" listener="#{ManageContractBean.updateActiveFilter()}"/>
+                        <p:ajax event="click" update="generalTable" listener="#{ManageContractBean.updateActiveFilter}"/>
                     </p:commandButton>
                 </f:facet>
 

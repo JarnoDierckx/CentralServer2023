@@ -13,10 +13,7 @@
         </navigation-case>
     </navigation-rule>
 
-    <converter>
-        <converter-id>clientConverter</converter-id>
-        <converter-class>clientConverter</converter-class>
-    </converter>
+
 
     <managed-bean>
         <managed-bean-name>HandleLogin</managed-bean-name>

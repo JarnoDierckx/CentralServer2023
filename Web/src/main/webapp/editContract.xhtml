@@ -22,6 +22,8 @@
 
 <h:body>
   <h:outputStylesheet library="css" name="editPageStyle.css"/>
+  <ui:include src="header.xhtml"/>
+
   <h:form>
     <div class="card">
       <p:dataTable id="contractTable" var="edit" value="#{EditContractBean.updatingContract}" paginator="true" paginatorTemplate="{Save} {delete}" paginatorPosition="bottom" editable="true" editMode="cell">

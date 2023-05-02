@@ -33,6 +33,6 @@ public class clientConverter implements Converter<Client> {
         if (value != null) {
             return String.valueOf(((Client) value).getDBB_ID());
         }
-        return "";
+        return null;
     }
 }

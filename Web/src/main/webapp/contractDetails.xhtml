@@ -11,6 +11,7 @@
     <h:link type="css" rel="stylesheet" hreflang="css/myStyles.css"/>
 </h:head>
 <h:body>
+    <ui:include src="header.xhtml"/>
     <h:form>
         <div class="card">
             <p:dataTable var="contract" value="#{ManageContractBean.selectedItem}" widgetVar="contractTable">
