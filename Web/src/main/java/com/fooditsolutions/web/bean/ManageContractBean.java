@@ -6,20 +6,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.util.model.*;
-import org.primefaces.event.SelectEvent;
 import org.primefaces.model.SortMeta;
 import org.primefaces.util.LangUtils;
 
-import javax.faces.bean.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -44,7 +41,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     private List<History> selectedHistory;
     private Client[] clients;
     private List<Client> clientList;
-    private List<Client> selectedClientList =new ArrayList<>();
+    private List<BigDecimal> selectedClientList;
     private BigDecimal yearlyFacturationAmount = BigDecimal.valueOf(0);
     private BigDecimal MonthlyFacturationAmount = BigDecimal.valueOf(0);
     private List<Server> unusedServers;
@@ -66,6 +63,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
             allHistory=retrieveHistory();
             allServers=Arrays.asList(retrieveServers());
             unusedServers=retrieveUnusedServers(allServers);
+            selectedClientList=new ArrayList<>();
 
         } catch (IOException | ServletException e) {
             throw new RuntimeException(e);
@@ -291,8 +289,8 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         if (!inActiveFilter) {
             filteredContracts=new ArrayList<>();
             for (Contract contract:contracts){
-                for (Client client:selectedClientList){
-                    if (contract.is_active && contract.getClient_id().equals(client.getDBB_ID())){
+                for (BigDecimal client:selectedClientList){
+                    if (contract.is_active && contract.getClient_id().equals(client)){
                         filteredContracts.add(contract);
                     }
                 }
@@ -301,18 +299,14 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         } else {
             filteredContracts=new ArrayList<>();
             for (Contract contract:contracts){
-                for (Client client:selectedClientList){
-                    if (!contract.is_active && contract.getClient_id().equals(client.getDBB_ID())){
+                for (BigDecimal client:selectedClientList){
+                    if (!contract.is_active && contract.getClient_id().equals(client)){
                         filteredContracts.add(contract);
                     }
                 }
 
             }
         }
-    }
-
-    public void onClientSelect(SelectEvent<Client> event) {
-        selectedClientList.add(event.getObject());
     }
 
 
@@ -415,11 +409,11 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         this.clientList = clientList;
     }
 
-    public List<Client> getSelectedClientList() {
+    public List<BigDecimal> getSelectedClientList() {
         return selectedClientList;
     }
 
-    public void setSelectedClientList(List<Client> selectedClientList) {
+    public void setSelectedClientList(List<BigDecimal> selectedClientList) {
         this.selectedClientList = selectedClientList;
     }
 

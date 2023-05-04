@@ -29,14 +29,20 @@
                     <p:selectBooleanCheckbox value="#{ManageContractBean.inActiveFilter}">
                         <p:ajax update="generalTable" listener="#{ManageContractBean.updateActiveFilter}" />
                     </p:selectBooleanCheckbox> <br/>
-                    <p:outputLabel value="Filter one or more clients:"/><br/>
 
-                    <p:autoComplete var="client" value="#{ManageContractBean.selectedClientList}" completeMethod="#{ManageContractBean.completeAutoComplete}" itemValue="#{client}" itemLabel="#{client.name}"
-                                    converter="#{clientConverter}" multiple="true" />
 
-                    <p:commandButton value="Filter clients">
-                        <p:ajax event="click" update="generalTable" listener="#{ManageContractBean.updateActiveFilter}"/>
-                    </p:commandButton><br/>
+                    <p:panel>
+                        <p:outputLabel value="Filter one or more clients:"/><br/>
+
+                        <p:selectManyMenu value="#{ManageContractBean.selectedClientList}" valueChangeListener="#{ManageContractBean.updateActiveFilter()}">
+                            <f:selectItem itemLabel="select client" itemValue="" noSelectionOption="true" />
+                            <f:selectItems var="client" value="#{ManageContractBean.clientList}"  itemValue="#{client.DBB_ID}" itemLabel="#{client.name}"/>
+                        </p:selectManyMenu>
+
+                        <p:commandButton value="Filter clients" action="#{ManageContractBean.updateActiveFilter()}" update="generalTable"/><br/>
+                    </p:panel>
+
+
                     <p:panel  rendered="#{ManageContractBean.unusedServers.size() gt 0}">
                         <p:selectOneMenu value="#{ManageContractBean.selectedServerID}">
                             <f:selectItem itemLabel="select server ID" itemValue="" noSelectionOption="true" />
