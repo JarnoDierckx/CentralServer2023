@@ -26,7 +26,7 @@ import java.util.Objects;
 public class ContractResource {
     @PostConstruct
     public void init() {
-        System.out.println("ContractService");
+        //System.out.println("ContractService");
     }
 
     /**
@@ -39,7 +39,7 @@ public class ContractResource {
     @Produces("application/json")
     public List<Contract> getContracts() throws IOException {
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contract?datastoreKey=" + PropertiesController.getProperty().getDatastore());
-        System.out.println("getContracts: " + responseString);
+        //System.out.println("getContracts: " + responseString);
         List<Contract> response = new ArrayList<>();
         response = ContractController.createContractsInformation(responseString);
         return response;
@@ -54,7 +54,7 @@ public class ContractResource {
     @Path("/{contractId}")
     public Contract getContract(@PathParam("contractId") int contractId) throws IOException {
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contract/" + contractId + "?datastoreKey=" + PropertiesController.getProperty().getDatastore());
-        System.out.println("getContracts: " + responseString);
+        //System.out.println("getContracts: " + responseString);
         Contract response = new Contract();
         response = ContractController.createContractInformation(responseString);
         return response;

@@ -283,6 +283,7 @@
               </f:facet>
               <f:facet name="input">
                   <p:selectOneMenu value="#{detail.module_DBB_ID}" rendered="#{detail.ID==0}" immediate="true">
+                    <f:selectItem itemLabel="select a module" itemValue="" noSelectionOption="true" />
                     <f:selectItems value="#{EditContractBean.moduleIds}" var="M" itemLabel="#{M.name}" itemValue="#{M.dbb_id}"/>
                     <p:ajax update="@this" />
                   </p:selectOneMenu>

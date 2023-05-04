@@ -14,8 +14,16 @@
 <h:body>
     <ui:include src="header.xhtml"/>
 
+    <h:form rendered="#{ManageContractBean.unusedServers.size() gt 0}">
+        <p:selectOneMenu value="#{ManageContractBean.selectedServerID}">
+            <f:selectItem itemLabel="select server ID" itemValue="" noSelectionOption="true" />
+            <f:selectItems value="#{ManageContractBean.unusedServers}" var="S" itemLabel="#{S.ID}" itemValue="#{S.ID}"/>
+        </p:selectOneMenu>
+        <p:commandButton value="create contract from server id" action="#{ManageContractBean.createContract()}"/><br/>
+    </h:form>
 
-    <h:form target="_blank">
+
+    <h:form>
         <div class="card">
 
             <p:dataTable id="generalTable" var="contract" value="#{ManageContractBean.filteredContracts}" widgetVar="contractTable" globalFilterFunction="#{ManageContractBean.globalFilterFunction}" sortMode="single">
@@ -36,7 +44,9 @@
 
                     <p:commandButton value="Filter clients">
                         <p:ajax event="click" update="generalTable" listener="#{ManageContractBean.updateActiveFilter}"/>
-                    </p:commandButton>
+                    </p:commandButton><br/>
+
+
                 </f:facet>
 
                 <ui:remove>
@@ -45,7 +55,7 @@
 
 
                 <p:column style="width:3rem;text-align: center">
-                    <p:commandButton icon="pi pi-search" title="View" action="#{ManageContractBean.ContractDetails()}" ajax="false" emptyMessage="No contracts found with given criteria">
+                    <p:commandButton icon="pi pi-search" title="View" action="#{ManageContractBean.ContractDetails()}" emptyMessage="No contracts found with given criteria">
                         <f:setPropertyActionListener value="#{contract}" target="#{ManageContractBean.selectedItem}"/>
                     </p:commandButton>
                 </p:column>
@@ -114,18 +124,21 @@
                     #{contract.total_price}
                 </p:column>
 
-                <p:column style="width:2rem;text-align: center">
-                    <p:commandButton title="Edit" action="#{ManageContractBean.editContract}" ajax="false">
+                <p:column style="width:2rem;text-align: center;">
+                    <p:commandButton title="Edit" action="#{ManageContractBean.editContract}">
                         <f:setPropertyActionListener value="#{contract}" target="#{ManageContractBean.selectedItem}"/>
                     </p:commandButton >
+                    <h:panelGroup rendered="#{contract.hasEmptyModule}">
+                        <div style="width: 40px; height: 40px; border-radius: 50%; background: red"></div>
+                    </h:panelGroup>
                 </p:column>
 
             </p:dataTable>
         </div>
     </h:form>
     <p:commandButton title="refresh page" action="#{ManageContractBean.retrieveContracts()}" oncomplete="setTimeout(function(){ location.reload(); });"/>
-    <h:form target="_blank">
-        <p:commandButton title="Create new contract" action="#{ManageContractBean.createContract()}" ajax="false"/>
+    <h:form>
+        <p:commandButton title="Create new contract" action="#{ManageContractBean.createContract()}"/>
     </h:form>
     <h:outputLabel value="Yearly facturation amount:"/>
     <h:outputText value="#{ManageContractBean.yearlyFacturationAmount}"/><br/>

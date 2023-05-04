@@ -36,10 +36,12 @@ public class ServerResource{
         List<Server> objectList = new ArrayList<>();
         for (int i = 0; i < jsonValues.length(); i++) {
             Server object = new Server();
-            object.setDBB_ID((BigDecimal) jsonValues.getJSONObject(i).get("DBB_ID"));
-            object.setID((String) jsonValues.getJSONObject(i).get("ID"));
-            object.setCLIENT_DBB_ID((BigDecimal) jsonValues.getJSONObject(i).get("CLIENT_DBB_ID"));
-            object.setTrial((boolean) jsonValues.getJSONObject(i).get("ISTRIAL"));
+            object.setDBB_ID((BigDecimal) jsonValues.getJSONObject(i).opt("DBB_ID"));
+            object.setID((String) jsonValues.getJSONObject(i).opt("ID"));
+            object.setCLIENT_DBB_ID((BigDecimal) jsonValues.getJSONObject(i).opt("CLIENT_DBB_ID"));
+            if (jsonValues.getJSONObject(i).opt("ISTRIAL") != null){
+                object.setTrial((boolean) jsonValues.getJSONObject(i).opt("ISTRIAL"));
+            }
             objectList.add(object);
         }
 

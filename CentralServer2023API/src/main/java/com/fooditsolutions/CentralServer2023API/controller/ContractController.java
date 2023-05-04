@@ -29,6 +29,8 @@ public class ContractController {
                     cContractDetail.remove(Moduleid_id);
                 }else{
                     compareContractCS.setModuleSyncStatus(ModuleCompare.CENTRALSERVER);
+                    //this module is not in contractDetails
+                    compareContractCS.setHasEmptyModule(true);
                 }
                 compareContractCSs.add(compareContractCS);
             }

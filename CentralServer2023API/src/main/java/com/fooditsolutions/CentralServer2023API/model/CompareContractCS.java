@@ -17,5 +17,6 @@ public class CompareContractCS {
     BigDecimal moduleId_DBB_ID;
     ModuleCompare moduleSyncStatus;
     ModuleId moduleId;
+    boolean hasEmptyModule;
 
 }

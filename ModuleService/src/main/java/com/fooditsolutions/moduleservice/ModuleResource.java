@@ -22,7 +22,7 @@ public class ModuleResource {
             urlString += "&client="+ clientId;
         }
         String responseString = HttpController.httpGet(urlString);
-        System.out.println("getModules: "+responseString);
+        //System.out.println("getModules: "+responseString);
         List<Module> response = new ArrayList<>();
         response = ModuleController.createModuleInformation(responseString);
         return response;

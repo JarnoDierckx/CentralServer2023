@@ -43,15 +43,19 @@ import java.util.List;
             List<Module> moduleList = new ArrayList<>();
             for (int i = 0; i < jsonModuleIds.length(); i++) {
                 Module module = new Module();
-                module.setDBB_ID((BigDecimal) jsonModuleIds.getJSONObject(i).get("DBB_ID"));
-                module.setName((String) jsonModuleIds.getJSONObject(i).get("NAME"));
-                module.setSERVER_DBB_ID((BigDecimal) jsonModuleIds.getJSONObject(i).get("SERVER_DBB_ID"));
-                module.setModules_Index((int) jsonModuleIds.getJSONObject(i).get("MODULES_INDEX"));
-                module.setValiduntil((Date)jsonModuleIds.getJSONObject(i).get("VALIDUNTIL"));
-                module.setTrial((boolean) jsonModuleIds.getJSONObject(i).get("ISTRIAL"));
+                module.setDBB_ID((BigDecimal) jsonModuleIds.getJSONObject(i).opt("DBB_ID"));
+                module.setName((String) jsonModuleIds.getJSONObject(i).opt("NAME"));
+                module.setSERVER_DBB_ID((BigDecimal) jsonModuleIds.getJSONObject(i).opt("SERVER_DBB_ID"));
+                if (jsonModuleIds.getJSONObject(i).opt("MODULES_INDEX") != null){
+                    module.setModules_Index((int) jsonModuleIds.getJSONObject(i).opt("MODULES_INDEX"));
+                }
+                module.setValiduntil((Date)jsonModuleIds.getJSONObject(i).opt("VALIDUNTIL"));
+                if (jsonModuleIds.getJSONObject(i).opt("ISTRIAL") != null){
+                    module.setTrial((boolean) jsonModuleIds.getJSONObject(i).opt("ISTRIAL"));
+                }
+
                 moduleList.add(module);
             }
-
             return moduleList;
         }
 

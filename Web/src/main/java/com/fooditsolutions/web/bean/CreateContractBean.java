@@ -43,7 +43,13 @@ public class CreateContractBean implements Serializable {
 
         newContract=new Contract();
         client=new Client();
+
         PrepareCreateContract();
+        if (session.getAttribute("serverID")!=null) {
+            String serverID= (String) session.getAttribute("serverID");
+            newContract.setServer_ID(serverID);
+            updateClient();
+        }
     }
 
     /**

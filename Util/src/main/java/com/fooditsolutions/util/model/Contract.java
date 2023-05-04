@@ -39,5 +39,6 @@ public class Contract {
     public boolean is_active;
     public String server_ID;
     private BigDecimal total_price;
+    private boolean hasEmptyModule;
 
 }

@@ -32,7 +32,7 @@ public class ContractDetailResource {
     @Produces("application/json")
     public List<ContractDetail> getContractDetails(@PathParam("ContractID") String contractID) throws IOException {
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail/"+ contractID +"?datastoreKey="+ PropertiesController.getProperty().getDatastore());
-        System.out.println("getContractDetails: "+responseString);
+        //System.out.println("getContractDetails: "+responseString);
 
         List<ContractDetail> contractDetails = ContractDetailController.createContractDetailInformation(responseString);
         List<ContractDetail> newContractDetails= new ArrayList<>();
@@ -136,7 +136,7 @@ public class ContractDetailResource {
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             //Converting the Object to JSONString
             String jsonString = mapper.writeValueAsString(detailDifferences);
-            System.out.println(jsonString);
+            //System.out.println(jsonString);
 
             HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
 
@@ -169,10 +169,10 @@ public class ContractDetailResource {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         //Converting the Object to JSONString
         String jsonString = mapper.writeValueAsString(contractDetails);
-        System.out.println(jsonString);
+        //.out.println(jsonString);
 
         String responseString=HttpController.httpPost(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
-        System.out.println(responseString);
+        //System.out.println(responseString);
 
         int[] ID=mapper.readValue(responseString, int[].class);
         for (int j : ID) {

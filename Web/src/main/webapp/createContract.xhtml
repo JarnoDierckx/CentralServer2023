@@ -34,6 +34,7 @@
             <section>
                 <h:outputText value="Client" id="client"/><br/>
                 <p:selectOneMenu value="#{createContractBean.newContract.client_id}">
+                    <f:selectItem itemLabel="select a client" itemValue="" noSelectionOption="true" />
                     <f:selectItems value="#{createContractBean.clients}" var="c" itemLabel="#{c.name}" itemValue="#{c.DBB_ID}"/>
                 </p:selectOneMenu>
             </section>

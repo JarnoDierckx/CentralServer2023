@@ -38,7 +38,7 @@ public class Contract extends Sqlmodel {
     public boolean is_active;
     public String server_ID;
     public BigDecimal total_price;
-
+    private boolean hasEmptyModule;
 
 
 

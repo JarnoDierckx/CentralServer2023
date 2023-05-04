@@ -7,7 +7,6 @@ com\fooditsolutions\util\model\User.class
 com\fooditsolutions\util\model\Client.class
 com\fooditsolutions\util\model\ContractDetail.class
 com\fooditsolutions\util\controller\PropertiesController.class
-com\fooditsolutions\util\model\Bjr.class
 com\fooditsolutions\util\model\Module.class
 com\fooditsolutions\util\model\ModuleId.class
 com\fooditsolutions\util\enums\Source.class

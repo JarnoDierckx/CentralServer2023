@@ -10,15 +10,16 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.SortMeta;
 import org.primefaces.util.LangUtils;
 
-import javax.annotation.ManagedBean;
+import javax.faces.bean.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpSession;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -46,6 +47,9 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     private List<Client> selectedClientList =new ArrayList<>();
     private BigDecimal yearlyFacturationAmount = BigDecimal.valueOf(0);
     private BigDecimal MonthlyFacturationAmount = BigDecimal.valueOf(0);
+    private List<Server> unusedServers;
+    private List<Server> allServers;
+    private String selectedServerID="";
 
     /**
      * Executes getContracts when generalContracts.xhtml is loaded.
@@ -60,6 +64,8 @@ public class ManageContractBean extends HttpServlet implements Serializable {
             clients=retrieveClients();
             clientList= Arrays.asList(clients);
             allHistory=retrieveHistory();
+            allServers=Arrays.asList(retrieveServers());
+            unusedServers=retrieveUnusedServers(allServers);
 
         } catch (IOException | ServletException e) {
             throw new RuntimeException(e);
@@ -121,6 +127,26 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return mapper.readValue(response, Client[].class);
     }
 
+    public List<Server> retrieveUnusedServers(List<Server> serverList){
+        List<Server> unusedServers=new ArrayList<>();
+        for (Server server: serverList){
+            boolean isused=false;
+            for (Contract contract: contracts){
+                if (contract.getServer_ID() != null){
+                    if (contract.getServer_ID().equals(server.getID())){
+                        isused=true;
+                        break;
+                    }
+                }
+            }
+            if (!isused){
+                unusedServers.add(server);
+            }
+        }
+
+        return unusedServers;
+    }
+
     /**
      * calls getContractDetails and puts the returned values in 'details'
      * @return redirects the user to the contractDetails.xhtml
@@ -158,6 +184,14 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return mapper.readValue(response, History[].class);
     }
 
+    public Server[] retrieveServers() throws JsonProcessingException {
+        String response =HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/server");
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.readValue(response, Server[].class);
+    }
+
     /**
      * Creates a session object for the user and puts the object of the contract they selected in it, so it can be retrieved and used later on.
      * Also deletes any existing contract and Editcontracts attributes that may already exist in the session.
@@ -186,6 +220,15 @@ public class ManageContractBean extends HttpServlet implements Serializable {
             session.removeAttribute("createContractBean");
         }
         session.setAttribute("allContracts",contracts2);
+
+        if (!Objects.equals(selectedServerID, "")){
+            if (session.getAttribute("serverID")!=null) {
+                session.removeAttribute("serverID");
+            }
+            session.setAttribute("serverID",selectedServerID);
+            session.setAttribute("allContracts",contracts2);
+            return "createContract.xhtml?faces-redirect=true";
+        }
 
         return "createContract.xhtml?faces-redirect=true";
     }
@@ -382,5 +425,17 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     public List<History> getSelectedHistory() {
         return selectedHistory;
+    }
+
+    public List<Server> getUnusedServers() {
+        return unusedServers;
+    }
+
+    public String getSelectedServerID() {
+        return selectedServerID;
+    }
+
+    public void setSelectedServerID(String selectedServerID) {
+        this.selectedServerID = selectedServerID;
     }
 }
