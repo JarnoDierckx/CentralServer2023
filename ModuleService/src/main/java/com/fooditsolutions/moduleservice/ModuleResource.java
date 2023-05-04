@@ -27,4 +27,14 @@ public class ModuleResource {
         response = ModuleController.createModuleInformation(responseString);
         return response;
     }
+
+    @GET
+    @Produces("application/json")
+    @Path("/all")
+    public List<Module> getModules() throws IOException {
+        String responseString=HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/module/all?datastoreKey="+PropertiesController.getProperty().getDatastore());
+        List<Module> response = new ArrayList<>();
+        response = ModuleController.createModuleInformation(responseString);
+        return response;
+    }
 }

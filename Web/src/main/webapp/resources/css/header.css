@@ -3,6 +3,11 @@
     display: flex;
     flex-direction: row;
     background-color: grey;
+
+    /*position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;*/
 }
 .headerButton {
     margin: 10px;

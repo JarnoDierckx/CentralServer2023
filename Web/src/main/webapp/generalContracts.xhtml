@@ -14,14 +14,6 @@
 <h:body>
     <ui:include src="header.xhtml"/>
 
-    <h:form rendered="#{ManageContractBean.unusedServers.size() gt 0}">
-        <p:selectOneMenu value="#{ManageContractBean.selectedServerID}">
-            <f:selectItem itemLabel="select server ID" itemValue="" noSelectionOption="true" />
-            <f:selectItems value="#{ManageContractBean.unusedServers}" var="S" itemLabel="#{S.ID}" itemValue="#{S.ID}"/>
-        </p:selectOneMenu>
-        <p:commandButton value="create contract from server id" action="#{ManageContractBean.createContract()}"/><br/>
-    </h:form>
-
 
     <h:form>
         <div class="card">
@@ -45,8 +37,13 @@
                     <p:commandButton value="Filter clients">
                         <p:ajax event="click" update="generalTable" listener="#{ManageContractBean.updateActiveFilter}"/>
                     </p:commandButton><br/>
-
-
+                    <p:panel  rendered="#{ManageContractBean.unusedServers.size() gt 0}">
+                        <p:selectOneMenu value="#{ManageContractBean.selectedServerID}">
+                            <f:selectItem itemLabel="select server ID" itemValue="" noSelectionOption="true" />
+                            <f:selectItems value="#{ManageContractBean.unusedServers}" var="S" itemLabel="#{S.ID}" itemValue="#{S.ID}"/>
+                        </p:selectOneMenu>
+                        <p:commandButton value="create contract from server id" action="#{ManageContractBean.createContract()}"/><br/>
+                    </p:panel>
                 </f:facet>
 
                 <ui:remove>

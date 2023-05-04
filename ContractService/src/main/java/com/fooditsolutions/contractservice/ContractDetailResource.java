@@ -27,21 +27,26 @@ public class ContractDetailResource {
      * @return takes the received value from the datastoreService, turns it into more usable information and sends it back.
      */
     @GET
-    @Path("/{ContractID}")
+    @Path("/{ContractID}/{calculate}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public List<ContractDetail> getContractDetails(@PathParam("ContractID") String contractID) throws IOException {
+    public List<ContractDetail> getContractDetails(@PathParam("ContractID") String contractID, @PathParam("calculate") boolean calculate) throws IOException {
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail/"+ contractID +"?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         //System.out.println("getContractDetails: "+responseString);
 
         List<ContractDetail> contractDetails = ContractDetailController.createContractDetailInformation(responseString);
-        List<ContractDetail> newContractDetails= new ArrayList<>();
-        for (ContractDetail contractDetail: contractDetails){
-            contractDetail=ContractDetailController.calculate(contractDetail);
-            newContractDetails.add(contractDetail);
+        if (calculate){
+            List<ContractDetail> newContractDetails= new ArrayList<>();
+            for (ContractDetail contractDetail: contractDetails){
+                contractDetail=ContractDetailController.calculate(contractDetail);
+                newContractDetails.add(contractDetail);
+            }
+            return newContractDetails;
         }
 
-        return newContractDetails;
+
+
+        return contractDetails;
     }
 
     @GET

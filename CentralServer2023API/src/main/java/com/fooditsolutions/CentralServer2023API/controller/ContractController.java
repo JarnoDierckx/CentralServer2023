@@ -29,8 +29,6 @@ public class ContractController {
                     cContractDetail.remove(Moduleid_id);
                 }else{
                     compareContractCS.setModuleSyncStatus(ModuleCompare.CENTRALSERVER);
-                    //this module is not in contractDetails
-                    compareContractCS.setHasEmptyModule(true);
                 }
                 compareContractCSs.add(compareContractCS);
             }
@@ -46,6 +44,27 @@ public class ContractController {
         }
 
         return compareContractCSs;
+
+    }
+
+    public static boolean checkForEmptyModule(List<ContractDetail> contractDetails, List<Module> modules){
+        HashMap<BigDecimal,ContractDetail> cContractDetail = new HashMap();
+
+        for(ContractDetail cd : contractDetails){
+            cContractDetail.put(cd.getModule_DBB_ID(),cd);
+        }
+        //The modules details are stored in ModuleId. The link between the module and a server is in the table Module
+        for(Module mod : modules){
+            if (mod.getModuleid()!=null){
+                BigDecimal Moduleid_id = mod.getModuleid().getDbb_id();
+                if(!cContractDetail.containsKey(Moduleid_id)){
+                    return true;
+                }
+            }
+
+        }
+
+        return false;
 
     }
 }

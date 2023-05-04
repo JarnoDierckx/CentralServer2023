@@ -7,6 +7,7 @@ import com.fooditsolutions.CentralServer2023API.model.CompareContractCS;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.util.model.*;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
@@ -18,9 +19,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.fooditsolutions.CentralServer2023API.controller.ContractController.checkContractCs;
+import static com.fooditsolutions.CentralServer2023API.controller.ContractController.checkForEmptyModule;
 
 @Path("/crudContract")
 public class ContractResource {
+
+    List<Server> allServers=new ArrayList<>();
+    List<Module> allModules=new ArrayList<>();
 
     @PostConstruct
     public void init() {
@@ -39,7 +44,7 @@ public class ContractResource {
         String response = "";
         //System.out.println("Starting read in ContractResource");
 
-        response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice()+"/contract");
+        response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice() + "/contract");
         //System.out.println("getContracts: "+response);
 
         byte[] jsonData = response.getBytes();
@@ -47,12 +52,17 @@ public class ContractResource {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         List<Contract> contracts = Arrays.asList(mapper.readValue(jsonData, Contract[].class));
 
-        for (Contract contract: contracts){
-            List<CompareContractCS> cs=getCSDifWithContract(contract);
-            for (CompareContractCS compareContractCS:cs){
-                if (compareContractCS.isHasEmptyModule()){
+        String serverResponse=HttpController.httpGet(PropertiesController.getProperty().getBase_url_moduleservice()+"/module/all");
+        allModules=Arrays.asList(mapper.readValue(serverResponse, Module[].class));
+
+        serverResponse=HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice()+"/server");
+        allServers=Arrays.asList(mapper.readValue(serverResponse, Server[].class));
+
+        for (Contract contract : contracts) {
+            if (contract.getServer_ID()!=null){
+                boolean hasEmpty = checkForEmptyModules(contract);
+                if (hasEmpty) {
                     contract.setHasEmptyModule(true);
-                    break;
                 }
             }
         }
@@ -68,7 +78,7 @@ public class ContractResource {
     public Contract getContract(@PathParam("contractId") String contractID) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        String responseContract = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice()+"/contract/"+contractID);
+        String responseContract = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice() + "/contract/" + contractID);
         byte[] jsonData2 = responseContract.getBytes();
         Contract contract = mapper.readValue(jsonData2, Contract.class);
 
@@ -84,23 +94,23 @@ public class ContractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     public List<ContractDetail> getContractDetails(@PathParam("ContractID") String contractID,
-                                                   @QueryParam("checkCS") boolean checkCS) throws IOException, ServletException {
+                                                   @QueryParam("checkCS") boolean checkCS, @QueryParam("calculate") boolean calculate) throws IOException, ServletException {
         Contract contract = getContract(contractID);
 
         //System.out.println("Starting read in ContractResource");
-        String responseContractDetails = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice()+"/contractDetail/"+contractID);
+        String responseContractDetails = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail/" + contractID + "/" + calculate);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-         byte[] jsonData = responseContractDetails.getBytes();
+        byte[] jsonData = responseContractDetails.getBytes();
         ContractDetail[] contractDetails = mapper.readValue(jsonData, ContractDetail[].class);
 
         List<ContractDetail> contractDetailList = new ArrayList<>(Arrays.asList(contractDetails));
 
-        if(checkCS){
+        if (checkCS) {
             List<CompareContractCS> compareContractCSList = getCSDif(contract.getId());
-            for(CompareContractCS com : compareContractCSList){
-                if(com.getModuleSyncStatus()== ModuleCompare.CENTRALSERVER){
+            for (CompareContractCS com : compareContractCSList) {
+                if (com.getModuleSyncStatus() == ModuleCompare.CENTRALSERVER) {
                     ContractDetail contractDetail = new ContractDetail();
                     contractDetail.setContract_ID(contract.id);
                     contractDetail.setModuleId(com.getModuleId());
@@ -116,6 +126,7 @@ public class ContractResource {
 
     /**
      * The endpoint called to update a single contract's general information.
+     *
      * @param contract is immediately parsed to a json string and send forward to the contract service.
      */
     @PUT
@@ -129,11 +140,12 @@ public class ContractResource {
         //Converting the Object to JSONString
         String jsonString = mapper.writeValueAsString(contract);
 
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice()+"/contract", jsonString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice() + "/contract", jsonString);
     }
 
     /**
      * The endpoint called to update a contract's details.
+     *
      * @param contractDetails is immediately parsed to a json String and send forward to the contracts service.
      */
     @PUT
@@ -149,11 +161,12 @@ public class ContractResource {
         String jsonString = mapper.writeValueAsString(contractDetails);
         //System.out.println(jsonString);
 
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice()+"/contractDetail?datastoreKey=", jsonString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail?datastoreKey=", jsonString);
     }
 
     /**
      * The endpoint to create a new contract.
+     *
      * @param contract is immediately parsed back into a json string and send forward to the datastoreService.
      */
     @POST
@@ -167,7 +180,7 @@ public class ContractResource {
         //Converting the Object to JSONString
         String jsonString = mapper.writeValueAsString(contract);
 
-        return HttpController.httpPost(PropertiesController.getProperty().getBase_url_contractservice()+"/contract", jsonString);
+        return HttpController.httpPost(PropertiesController.getProperty().getBase_url_contractservice() + "/contract", jsonString);
     }
 
     @Path("/detail")
@@ -196,17 +209,17 @@ public class ContractResource {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        List<ContractDetail> contractDetail = getContractDetails(String.valueOf(contractID),false);
+        List<ContractDetail> contractDetail = getContractDetails(String.valueOf(contractID), false, true);
 
-        String responseContract = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice()+"/contract/"+contractID);
+        String responseContract = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice() + "/contract/" + contractID);
         byte[] jsonData2 = responseContract.getBytes();
         Contract contract = mapper.readValue(jsonData2, Contract.class);
 
-        String responseModule = HttpController.httpGet(PropertiesController.getProperty().getBase_url_moduleservice()+"/module?client="+contract.client.getDBB_ID());
+        String responseModule = HttpController.httpGet(PropertiesController.getProperty().getBase_url_moduleservice() + "/module?client=" + contract.client.getDBB_ID());
         byte[] jsonData3 = responseModule.getBytes();
         Module[] modules = mapper.readValue(jsonData3, Module[].class);
 
-        List<CompareContractCS> compareContractCSList =  checkContractCs(contractDetail, Arrays.asList(modules));
+        List<CompareContractCS> compareContractCSList = checkContractCs(contractDetail, Arrays.asList(modules));
         return compareContractCSList;
 
 
@@ -221,23 +234,71 @@ public class ContractResource {
     @DELETE
     @Path("/detail/{id}")
     public void deleteContractDetails(@PathParam("id") int id) throws IOException {
-        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_contractservice()+"/contractDetail/"+id);
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail/" + id);
     }
 
-    public List<CompareContractCS> getCSDifWithContract(Contract contract) throws IOException, ServletException {
+    public boolean checkForEmptyModules(Contract contract) throws IOException, ServletException {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        List<ContractDetail> contractDetail = getContractDetails(String.valueOf(contract.getId()),false);
+        List<ContractDetail> contractDetail = getContractDetailsWithContract(contract, false, false);
 
-        String responseModule = HttpController.httpGet(PropertiesController.getProperty().getBase_url_moduleservice()+"/module?client="+contract.client.getDBB_ID());
+        /*String responseModule = HttpController.httpGet(PropertiesController.getProperty().getBase_url_moduleservice() + "/module?client=" + contract.client.getDBB_ID());
         byte[] jsonData3 = responseModule.getBytes();
-        Module[] modules = mapper.readValue(jsonData3, Module[].class);
+        Module[] modules = mapper.readValue(jsonData3, Module[].class);*/
+        List<Module> modules=new ArrayList<>();
 
-        List<CompareContractCS> compareContractCSList =  checkContractCs(contractDetail, Arrays.asList(modules));
-        return compareContractCSList;
+        Server contractServer = null;
+        for (Server server:allServers){
+            if (server.getID().equals(contract.getServer_ID())){
+                contractServer=server;
+                break;
+            }
+        }
+        if (contractServer != null){
+            for (Module module:allModules){
+                assert contractServer != null;
+                if (module.getSERVER_DBB_ID().equals(contractServer.getDBB_ID())){
+                    modules.add(module);
+                }
+            }
+
+            return checkForEmptyModule(contractDetail, modules);
+        }
+        return false;
 
 
+
+    }
+
+    public List<ContractDetail> getContractDetailsWithContract(Contract contract,
+                                                               @QueryParam("checkCS") boolean checkCS, @QueryParam("calculate") boolean calculate) throws IOException, ServletException {
+
+        //System.out.println("Starting read in ContractResource");
+        String responseContractDetails = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail/" + contract.getId() + "/" + calculate);
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        byte[] jsonData = responseContractDetails.getBytes();
+        ContractDetail[] contractDetails = mapper.readValue(jsonData, ContractDetail[].class);
+
+        List<ContractDetail> contractDetailList = new ArrayList<>(Arrays.asList(contractDetails));
+
+        if (checkCS) {
+            List<CompareContractCS> compareContractCSList = getCSDif(contract.getId());
+            for (CompareContractCS com : compareContractCSList) {
+                if (com.getModuleSyncStatus() == ModuleCompare.CENTRALSERVER) {
+                    ContractDetail contractDetail = new ContractDetail();
+                    contractDetail.setContract_ID(contract.id);
+                    contractDetail.setModuleId(com.getModuleId());
+                    contractDetail.setModule_DBB_ID(com.getModuleId().getDbb_id());
+                    contractDetailList.add(contractDetail);
+                }
+            }
+        }
+
+
+        return contractDetailList;
     }
 }

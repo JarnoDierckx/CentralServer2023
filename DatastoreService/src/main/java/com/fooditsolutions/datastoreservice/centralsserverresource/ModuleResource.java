@@ -15,75 +15,110 @@ import java.util.Date;
 import java.util.List;
 
 
-    @Path("/module")
-    public class ModuleResource {
-        @GET
-        @Produces("application/json")
-        public List<Module> getModuleIds(@QueryParam("datastoreKey") String datastoreKey,
-                                         @QueryParam("server") String serverId,
-                                         @QueryParam("client") String clientId) {
-            JSONArray jsonModuleIds = new JSONArray();
+@Path("/module")
+public class ModuleResource {
+    @GET
+    @Produces("application/json")
+    public List<Module> getModuleIds(@QueryParam("datastoreKey") String datastoreKey,
+                                     @QueryParam("server") String serverId,
+                                     @QueryParam("client") String clientId) {
+        JSONArray jsonModuleIds = new JSONArray();
 
-            for (DatastoreObject ds : Datastores.getDatastores()) {
-                if (datastoreKey.equals(ds.getKey())) {
-                    String sql = "SELECT * FROM MODULE";
-                    if(clientId!=null && clientId!="") {
-                        sql += " Left join SERVER ON MODULE.SERVER_DBB_ID = SERVER.DBB_ID";
-                    }
-                    sql += " WHERE SERVER_DBB_ID IS NOT NULL";
-                    if(clientId!=null && clientId!="") {
-                        sql += " AND SERVER.CLIENT_DBB_ID = " + clientId;
-                    }
-                    if(serverId!=null && serverId!=""){
-                        sql += " AND SERVER_DBB_ID = " + serverId;
-                    }
-                    jsonModuleIds = DBFirebird.executeSQL(ds, sql);
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                String sql = "SELECT * FROM MODULE";
+                if (clientId != null && clientId != "") {
+                    sql += " Left join SERVER ON MODULE.SERVER_DBB_ID = SERVER.DBB_ID";
                 }
+                sql += " WHERE SERVER_DBB_ID IS NOT NULL";
+                if (clientId != null && clientId != "") {
+                    sql += " AND SERVER.CLIENT_DBB_ID = " + clientId;
+                }
+                if (serverId != null && serverId != "") {
+                    sql += " AND SERVER_DBB_ID = " + serverId;
+                }
+                jsonModuleIds = DBFirebird.executeSQL(ds, sql);
             }
-            List<Module> moduleList = new ArrayList<>();
-            for (int i = 0; i < jsonModuleIds.length(); i++) {
-                Module module = new Module();
-                module.setDBB_ID((BigDecimal) jsonModuleIds.getJSONObject(i).opt("DBB_ID"));
-                module.setName((String) jsonModuleIds.getJSONObject(i).opt("NAME"));
-                module.setSERVER_DBB_ID((BigDecimal) jsonModuleIds.getJSONObject(i).opt("SERVER_DBB_ID"));
-                if (jsonModuleIds.getJSONObject(i).opt("MODULES_INDEX") != null){
-                    module.setModules_Index((int) jsonModuleIds.getJSONObject(i).opt("MODULES_INDEX"));
-                }
-                module.setValiduntil((Date)jsonModuleIds.getJSONObject(i).opt("VALIDUNTIL"));
-                if (jsonModuleIds.getJSONObject(i).opt("ISTRIAL") != null){
-                    module.setTrial((boolean) jsonModuleIds.getJSONObject(i).opt("ISTRIAL"));
-                }
-
-                moduleList.add(module);
-            }
-            return moduleList;
         }
-
-        @GET
-        @Produces("application/json")
-        @Path("/{moduleId}")
-        public Module getModuleId(
-                @PathParam("moduleId") String moduleId,
-                @QueryParam("datastoreKey") String datastoreKey) {
-            JSONArray jsonModules = new JSONArray();
-
-            for (DatastoreObject ds : Datastores.getDatastores()) {
-                if (datastoreKey.equals(ds.getKey())) {
-                    jsonModules = DBFirebird.executeSQL(ds, "SELECT * FROM MODULE WHERE DBB_ID="+moduleId);
-                }
+        List<Module> moduleList = new ArrayList<>();
+        for (int i = 0; i < jsonModuleIds.length(); i++) {
+            Module module = new Module();
+            module.setDBB_ID((BigDecimal) jsonModuleIds.getJSONObject(i).opt("DBB_ID"));
+            module.setName((String) jsonModuleIds.getJSONObject(i).opt("NAME"));
+            module.setSERVER_DBB_ID((BigDecimal) jsonModuleIds.getJSONObject(i).opt("SERVER_DBB_ID"));
+            if (jsonModuleIds.getJSONObject(i).opt("MODULES_INDEX") != null) {
+                module.setModules_Index((int) jsonModuleIds.getJSONObject(i).opt("MODULES_INDEX"));
             }
-            List<Module> moduleList = new ArrayList<>();
-            for (int i = 0; i < jsonModules.length(); i++) {
-                Module module = new Module();
-                module.setDBB_ID((BigDecimal) jsonModules.getJSONObject(i).get("DBB_ID"));
-                module.setName((String) jsonModules.getJSONObject(i).get("NAME"));
-                module.setSERVER_DBB_ID((BigDecimal) jsonModules.getJSONObject(i).get("SERVER_DBB_ID"));
-                module.setModules_Index((int) jsonModules.getJSONObject(i).get("MODULES_INDEX"));
-                module.setValiduntil((Date)jsonModules.getJSONObject(i).get("VALIDUNTIL"));
-                moduleList.add(module);
+            module.setValiduntil((Date) jsonModuleIds.getJSONObject(i).opt("VALIDUNTIL"));
+            if (jsonModuleIds.getJSONObject(i).opt("ISTRIAL") != null) {
+                module.setTrial((boolean) jsonModuleIds.getJSONObject(i).opt("ISTRIAL"));
             }
 
-            return moduleList.get(0);
+            moduleList.add(module);
         }
+        return moduleList;
     }
+
+    @GET
+    @Produces("application/json")
+    @Path("/{moduleId}")
+    public Module getModuleId(
+            @PathParam("moduleId") String moduleId,
+            @QueryParam("datastoreKey") String datastoreKey) {
+        JSONArray jsonModules = new JSONArray();
+
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                jsonModules = DBFirebird.executeSQL(ds, "SELECT * FROM MODULE WHERE DBB_ID=" + moduleId);
+            }
+        }
+        List<Module> moduleList = new ArrayList<>();
+        for (int i = 0; i < jsonModules.length(); i++) {
+            Module module = new Module();
+            module.setDBB_ID((BigDecimal) jsonModules.getJSONObject(i).opt("DBB_ID"));
+            module.setName((String) jsonModules.getJSONObject(i).opt("NAME"));
+            module.setSERVER_DBB_ID((BigDecimal) jsonModules.getJSONObject(i).opt("SERVER_DBB_ID"));
+            if (jsonModules.getJSONObject(i).opt("MODULES_INDEX") != null) {
+                module.setModules_Index((int) jsonModules.getJSONObject(i).opt("MODULES_INDEX"));
+            }
+            module.setValiduntil((Date) jsonModules.getJSONObject(i).opt("VALIDUNTIL"));
+            if (jsonModules.getJSONObject(i).opt("ISTRIAL") != null) {
+                module.setTrial((boolean) jsonModules.getJSONObject(i).opt("ISTRIAL"));
+            }
+
+            moduleList.add(module);
+        }
+
+        return moduleList.get(0);
+    }
+
+    @GET
+    @Produces("application/json")
+    @Path("/all")
+    public List<Module> getModulesWithServerIDs(@QueryParam("datastoreKey") String datastoreKey) {
+        JSONArray jsonModules = new JSONArray();
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                jsonModules = DBFirebird.executeSQL(ds, "SELECT * FROM MODULE WHERE SERVER_DBB_ID IS NOT NULL");
+            }
+        }
+        List<Module> moduleList = new ArrayList<>();
+        for (int i = 0; i < jsonModules.length(); i++) {
+            Module module = new Module();
+            module.setDBB_ID((BigDecimal) jsonModules.getJSONObject(i).opt("DBB_ID"));
+            module.setName((String) jsonModules.getJSONObject(i).opt("NAME"));
+            module.setSERVER_DBB_ID((BigDecimal) jsonModules.getJSONObject(i).opt("SERVER_DBB_ID"));
+            if (jsonModules.getJSONObject(i).opt("MODULES_INDEX") != null) {
+                module.setModules_Index((int) jsonModules.getJSONObject(i).opt("MODULES_INDEX"));
+            }
+            module.setValiduntil((Date) jsonModules.getJSONObject(i).opt("VALIDUNTIL"));
+            if (jsonModules.getJSONObject(i).opt("ISTRIAL") != null) {
+                module.setTrial((boolean) jsonModules.getJSONObject(i).opt("ISTRIAL"));
+            }
+
+            moduleList.add(module);
+        }
+        return moduleList;
+    }
+}
 
