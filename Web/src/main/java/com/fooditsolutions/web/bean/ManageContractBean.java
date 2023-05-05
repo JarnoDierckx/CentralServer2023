@@ -46,7 +46,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     private BigDecimal MonthlyFacturationAmount = BigDecimal.valueOf(0);
     private List<Server> unusedServers;
     private List<Server> allServers;
-    private String selectedServerID="";
+    private String selectedServerID = "";
 
     /**
      * Executes getContracts when generalContracts.xhtml is loaded.
@@ -54,26 +54,26 @@ public class ManageContractBean extends HttpServlet implements Serializable {
      * It also initializes the List used to sort items.
      */
     @PostConstruct
-    public void init(){
+    public void init() {
         try {
             PropertiesController.init();
             retrieveContracts();
-            clients=retrieveClients();
-            clientList= Arrays.asList(clients);
-            allHistory=retrieveHistory();
-            allServers=Arrays.asList(retrieveServers());
-            unusedServers=retrieveUnusedServers(allServers);
-            selectedClientList=new ArrayList<>();
+            clients = retrieveClients();
+            clientList = Arrays.asList(clients);
+            allHistory = retrieveHistory();
+            allServers = Arrays.asList(retrieveServers());
+            unusedServers = retrieveUnusedServers(allServers);
+            selectedClientList = new ArrayList<>();
 
         } catch (IOException | ServletException e) {
             throw new RuntimeException(e);
         }
         sortBy = new ArrayList<>();
-        for (Contract contract: contracts2){
-            if (contract.is_active && contract.getInvoice_frequency().equals("J") && contract.getTotal_price() != null){
-                yearlyFacturationAmount=yearlyFacturationAmount.add(contract.getTotal_price());
-            }else if (contract.is_active && contract.getInvoice_frequency().equals("M") && contract.getTotal_price() != null){
-                MonthlyFacturationAmount=MonthlyFacturationAmount.add(contract.getTotal_price());
+        for (Contract contract : contracts2) {
+            if (contract.is_active && contract.getInvoice_frequency().equals("J") && contract.getTotal_price() != null) {
+                yearlyFacturationAmount = yearlyFacturationAmount.add(contract.getTotal_price());
+            } else if (contract.is_active && contract.getInvoice_frequency().equals("M") && contract.getTotal_price() != null) {
+                MonthlyFacturationAmount = MonthlyFacturationAmount.add(contract.getTotal_price());
             }
         }
     }
@@ -86,8 +86,8 @@ public class ManageContractBean extends HttpServlet implements Serializable {
      */
     public void retrieveContracts() throws IOException, ServletException {
         System.out.println("Starting read in ManageContracts");
-        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract");
-        System.out.println("getContracts: "+response);
+        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract");
+        System.out.println("getContracts: " + response);
 
         byte[] jsonData = response.getBytes();
         ObjectMapper mapper = new ObjectMapper();
@@ -105,10 +105,10 @@ public class ManageContractBean extends HttpServlet implements Serializable {
                 contract.next_invoice_date = new Date(contract.next_invoice_date.getTime());
             }
         }
-        contracts= Arrays.asList(contracts2);
-        filteredContracts=new ArrayList<>();
-        for (Contract contract:contracts){
-            if (contract.is_active){
+        contracts = Arrays.asList(contracts2);
+        filteredContracts = new ArrayList<>();
+        for (Contract contract : contracts) {
+            if (contract.is_active) {
                 filteredContracts.add(contract);
             }
         }
@@ -116,28 +116,29 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     /**
      * retrieves all clients
+     *
      * @return maps all values from the api response into an array of Client objects
      */
     public Client[] retrieveClients() throws JsonProcessingException {
-        String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/clients");
+        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/clients");
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return mapper.readValue(response, Client[].class);
     }
 
-    public List<Server> retrieveUnusedServers(List<Server> serverList){
-        List<Server> unusedServers=new ArrayList<>();
-        for (Server server: serverList){
-            boolean isused=false;
-            for (Contract contract: contracts){
-                if (contract.getServer_ID() != null){
-                    if (contract.getServer_ID().equals(server.getID())){
-                        isused=true;
+    public List<Server> retrieveUnusedServers(List<Server> serverList) {
+        List<Server> unusedServers = new ArrayList<>();
+        for (Server server : serverList) {
+            boolean isused = false;
+            for (Contract contract : contracts) {
+                if (contract.getServer_ID() != null) {
+                    if (contract.getServer_ID().equals(server.getID())) {
+                        isused = true;
                         break;
                     }
                 }
             }
-            if (!isused){
+            if (!isused) {
                 unusedServers.add(server);
             }
         }
@@ -147,13 +148,14 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     /**
      * calls getContractDetails and puts the returned values in 'details'
+     *
      * @return redirects the user to the contractDetails.xhtml
      */
     public String ContractDetails() throws IOException {
-        detailList=new ArrayList<>();
-        details=getContractDetails(selectedItem.id,false);
-        detailList= Arrays.asList(details);
-        selectedHistory=addSelectedHistory(allHistory);
+        detailList = new ArrayList<>();
+        details = getContractDetails(selectedItem.id, false);
+        detailList = Arrays.asList(details);
+        selectedHistory = addSelectedHistory(allHistory);
         return "contractDetails.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
@@ -161,21 +163,22 @@ public class ManageContractBean extends HttpServlet implements Serializable {
      * Gets called when a user presses the search icon next to a contract entry.
      * It uses the id of the relevant contract to send a request forward for said contracts details.
      * The received value is then parsed to a string.
+     *
      * @return the string is then further parsed to the ContractDetail class as the return value
      */
     public ContractDetail[] getContractDetails(int id, boolean checkCS) throws IOException {
-        String responseContractDetails = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract/"+id+"/contractdetails?checkCS="+checkCS);
+        String responseContractDetails = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/" + id + "/contractdetails?checkCS=" + checkCS);
 
-        System.out.println("ResponseString: "+responseContractDetails);
+        System.out.println("ResponseString: " + responseContractDetails);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        return mapper.readValue(responseContractDetails,ContractDetail[].class);
+        return mapper.readValue(responseContractDetails, ContractDetail[].class);
     }
 
     public History[] retrieveHistory() throws JsonProcessingException {
-        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/history?full=true");
+        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/history?full=true");
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -183,7 +186,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     }
 
     public Server[] retrieveServers() throws JsonProcessingException {
-        String response =HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/server");
+        String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/server");
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -193,15 +196,16 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     /**
      * Creates a session object for the user and puts the object of the contract they selected in it, so it can be retrieved and used later on.
      * Also deletes any existing contract and Editcontracts attributes that may already exist in the session.
+     *
      * @return redirects the user to editContract.xhtml
      */
-    public String editContract(){
-        HttpSession session= (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-        if (session.getAttribute("contract")!=null) {
+    public String editContract() {
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        if (session.getAttribute("contract") != null) {
             //selectedItem = (Contract) session.getAttribute("contract");
             session.removeAttribute("contract");
         }
-        if (session.getAttribute("EditContractBean")!=null){
+        if (session.getAttribute("EditContractBean") != null) {
             session.removeAttribute("EditContractBean");
         }
         session.setAttribute("contract", selectedItem);
@@ -210,21 +214,22 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     /**
      * First checks for an existing createContractBean and deletes it.
+     *
      * @return redirects to the create contract page
      */
-    public String createContract(){
-        HttpSession session= (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-        if (session.getAttribute("createContractBean")!=null){
+    public String createContract() {
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        if (session.getAttribute("createContractBean") != null) {
             session.removeAttribute("createContractBean");
         }
-        session.setAttribute("allContracts",contracts2);
+        session.setAttribute("allContracts", contracts2);
 
-        if (!Objects.equals(selectedServerID, "")){
-            if (session.getAttribute("serverID")!=null) {
+        if (!Objects.equals(selectedServerID, "")) {
+            if (session.getAttribute("serverID") != null) {
                 session.removeAttribute("serverID");
             }
-            session.setAttribute("serverID",selectedServerID);
-            session.setAttribute("allContracts",contracts2);
+            session.setAttribute("serverID", selectedServerID);
+            session.setAttribute("allContracts", contracts2);
             return "createContract.xhtml?faces-redirect=true";
         }
 
@@ -246,14 +251,14 @@ public class ManageContractBean extends HttpServlet implements Serializable {
                 || filterContract.getClient().getName().toLowerCase().contains(filterText);
     }
 
-    public List<History> addSelectedHistory(History[] history){
-        List<History> selectedHistory=new ArrayList<>();
-        for (History h: history){
-            if (h.getAttribute_id()==selectedItem.getId()){
+    public List<History> addSelectedHistory(History[] history) {
+        List<History> selectedHistory = new ArrayList<>();
+        for (History h : history) {
+            if (h.getAttribute_id() == selectedItem.getId()) {
                 selectedHistory.add(h);
             }
-            for (ContractDetail detail: details){
-                if (detail.getID()==h.getAttribute_id()){
+            for (ContractDetail detail : details) {
+                if (detail.getID() == h.getAttribute_id()) {
                     selectedHistory.add(h);
                 }
             }
@@ -287,26 +292,39 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     public void updateActiveFilter() {
         // Update the filter value based on the value of the checkbox and what clients are selected
         if (!inActiveFilter) {
-            filteredContracts=new ArrayList<>();
-            for (Contract contract:contracts){
-                for (BigDecimal client:selectedClientList){
-                    if (contract.is_active && contract.getClient_id().equals(client)){
-                        filteredContracts.add(contract);
-                    }
+            filteredContracts = new ArrayList<>();
+            for (Contract contract : contracts) {
+                if (contract.is_active) {
+                    filteredContracts.add(contract);
                 }
 
             }
         } else {
-            filteredContracts=new ArrayList<>();
-            for (Contract contract:contracts){
-                for (BigDecimal client:selectedClientList){
-                    if (!contract.is_active && contract.getClient_id().equals(client)){
-                        filteredContracts.add(contract);
-                    }
-                }
+            filteredContracts = new ArrayList<>();
+            for (Contract contract : contracts) {
+                if (!contract.is_active) {
+                    filteredContracts.add(contract);
 
+                }
             }
         }
+
+        if (selectedClientList.size()!=0){
+            List<Contract> filteredContracts2=new ArrayList<>();
+            for (BigDecimal client:selectedClientList){
+                for (Contract contract:filteredContracts){
+                    if (contract.getClient_id().equals(client)){
+                        filteredContracts2.add(contract);
+                    }
+                }
+            }
+            filteredContracts=filteredContracts2;
+        }
+    }
+
+    public void clearClientList(){
+        selectedClientList.clear();
+        updateActiveFilter();
     }
 
 

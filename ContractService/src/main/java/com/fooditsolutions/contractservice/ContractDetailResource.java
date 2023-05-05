@@ -23,30 +23,34 @@ public class ContractDetailResource {
 
     /**
      * The endpoint to get the details of a specific contract.
+     *
      * @param contractID is the ID of the contract in question and is sends forward along with the request in the url.
      * @return takes the received value from the datastoreService, turns it into more usable information and sends it back.
      */
     @GET
-    @Path("/{ContractID}/{calculate}")
+    @Path("/{ContractID}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public List<ContractDetail> getContractDetails(@PathParam("ContractID") String contractID, @PathParam("calculate") boolean calculate) throws IOException {
-        String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail/"+ contractID +"?datastoreKey="+ PropertiesController.getProperty().getDatastore());
+    public List<ContractDetail> getContractDetails(@PathParam("ContractID") String contractID) throws IOException {
+        String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contractDetail/" + contractID + "?datastoreKey=" + PropertiesController.getProperty().getDatastore());
         //System.out.println("getContractDetails: "+responseString);
 
         List<ContractDetail> contractDetails = ContractDetailController.createContractDetailInformation(responseString);
-        if (calculate){
-            List<ContractDetail> newContractDetails= new ArrayList<>();
-            for (ContractDetail contractDetail: contractDetails){
-                contractDetail=ContractDetailController.calculate(contractDetail);
-                newContractDetails.add(contractDetail);
-            }
-            return newContractDetails;
+        List<ContractDetail> newContractDetails = new ArrayList<>();
+        for (ContractDetail contractDetail : contractDetails) {
+            contractDetail = ContractDetailController.calculate(contractDetail);
+            newContractDetails.add(contractDetail);
         }
-
-
-
-        return contractDetails;
+        return newContractDetails;
+    }
+    @GET
+    @Path("/noCalc/{ContractID}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("application/json")
+    public String getContractDetailsNoCalculate(@PathParam("ContractID") String contractID){
+        String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contractDetail/" + contractID + "?datastoreKey=" + PropertiesController.getProperty().getDatastore());
+        //System.out.println("getContractDetails: "+responseString);
+        return responseString;
     }
 
     @GET
@@ -54,11 +58,11 @@ public class ContractDetailResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     public ContractDetail getContractDetail(@PathParam("ContractDetailID") int contractDetailID) throws IOException {
-        String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail/"+ "singleDetail/"+ contractDetailID +"?datastoreKey="+ PropertiesController.getProperty().getDatastore());
-        List<ContractDetail> contractDetails=ContractDetailController.createContractDetailInformation(responseString);
-        List<ContractDetail> newContractDetails= new ArrayList<>();
-        for (ContractDetail contractDetail: contractDetails){
-            contractDetail=ContractDetailController.calculate(contractDetail);
+        String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contractDetail/" + "singleDetail/" + contractDetailID + "?datastoreKey=" + PropertiesController.getProperty().getDatastore());
+        List<ContractDetail> contractDetails = ContractDetailController.createContractDetailInformation(responseString);
+        List<ContractDetail> newContractDetails = new ArrayList<>();
+        for (ContractDetail contractDetail : contractDetails) {
+            contractDetail = ContractDetailController.calculate(contractDetail);
             newContractDetails.add(contractDetail);
         }
 
@@ -74,32 +78,32 @@ public class ContractDetailResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     public void updateContractDetails(ContractDetail[] contractDetails) throws IOException, IllegalAccessException {
-        List<ContractDetail> detailsToUpdate=new ArrayList<>();
-        List<ContractDetail> detailsToCreate=new ArrayList<>();
-        for (int i=0;i<contractDetails.length;i++){
-            if (contractDetails[i].getWhatToDo() !=null){
-                if (contractDetails[i].getWhatToDo().contains("U")){
+        List<ContractDetail> detailsToUpdate = new ArrayList<>();
+        List<ContractDetail> detailsToCreate = new ArrayList<>();
+        for (int i = 0; i < contractDetails.length; i++) {
+            if (contractDetails[i].getWhatToDo() != null) {
+                if (contractDetails[i].getWhatToDo().contains("U")) {
                     detailsToUpdate.add(contractDetails[i]);
-                }else if(contractDetails[i].getWhatToDo().contains("C")){
+                } else if (contractDetails[i].getWhatToDo().contains("C")) {
                     detailsToCreate.add(contractDetails[i]);
                 } else if (contractDetails[i].getWhatToDo().contains("D")) {
                     deleteContractDetails(contractDetails[i].getID());
                 }
             }
         }
-        if (detailsToCreate.size()>0){
-            ContractDetail[] detailsToCreateArray=new ContractDetail[detailsToCreate.size()];
+        if (detailsToCreate.size() > 0) {
+            ContractDetail[] detailsToCreateArray = new ContractDetail[detailsToCreate.size()];
             createContractDetails(detailsToCreate.toArray(detailsToCreateArray));
         }
 
-        if (detailsToUpdate.size()>0){
-            ContractDetail[] originalContractDetails=new ContractDetail[detailsToUpdate.size()];
+        if (detailsToUpdate.size() > 0) {
+            ContractDetail[] originalContractDetails = new ContractDetail[detailsToUpdate.size()];
             ContractDetail[] detailDifferences = new ContractDetail[detailsToUpdate.size()];
-            List<String> historyDesc=new ArrayList<>();
-            String desc="";
+            List<String> historyDesc = new ArrayList<>();
+            String desc = "";
 
-            for (int i=0;i<detailsToUpdate.size();i++){
-                originalContractDetails[i]=getContractDetail(detailsToUpdate.get(i).getID());
+            for (int i = 0; i < detailsToUpdate.size(); i++) {
+                originalContractDetails[i] = getContractDetail(detailsToUpdate.get(i).getID());
             }
 
             for (int i = 0; i < detailsToUpdate.size(); i++) {
@@ -117,23 +121,23 @@ public class ContractDetailResource {
                             Object value1 = field.get(originalContractDetail);
                             Object value2 = field.get(detailsToUpdate.get(i));
                             if (value2 != null && !field.getName().equals("moduleId") && !field.getName().equals("whatToDo")) {
-                                if (value1==null || !value1.equals(value2)) {
+                                if (value1 == null || !value1.equals(value2)) {
                                     if (newDetail) {
                                         field.set(detailDifferences[i], value2);
                                     } else {
                                         field.set(detailDifferences[i], value2);
                                     }
-                                    desc+=field.getName()+": "+value1+" to "+value2+", ";
+                                    desc += field.getName() + ": " + value1 + " to " + value2 + ", ";
                                 }
                             }
                         }
                     }
                 }
-                if (!desc.equals("")){
-                    desc=desc.substring(0,desc.length()-2);
+                if (!desc.equals("")) {
+                    desc = desc.substring(0, desc.length() - 2);
                     historyDesc.add(desc);
                 }
-                desc="";
+                desc = "";
             }
 
             //Creating the ObjectMapper object
@@ -143,9 +147,9 @@ public class ContractDetailResource {
             String jsonString = mapper.writeValueAsString(detailDifferences);
             //System.out.println(jsonString);
 
-            HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
+            HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contractDetail?datastoreKey=" + PropertiesController.getProperty().getDatastore(), jsonString);
 
-            for (int i=0;i<detailDifferences.length;i++){
+            for (int i = 0; i < detailDifferences.length; i++) {
                 History history = new History();
                 history.setAttribute("contractDetail");
                 history.setAttribute_id(detailDifferences[i].getID());
@@ -176,10 +180,10 @@ public class ContractDetailResource {
         String jsonString = mapper.writeValueAsString(contractDetails);
         //.out.println(jsonString);
 
-        String responseString=HttpController.httpPost(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail?datastoreKey="+ PropertiesController.getProperty().getDatastore(), jsonString);
+        String responseString = HttpController.httpPost(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contractDetail?datastoreKey=" + PropertiesController.getProperty().getDatastore(), jsonString);
         //System.out.println(responseString);
 
-        int[] ID=mapper.readValue(responseString, int[].class);
+        int[] ID = mapper.readValue(responseString, int[].class);
         for (int j : ID) {
             History history = new History();
             history.setAttribute("contractDetail");
@@ -192,9 +196,10 @@ public class ContractDetailResource {
         }
 
     }
+
     @DELETE
     @Path("/{id}")
     public void deleteContractDetails(@PathParam("id") int id) throws IOException {
-        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contractDetail/"+id+"?datastoreKey="+PropertiesController.getProperty().getDatastore());
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contractDetail/" + id + "?datastoreKey=" + PropertiesController.getProperty().getDatastore());
     }
 }

@@ -39,7 +39,8 @@
                             <f:selectItems var="client" value="#{ManageContractBean.clientList}"  itemValue="#{client.DBB_ID}" itemLabel="#{client.name}"/>
                         </p:selectManyMenu>
 
-                        <p:commandButton value="Filter clients" action="#{ManageContractBean.updateActiveFilter()}" update="generalTable"/><br/>
+                        <p:commandButton value="Filter clients" action="#{ManageContractBean.updateActiveFilter()}" update="generalTable"/>
+                        <p:commandButton value="clear client filter" action="#{ManageContractBean.clearClientList()}" update="generalTable"/><br/>
                     </p:panel>
 
 

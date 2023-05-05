@@ -29,7 +29,7 @@ import java.util.Objects;
 public class ContractResource {
     @PostConstruct
     public void init() {
-        System.out.println("DataStoreService contracts");
+        //System.out.println("DataStoreService contracts");
     }
 
 

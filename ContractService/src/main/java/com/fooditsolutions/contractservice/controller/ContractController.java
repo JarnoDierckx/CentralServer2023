@@ -44,7 +44,7 @@ public class ContractController {
                         break;
                     }
                 }
-            }
+            }else if (Objects.equals(contract.getSource(), "M"))contract.is_active=true;
 
             contract.setClient(clients.get(contract.getClient_id()));
             //contract.setName((String) jsonArray.getJSONObject(i).get("name"));

@@ -56,6 +56,7 @@ public class ContractDetailController {
             BigDecimal calculation1=(BigDecimal.valueOf(contractDetail.getJgr()).divide(BigDecimal.valueOf(100),2, RoundingMode.HALF_UP));
             BigDecimal calculation2=contractDetail.getPurchase_price().multiply(calculation1);
             contractDetail.setJgr_not_indexed(calculation2);
+            contractDetail.setWhatToDo("U");
             ContractResource contractResource=new ContractResource();
             Contract contract = contractResource.getContract(contractDetail.getContract_ID());
             if (contract.getIndex_last_invoice() != null && contractDetail.getIndex_Start() != null){

@@ -94,11 +94,11 @@ public class ContractResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     public List<ContractDetail> getContractDetails(@PathParam("ContractID") String contractID,
-                                                   @QueryParam("checkCS") boolean checkCS, @QueryParam("calculate") boolean calculate) throws IOException, ServletException {
+                                                   @QueryParam("checkCS") boolean checkCS) throws IOException, ServletException {
         Contract contract = getContract(contractID);
 
         //System.out.println("Starting read in ContractResource");
-        String responseContractDetails = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail/" + contractID + "/" + calculate);
+        String responseContractDetails = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail/" + contractID);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -209,7 +209,7 @@ public class ContractResource {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        List<ContractDetail> contractDetail = getContractDetails(String.valueOf(contractID), false, true);
+        List<ContractDetail> contractDetail = getContractDetails(String.valueOf(contractID), false);
 
         String responseContract = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice() + "/contract/" + contractID);
         byte[] jsonData2 = responseContract.getBytes();
@@ -242,7 +242,7 @@ public class ContractResource {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        List<ContractDetail> contractDetail = getContractDetailsWithContract(contract, false, false);
+        List<ContractDetail> contractDetail = getContractDetailsWithContract(contract, false);
 
         /*String responseModule = HttpController.httpGet(PropertiesController.getProperty().getBase_url_moduleservice() + "/module?client=" + contract.client.getDBB_ID());
         byte[] jsonData3 = responseModule.getBytes();
@@ -273,10 +273,10 @@ public class ContractResource {
     }
 
     public List<ContractDetail> getContractDetailsWithContract(Contract contract,
-                                                               @QueryParam("checkCS") boolean checkCS, @QueryParam("calculate") boolean calculate) throws IOException, ServletException {
+                                                               @QueryParam("checkCS") boolean checkCS) throws IOException, ServletException {
 
         //System.out.println("Starting read in ContractResource");
-        String responseContractDetails = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail/" + contract.getId() + "/" + calculate);
+        String responseContractDetails = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail/noCalc/" + contract.getId());
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
