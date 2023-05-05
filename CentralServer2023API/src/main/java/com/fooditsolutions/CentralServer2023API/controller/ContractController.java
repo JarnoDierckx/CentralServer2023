@@ -8,6 +8,12 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public class ContractController {
+    /**
+     * Compares a list of contractDetail and module objects connected to a certain Contract.
+     * All modules that aren't already a detail object are added to the list so they can be displayed as empty objects on the front end.
+     * @param contractDetails List of a contracts associated contractDetail objects.
+     * @param modules List of modules bound to a contracts server
+     */
     public static List<CompareContractCS> checkContractCs(List<ContractDetail> contractDetails, List<Module> modules){
         HashMap<BigDecimal,ContractDetail> cContractDetail = new HashMap();
         HashMap<BigDecimal,Module> cModules = new HashMap();
@@ -47,6 +53,9 @@ public class ContractController {
 
     }
 
+    /**
+     * Used to check if a contract has modules connected to it that don't yet have a contractDetail object.
+     */
     public static boolean checkForEmptyModule(List<ContractDetail> contractDetails, List<Module> modules){
         HashMap<BigDecimal,ContractDetail> cContractDetail = new HashMap();
 
@@ -63,8 +72,6 @@ public class ContractController {
             }
 
         }
-
         return false;
-
     }
 }

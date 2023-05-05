@@ -54,7 +54,6 @@ public class EditContractBean implements Serializable {
      * The function creates a session object, checks if one already exists and then retrieves the Contract object created before this class and the webpage it manages
      * where loaded. The Contract object is then put into updatingContract so that editContract.xhtml can put it into a form.
      * updatingContract's details are then also retrieved from the ManageContract class and put into updatingContractDetails before also being used in a form.
-     * updatingContract can probably be received in the same way.
      * It also retrieves the stored ID if the user was redirected after creating a contract to then retrieve the contract object that was just made.
      */
     @PostConstruct
@@ -62,6 +61,8 @@ public class EditContractBean implements Serializable {
         System.out.println("Edit contract");
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
                 .getExternalContext().getSession(false);
+        //checks for existing session and retrieves contract
+        //if there is no contract stored then it takes the ID and quantity and removes them from the session.
         if (session != null) {
             if (session.getAttribute("contract") != null) {
                 selectedContract = (Contract) session.getAttribute("contract");
@@ -86,8 +87,11 @@ public class EditContractBean implements Serializable {
             e.printStackTrace();
         }
         ManageContractBean manageContractBean = new ManageContractBean();
+        //get the details for this contract
         updatingContractDetails = manageContractBean.getContractDetails(updatingContract.getId(), true);
         counter = 0;
+        //looks for modules from CS, and gives them a negative ID.
+        //if the user was redirected to the edit page after creating a contract, the modules are given basic values from when the contract was created.
         for (ContractDetail detail : updatingContractDetails) {
             if (detail.getID() == 0) {
                 counter--;
@@ -175,7 +179,7 @@ public class EditContractBean implements Serializable {
     }
 
     /**
-     * Takes updatingContract and parses it into a json string
+     * Takes updatingContract and parses it into a json string after updating the total price.
      * An api call is then made to CentralServer2023API with the json string, so it can update the original Contract.
      */
     public void updateContract() throws IOException {
@@ -332,6 +336,10 @@ public class EditContractBean implements Serializable {
         updatingContractDetailsList = newList;
     }
 
+    /**
+     * if a user presses on the delete button next to a module and it is an empty detail, the row is removed.
+     * otherwise the user has the chance to undo their decision. Rows don't get removed until after the contract has been saved.
+     */
     public void pressDelete() {
         FacesContext context = FacesContext.getCurrentInstance();
         ContractDetail editedDetail = context.getApplication().evaluateExpressionGet(context, "#{detail}", ContractDetail.class);
@@ -351,6 +359,9 @@ public class EditContractBean implements Serializable {
         }
     }
 
+    /**
+     *removes the detail from the list of details
+     */
     public void removeRow() {
         FacesContext context = FacesContext.getCurrentInstance();
         ContractDetail editedDetail = context.getApplication().evaluateExpressionGet(context, "#{detail}", ContractDetail.class);
@@ -362,12 +373,18 @@ public class EditContractBean implements Serializable {
         }
     }
 
+    /**
+     * updates the value of 'Index last invoice' based on the last invoice date and base year index.
+     */
     public void updateCPILastInvoice() {
         if (updatingContract.getLast_invoice_date() != null && updatingContract.getBase_index_year() > 0) {
             updatingContract.setIndex_last_invoice(updateCPI(updatingContract.getLast_invoice_date(),updatingContract.getBase_index_year()));
         }
     }
 
+    /**
+     * updates the starting index value of a specific detail object.
+     */
     public void updateCPIContractDetail(int id) {
         for (ContractDetail detail: updatingContractDetailsList){
             if (detail.getID()==id){
@@ -376,6 +393,9 @@ public class EditContractBean implements Serializable {
         }
     }
 
+    /**
+     * gives a cpi based on the values given to the function.
+     */
     public BigDecimal updateCPI(Date startDate, int baseYear) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startDate);

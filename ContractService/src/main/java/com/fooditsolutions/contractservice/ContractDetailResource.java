@@ -201,5 +201,16 @@ public class ContractDetailResource {
     @Path("/{id}")
     public void deleteContractDetails(@PathParam("id") int id) throws IOException {
         HttpController.httpDelete(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contractDetail/" + id + "?datastoreKey=" + PropertiesController.getProperty().getDatastore());
+
+        History history = new History();
+        history.setAttribute("contractDetail");
+        history.setAttribute_id(id);
+        history.setAction(Action.DELETE);
+        history.setActor("Temp");
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        String jsonString = mapper.writeValueAsString(history);
+        HttpController.httpPost("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api" + "/history", jsonString);
     }
 }

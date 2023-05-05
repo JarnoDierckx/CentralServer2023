@@ -34,6 +34,7 @@ public class ContractResource {
 
     /**
      * sends forward GET request for all contracts.
+     * Makes a call for all modules a servers and then checks for each contract if they have modules bound to them that don't yet have a contractDetail object.
      * The recieved value is then returned back.
      */
     @GET
@@ -71,6 +72,9 @@ public class ContractResource {
 
     }
 
+    /**
+     * makes a call for a single contract based on ID and returns it.
+     */
     @GET
     @Path("/{contractId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -87,7 +91,8 @@ public class ContractResource {
 
     /**
      * sends forward GET request for the contract details of whatever ID is send along.
-     * The recieved value is then returned back.
+     * It then checks if the associated contract has modules that don't yet have a contractDetail object and adds them to the list.
+     * The list is then returned back.
      */
     @GET
     @Path("/{ContractID}/contractdetails")
@@ -183,6 +188,8 @@ public class ContractResource {
         return HttpController.httpPost(PropertiesController.getProperty().getBase_url_contractservice() + "/contract", jsonString);
     }
 
+    /**
+     */
     @Path("/detail")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -237,6 +244,9 @@ public class ContractResource {
         HttpController.httpDelete(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail/" + id);
     }
 
+    /**
+     * Receives a contract object and checks if it has any associated modules that don't yet have a contractDetail object.
+     */
     public boolean checkForEmptyModules(Contract contract) throws IOException, ServletException {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -272,6 +282,9 @@ public class ContractResource {
 
     }
 
+    /**
+     * Calls for the contractDetails from the given contract.
+     */
     public List<ContractDetail> getContractDetailsWithContract(Contract contract,
                                                                @QueryParam("checkCS") boolean checkCS) throws IOException, ServletException {
 

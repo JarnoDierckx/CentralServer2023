@@ -9,6 +9,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import java.math.BigDecimal;
 
+/**
+ * currently redundant, was used for an autoComplete that never worked
+ */
 @Named
 @FacesConverter(value = "clientConverter", managed = true)
 public class clientConverter implements Converter<Client> {

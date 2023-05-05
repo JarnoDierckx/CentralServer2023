@@ -49,9 +49,9 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     private String selectedServerID = "";
 
     /**
-     * Executes getContracts when generalContracts.xhtml is loaded.
-     * This makes sure all contracts are on the page when it is loaded.
-     * It also initializes the List used to sort items.
+     * Executed when the page loads.
+     * Calls for all the needed data and puts it in the correct variables.
+     * Also sorts between active and inactive contracts.
      */
     @PostConstruct
     public void init() {
@@ -126,6 +126,10 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return mapper.readValue(response, Client[].class);
     }
 
+    /**
+     * loops through the given list of servers and takes out those that aren't used in any contracts.
+     * @return A list of unused server objects
+     */
     public List<Server> retrieveUnusedServers(List<Server> serverList) {
         List<Server> unusedServers = new ArrayList<>();
         for (Server server : serverList) {
@@ -147,7 +151,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     }
 
     /**
-     * calls getContractDetails and puts the returned values in 'details'
+     * calls for all the information needed on the contractDetails page and puts them in the correct variables.
      *
      * @return redirects the user to the contractDetails.xhtml
      */
@@ -195,7 +199,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     /**
      * Creates a session object for the user and puts the object of the contract they selected in it, so it can be retrieved and used later on.
-     * Also deletes any existing contract and Editcontracts attributes that may already exist in the session.
+     * Also deletes any existing contract and EditContractBean attributes that may already exist in the session.
      *
      * @return redirects the user to editContract.xhtml
      */
@@ -213,7 +217,8 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     }
 
     /**
-     * First checks for an existing createContractBean and deletes it.
+     * First checks for an existing createContractBean and serverID and deletes it.
+     * Then adds new version of those items to the session
      *
      * @return redirects to the create contract page
      */
@@ -251,6 +256,9 @@ public class ManageContractBean extends HttpServlet implements Serializable {
                 || filterContract.getClient().getName().toLowerCase().contains(filterText);
     }
 
+    /**
+     * Returns a list of history objects depending on the selectedItem variable.
+     */
     public List<History> addSelectedHistory(History[] history) {
         List<History> selectedHistory = new ArrayList<>();
         for (History h : history) {
@@ -287,7 +295,8 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     }
 
     /**
-     * Fills the list used in the datatable to determine if only active/inactive contracts should be shown
+     * Fills the list used in the datatable to determine if only active/inactive contracts should be shown.
+     * If the user is filtering on specific clients, it will also only add contracts from those clients to the list.
      */
     public void updateActiveFilter() {
         // Update the filter value based on the value of the checkbox and what clients are selected
@@ -327,7 +336,10 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         updateActiveFilter();
     }
 
-
+    /**
+     * gives autocomplete suggestion when a user types in the textbar of a p:autocomplete
+     * currently redundant
+     */
     public List<Client> completeAutoComplete(String query) {
         // Filter the list of suggestion objects based on the user's input
         List<Client> filteredItems = new ArrayList<>();

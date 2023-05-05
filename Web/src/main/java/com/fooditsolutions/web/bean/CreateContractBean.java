@@ -167,6 +167,9 @@ public class CreateContractBean implements Serializable {
         }
     }
 
+    /**
+     * checks if the entered contract number is unique or not.
+     */
     public void checkContract_NumberUnique(){
         for (Contract contract: allContracts){
             if (contract.getContract_number().equals(newContract.getContract_number())){
