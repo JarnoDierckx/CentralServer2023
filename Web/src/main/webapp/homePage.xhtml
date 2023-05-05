@@ -9,9 +9,26 @@
     <title>Home</title>
 </h:head>
 <h:body>
+    <h:outputStylesheet library="css" name="home.css"/>
     <ui:include src="header.xhtml"/>
-    <h:form>
-        <p:commandButton value="Contracts" action="#{LandingPageBean.redirectToGeneralContracts}"/>
-    </h:form>
+    <section class="homeBody">
+        <section class="homeSection">
+            <h:form styleClass="homeForm">
+                <p:commandButton styleClass="homeButton" value="Contracts" action="#{LandingPageBean.redirectToGeneralContracts}"/>
+            </h:form>
+        </section>
+
+        <section class="homeSection">
+            <h:form styleClass="homeForm">
+                <p:commandButton styleClass="homeButton" value="Central Server" disabled="true"/>
+            </h:form>
+        </section>
+
+        <section class="homeSection">
+            <h:form styleClass="homeForm">
+                <p:commandButton styleClass="homeButton" value="Users" disabled="true"/>
+            </h:form>
+        </section>
+    </section>
 </h:body>
 </html>

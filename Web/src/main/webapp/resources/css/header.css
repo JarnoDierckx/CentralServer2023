@@ -1,16 +1,19 @@
 #headerDiv {
-    padding: 5px;
     display: flex;
-    flex-direction: row;
+    align-items: center;
     background-color: grey;
+    color: #fff;
+    padding: 10px;
 
     /*position: fixed;
     top: 0;
     width: 100%;
     z-index: 9999;*/
 }
-.headerButton {
-    margin: 10px;
-    align-items: center;
-    color: green;
+
+.headerButton{
+    margin-left: 25px;
+    margin-right: 25px;
+    padding-right: 25px;
+    padding-left: 25px;
 }

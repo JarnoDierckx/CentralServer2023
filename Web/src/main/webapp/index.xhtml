@@ -9,15 +9,16 @@
 <h:head>
     <title>Login</title>
 </h:head>
-<h:body>
-    <h:form>
-        <h:outputLabel value="Username/Email" />
-        <h:inputText id="email" value="#{HandleLogin.email}"/><br/>
+<h:body styleClass="indexBody">
+    <h:outputStylesheet library="css" name="myStyles.css"/>
+    <h:form styleClass="indexForm">
+        <h:outputLabel value="Username/Email" styleClass="indexLabel"/>
+        <h:inputText id="email" value="#{HandleLogin.email}" styleClass="indexInput"/><br/>
 
-        <h:outputLabel value="Password" />
-        <h:inputSecret id="password" value="#{HandleLogin.password}"/><br/>
+        <h:outputLabel value="Password" styleClass="indexLabel"/>
+        <h:inputSecret id="password" value="#{HandleLogin.password}" styleClass="indexInput"/><br/>
 
-    <h:commandButton value="Log in" action="#{HandleLogin.PassCredentials}" disabled="#{HandleLogin.timedOut}">
+    <h:commandButton styleClass="indexButton" value="Log in" action="#{HandleLogin.PassCredentials}" disabled="#{HandleLogin.timedOut}">
         <f:ajax execute="@form" render="error"/>
     </h:commandButton><br/>
     </h:form>

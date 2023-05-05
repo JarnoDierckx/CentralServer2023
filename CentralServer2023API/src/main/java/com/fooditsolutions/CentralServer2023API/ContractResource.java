@@ -107,7 +107,7 @@ public class ContractResource {
 
         List<ContractDetail> contractDetailList = new ArrayList<>(Arrays.asList(contractDetails));
 
-        if (checkCS) {
+        if (checkCS && contract.getSource().equals("CS")) {
             List<CompareContractCS> compareContractCSList = getCSDif(contract.getId());
             for (CompareContractCS com : compareContractCSList) {
                 if (com.getModuleSyncStatus() == ModuleCompare.CENTRALSERVER) {
