@@ -41,12 +41,16 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     private List<History> selectedHistory;
     private Client[] clients;
     private List<Client> clientList;
+    private List<Client> listClientsWithContracts;
     private List<BigDecimal> selectedClientList;
     private BigDecimal yearlyFacturationAmount = BigDecimal.valueOf(0);
     private BigDecimal MonthlyFacturationAmount = BigDecimal.valueOf(0);
+    private BigDecimal yearlyShownCustomers=BigDecimal.valueOf(0);
+    private BigDecimal monthlyShownCustomers=BigDecimal.valueOf(0);
     private List<Server> unusedServers;
     private List<Server> allServers;
     private String selectedServerID = "";
+    private boolean renderFilters=true;
 
     /**
      * Executed when the page loads.
@@ -64,6 +68,8 @@ public class ManageContractBean extends HttpServlet implements Serializable {
             allServers = Arrays.asList(retrieveServers());
             unusedServers = retrieveUnusedServers(allServers);
             selectedClientList = new ArrayList<>();
+            updateFacturationShownCustomers();
+            onlyClientsWithContracts();
 
         } catch (IOException | ServletException e) {
             throw new RuntimeException(e);
@@ -148,6 +154,21 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         }
 
         return unusedServers;
+    }
+
+    public void onlyClientsWithContracts(){
+        listClientsWithContracts=new ArrayList<>();
+        for (Client client: clientList){
+            int counter=0;
+            for (Contract contract: filteredContracts){
+                if (contract.getClient_id().equals(client.getDBB_ID())){
+                    counter++;
+                }
+            }
+            if (counter>0){
+                listClientsWithContracts.add(client);
+            }
+        }
     }
 
     /**
@@ -329,6 +350,20 @@ public class ManageContractBean extends HttpServlet implements Serializable {
             }
             filteredContracts=filteredContracts2;
         }
+        updateFacturationShownCustomers();
+        onlyClientsWithContracts();
+    }
+
+    public void updateFacturationShownCustomers(){
+        yearlyShownCustomers= BigDecimal.valueOf(0);
+        monthlyShownCustomers= BigDecimal.valueOf(0);
+        for (Contract contract:filteredContracts){
+            if (contract.getInvoice_frequency().equals("J") && contract.getTotal_price()!=null){
+                yearlyShownCustomers=yearlyShownCustomers.add(contract.getTotal_price());
+            }else if (contract.getInvoice_frequency().equals("M") && contract.getTotal_price()!=null){
+                monthlyShownCustomers=monthlyShownCustomers.add(contract.getTotal_price());
+            }
+        }
     }
 
     public void clearClientList(){
@@ -461,5 +496,37 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     public void setSelectedServerID(String selectedServerID) {
         this.selectedServerID = selectedServerID;
+    }
+
+    public boolean isRenderFilters() {
+        return renderFilters;
+    }
+
+    public void setRenderFilters(boolean renderFilters) {
+        this.renderFilters = renderFilters;
+    }
+
+    public BigDecimal getYearlyShownCustomers() {
+        return yearlyShownCustomers;
+    }
+
+    public void setYearlyShownCustomers(BigDecimal yearlyShownCustomers) {
+        this.yearlyShownCustomers = yearlyShownCustomers;
+    }
+
+    public BigDecimal getMonthlyShownCustomers() {
+        return monthlyShownCustomers;
+    }
+
+    public void setMonthlyShownCustomers(BigDecimal monthlyShownCustomers) {
+        this.monthlyShownCustomers = monthlyShownCustomers;
+    }
+
+    public List<Client> getListClientsWithContracts() {
+        return listClientsWithContracts;
+    }
+
+    public void setListClientsWithContracts(List<Client> listClientsWithContracts) {
+        this.listClientsWithContracts = listClientsWithContracts;
     }
 }

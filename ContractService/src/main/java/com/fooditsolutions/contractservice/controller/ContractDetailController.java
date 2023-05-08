@@ -55,16 +55,28 @@ public class ContractDetailController {
         if (contractDetail.getPurchase_price() != null && contractDetail.getJgr() > 0){
             BigDecimal calculation1=(BigDecimal.valueOf(contractDetail.getJgr()).divide(BigDecimal.valueOf(100),2, RoundingMode.HALF_UP));
             BigDecimal calculation2=contractDetail.getPurchase_price().multiply(calculation1);
-            contractDetail.setJgr_not_indexed(calculation2);
-            contractDetail.setWhatToDo("U");
+            calculation2=calculation2.setScale(2,RoundingMode.HALF_EVEN);
+            if(contractDetail.getJgr_not_indexed()!=null && !contractDetail.getJgr_not_indexed().equals(calculation2)){
+                contractDetail.setJgr_not_indexed(calculation2);
+                contractDetail.setWhatToDo("U");
+            }else if (contractDetail.getJgr_not_indexed()==null){
+                contractDetail.setJgr_not_indexed(calculation2);
+                contractDetail.setWhatToDo("U");
+            }
             ContractResource contractResource=new ContractResource();
             Contract contract = contractResource.getContract(contractDetail.getContract_ID());
             if (contract.getIndex_last_invoice() != null && contractDetail.getIndex_Start() != null){
                 BigDecimal calculation3=(contractDetail.getJgr_not_indexed().multiply(contract.index_last_invoice));
                 BigDecimal calculation4=calculation3.divide(contractDetail.getIndex_Start(), RoundingMode.HALF_UP);
-                contractDetail.setJgr_indexed(calculation4.setScale(2, RoundingMode.HALF_EVEN));
+                calculation4=calculation4.setScale(2, RoundingMode.HALF_EVEN);
+                if (contractDetail.getJgr_indexed() != null && !contractDetail.getJgr_indexed().equals(calculation4)){
+                    contractDetail.setJgr_indexed(calculation4);
+                    contractDetail.setWhatToDo("U");
+                }else if (contractDetail.getJgr_indexed() == null){
+                    contractDetail.setJgr_indexed(calculation4);
+                    contractDetail.setWhatToDo("U");
+                }
             }
-            contractDetail.setJgr_not_indexed(calculation2.setScale(2,RoundingMode.HALF_EVEN));
         }
 
 

@@ -17,39 +17,48 @@
 
     <h:form>
         <div class="card">
+            <section>
+                <p:outputLabel value="show filters:"/>
+                <p:selectBooleanCheckbox value="#{ManageContractBean.renderFilters}">
+                    <p:ajax event="change" update="generalTable"/>
+                </p:selectBooleanCheckbox>
+            </section>
 
             <p:dataTable id="generalTable" var="contract" value="#{ManageContractBean.filteredContracts}" widgetVar="contractTable" globalFilterFunction="#{ManageContractBean.globalFilterFunction}" sortMode="single">
+
                 <f:facet name="header">
-                    <div class="flex justify-content-end">
-                        <p:inputText id="globalFilter" onkeyup="PF('contractTable').filter()" style="width:300px"
-                                     placeholder="Search contract numbers and clients" />
-                    </div>
+                    <p:panel rendered="#{ManageContractBean.renderFilters}">
+                        <div class="flex justify-content-end">
+                            <p:inputText id="globalFilter" onkeyup="PF('contractTable').filter()" style="width:300px"
+                                         placeholder="Search contract numbers and clients" />
+                        </div>
 
-                    <p:outputLabel value="show inactive contracts:"/>
-                    <p:selectBooleanCheckbox value="#{ManageContractBean.inActiveFilter}">
-                        <p:ajax update="generalTable" listener="#{ManageContractBean.updateActiveFilter}" />
-                    </p:selectBooleanCheckbox> <br/>
-
-
-                    <p:panel>
-                        <p:outputLabel value="Filter one or more clients:"/><br/>
-
-                        <p:selectManyMenu value="#{ManageContractBean.selectedClientList}" valueChangeListener="#{ManageContractBean.updateActiveFilter()}">
-                            <f:selectItem itemLabel="select client" itemValue="" noSelectionOption="true" />
-                            <f:selectItems var="client" value="#{ManageContractBean.clientList}"  itemValue="#{client.DBB_ID}" itemLabel="#{client.name}"/>
-                        </p:selectManyMenu>
-
-                        <p:commandButton value="Filter clients" action="#{ManageContractBean.updateActiveFilter()}" update="generalTable"/>
-                        <p:commandButton value="clear client filter" action="#{ManageContractBean.clearClientList()}" update="generalTable"/><br/>
-                    </p:panel>
+                        <p:outputLabel value="show inactive contracts:"/>
+                        <p:selectBooleanCheckbox value="#{ManageContractBean.inActiveFilter}">
+                            <p:ajax update="generalTable" listener="#{ManageContractBean.updateActiveFilter}" />
+                        </p:selectBooleanCheckbox> <br/>
 
 
-                    <p:panel  rendered="#{ManageContractBean.unusedServers.size() gt 0}">
-                        <p:selectOneMenu value="#{ManageContractBean.selectedServerID}">
-                            <f:selectItem itemLabel="select server ID" itemValue="" noSelectionOption="true" />
-                            <f:selectItems value="#{ManageContractBean.unusedServers}" var="S" itemLabel="#{S.ID}" itemValue="#{S.ID}"/>
-                        </p:selectOneMenu>
-                        <p:commandButton value="create contract from server id" action="#{ManageContractBean.createContract()}"/><br/>
+                        <p:panel>
+                            <p:outputLabel value="Filter one or more clients:"/><br/>
+
+                            <p:selectManyMenu value="#{ManageContractBean.selectedClientList}" valueChangeListener="#{ManageContractBean.updateActiveFilter()}">
+                                <f:selectItem itemLabel="select client" itemValue="" noSelectionOption="true" />
+                                <f:selectItems var="client" value="#{ManageContractBean.listClientsWithContracts}"  itemValue="#{client.DBB_ID}" itemLabel="#{client.name}"/>
+                            </p:selectManyMenu>
+
+                            <p:commandButton value="Filter clients" action="#{ManageContractBean.updateActiveFilter()}" update="generalTable"/>
+                            <p:commandButton value="clear client filter" action="#{ManageContractBean.clearClientList()}" update="generalTable"/><br/>
+                        </p:panel>
+
+
+                        <p:panel  rendered="#{ManageContractBean.unusedServers.size() gt 0}">
+                            <p:selectOneMenu value="#{ManageContractBean.selectedServerID}">
+                                <f:selectItem itemLabel="select server ID" itemValue="" noSelectionOption="true" />
+                                <f:selectItems value="#{ManageContractBean.unusedServers}" var="S" itemLabel="#{S.ID}" itemValue="#{S.ID}"/>
+                            </p:selectOneMenu>
+                            <p:commandButton value="create contract from server id" action="#{ManageContractBean.createContract()}" style="background-color: yellow; color: black"/>
+                        </p:panel>
                     </p:panel>
                 </f:facet>
 
@@ -144,9 +153,13 @@
     <h:form>
         <p:commandButton title="Create new contract" action="#{ManageContractBean.createContract()}"/>
     </h:form>
-    <h:outputLabel value="Yearly facturation amount:"/>
+    <h:outputLabel value="total facturation amount of all yearly contracts:"/>
     <h:outputText value="#{ManageContractBean.yearlyFacturationAmount}"/><br/>
-    <h:outputLabel value="Monthly facturation amount:"/>
-    <h:outputText value="#{ManageContractBean.monthlyFacturationAmount}"/>
+    <h:outputLabel value="total facturation amount of all monthly contracts:"/>
+    <h:outputText value="#{ManageContractBean.monthlyFacturationAmount}"/><br/>
+    <h:outputLabel value="Yearly facturation amount of shown contracts:"/>
+    <h:outputText value="#{ManageContractBean.yearlyShownCustomers}"/><br/>
+    <h:outputLabel value="Monthly facturation amount of shown contracts:"/>
+    <h:outputText value="#{ManageContractBean.monthlyShownCustomers}"/><br/>
 </h:body>
 </html>

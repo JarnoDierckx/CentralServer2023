@@ -107,6 +107,7 @@ public class ContractDetailResource {
             }
 
             for (int i = 0; i < detailsToUpdate.size(); i++) {
+                int counter=0;
                 for (ContractDetail originalContractDetail : originalContractDetails) {
                     if (detailsToUpdate.get(i).getID() == originalContractDetail.getID()) {
                         boolean newDetail = false;
@@ -122,6 +123,7 @@ public class ContractDetailResource {
                             Object value2 = field.get(detailsToUpdate.get(i));
                             if (value2 != null && !field.getName().equals("moduleId") && !field.getName().equals("whatToDo")) {
                                 if (value1 == null || !value1.equals(value2)) {
+                                    counter++;
                                     if (newDetail) {
                                         field.set(detailDifferences[i], value2);
                                     } else {
@@ -138,21 +140,31 @@ public class ContractDetailResource {
                     historyDesc.add(desc);
                 }
                 desc = "";
+                if (counter==0){
+                    detailDifferences[i]=null;
+                }
             }
+            List<ContractDetail> notNullDifferences=new ArrayList<>();
+            for (ContractDetail detailDifference : detailDifferences) {
+                if (detailDifference != null) {
+                    notNullDifferences.add(detailDifference);
+                }
+            }
+
 
             //Creating the ObjectMapper object
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             //Converting the Object to JSONString
-            String jsonString = mapper.writeValueAsString(detailDifferences);
+            String jsonString = mapper.writeValueAsString(notNullDifferences);
             //System.out.println(jsonString);
 
             HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contractDetail?datastoreKey=" + PropertiesController.getProperty().getDatastore(), jsonString);
 
-            for (int i = 0; i < detailDifferences.length; i++) {
+            for (int i = 0; i < notNullDifferences.size(); i++) {
                 History history = new History();
                 history.setAttribute("contractDetail");
-                history.setAttribute_id(detailDifferences[i].getID());
+                history.setAttribute_id(notNullDifferences.get(i).getID());
                 history.setAction(Action.UPDATE);
                 history.setDescription(String.valueOf(historyDesc.get(i)));
                 history.setActor("Temp");
