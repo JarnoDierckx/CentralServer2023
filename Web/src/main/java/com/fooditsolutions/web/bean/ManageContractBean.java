@@ -22,6 +22,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @ManagedBean
 @SessionScoped
@@ -51,6 +52,8 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     private List<Server> allServers;
     private String selectedServerID = "";
     private boolean renderFilters=true;
+    private int selectedObject;
+    private ContractDetail selectedDetail;
 
     /**
      * Executed when the page loads.
@@ -64,7 +67,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
             retrieveContracts();
             clients = retrieveClients();
             clientList = Arrays.asList(clients);
-            allHistory = retrieveHistory();
+            //allHistory = retrieveHistory();
             allServers = Arrays.asList(retrieveServers());
             unusedServers = retrieveUnusedServers(allServers);
             selectedClientList = new ArrayList<>();
@@ -180,7 +183,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         detailList = new ArrayList<>();
         details = getContractDetails(selectedItem.id, false);
         detailList = Arrays.asList(details);
-        selectedHistory = addSelectedHistory(allHistory);
+        //selectedHistory = addSelectedHistory(allHistory);
         return "contractDetails.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
@@ -210,12 +213,29 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return mapper.readValue(response, History[].class);
     }
 
+    public History[] retrieveHistoryID(String attribute, int attributeid) throws JsonProcessingException {
+        String response =HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/history/"+attribute+"/"+attributeid+"?full=true");
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.readValue(response, History[].class);
+    }
+
     public Server[] retrieveServers() throws JsonProcessingException {
         String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/server");
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return mapper.readValue(response, Server[].class);
+    }
+
+    public void HistoryForDetail() throws JsonProcessingException {
+        History[] detailHistory=retrieveHistoryID("contractDetail", selectedDetail.getID());
+        selectedHistory= Arrays.asList(detailHistory);
+    }
+    public void HistoryForContract() throws JsonProcessingException {
+        History[] detailHistory=retrieveHistoryID("contract", selectedItem.getId());
+        selectedHistory= Arrays.asList(detailHistory);
     }
 
     /**
@@ -528,5 +548,21 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     public void setListClientsWithContracts(List<Client> listClientsWithContracts) {
         this.listClientsWithContracts = listClientsWithContracts;
+    }
+
+    public int getSelectedObject() {
+        return selectedObject;
+    }
+
+    public void setSelectedObject(int selectedObject) {
+        this.selectedObject = selectedObject;
+    }
+
+    public ContractDetail getSelectedDetail() {
+        return selectedDetail;
+    }
+
+    public void setSelectedDetail(ContractDetail selectedDetail) {
+        this.selectedDetail = selectedDetail;
     }
 }

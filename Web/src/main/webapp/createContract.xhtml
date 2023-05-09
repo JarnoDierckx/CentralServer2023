@@ -20,7 +20,7 @@
                 <p:inputText value="#{createContractBean.newContract.server_ID}">
                     <p:ajax event="blur" listener="#{createContractBean.updateClient()}" update="createForm"/>
                 </p:inputText>
-                <h:outputText value="#{createContractBean.server_IDWarning}" style="color: red"/>
+                <h:outputText value="#{createContractBean.server_IDWarning}" style="color: blue"/>
             </section>
 
             <section >
@@ -107,7 +107,7 @@
                 </p:inputText>
             </section>
         </div>
-        <p><h:commandButton value="Create" action="#{createContractBean.createContract}" /></p>
+        <p><h:commandButton value="Create" action="#{createContractBean.createContract}" disabled="#{createContractBean.disabled}"/></p>
     </h:form>
 </div>
 

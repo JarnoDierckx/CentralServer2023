@@ -12,7 +12,7 @@
 </h:head>
 <h:body>
     <ui:include src="header.xhtml"/>
-    <h:form>
+    <h:form id="detailForm">
         <div class="card">
             <p:dataTable var="contract" value="#{ManageContractBean.selectedItem}" widgetVar="contractTable">
 
@@ -77,6 +77,11 @@
                 <p:column headerText="Total price">
                     #{contract.total_price}
                 </p:column>
+                <p:column>
+                    <p:commandButton value="History" action="#{ManageContractBean.HistoryForContract()}">
+                        <p:ajax update="detailForm" delay="500"/>
+                    </p:commandButton>
+                </p:column>
 
             </p:dataTable>
             <h:outputText value="#{ManageContractBean.selectedItem.comments}" style="width: 250px; height: 100px"/>
@@ -113,15 +118,16 @@
                 <p:column headerText="%jgr" sortBy="#{detail.jgr}">
                     #{detail.jgr}
                 </p:column>
+                <p:column>
+                    <p:commandButton value="History" action="#{ManageContractBean.HistoryForDetail}">
+                        <f:setPropertyActionListener target="#{ManageContractBean.selectedDetail}" value="#{detail}"/>
+                        <p:ajax update="detailForm" delay="500"/>
+                    </p:commandButton>
+                </p:column>
             </p:dataTable>
         </div>
-        <p:dataTable var="history" value="#{ManageContractBean.selectedHistory}">
-            <p:column headerText="Contract/Detail:">
-                #{history.attribute}
-            </p:column>
-            <p:column headerText="Item:">
-                #{history.attribute_id}
-            </p:column>
+
+        <p:dataTable id="historyTable" var="history" value="#{ManageContractBean.selectedHistory}">
             <p:column headerText="Action:">
                 #{history.action}
             </p:column>

@@ -45,6 +45,12 @@ public class ContractController {
                     }
                 }
             }else if (Objects.equals(contract.getSource(), "M"))contract.is_active=true;
+            if (contract.getEnd_date()!=null){
+                Date currentDate=new Date();
+                if (contract.getEnd_date().before(currentDate)){
+                    contract.set_active(false);
+                }
+            }
 
             contract.setClient(clients.get(contract.getClient_id()));
             //contract.setName((String) jsonArray.getJSONObject(i).get("name"));

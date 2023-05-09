@@ -68,7 +68,8 @@ public class ContractResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public void updateContract(Contract contract) throws IOException, IllegalAccessException {
+    @Path("/{name}")
+    public void updateContract(Contract contract,@PathParam("name")String name) throws IOException, IllegalAccessException {
         StringBuilder desc = new StringBuilder();
         Contract originalContract = getContract(contract.getId());
         Contract differences = new Contract();
@@ -94,11 +95,6 @@ public class ContractResource {
                 }
             }
         }
-
-
-
-
-
         if (counter > 0) {
             differences.id = contract.id;
             //Creating the ObjectMapper object
@@ -106,7 +102,7 @@ public class ContractResource {
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             //Converting the Object to JSONString
             String jsonString = mapper.writeValueAsString(contract);
-            System.out.println(jsonString);
+            //System.out.println(jsonString);
 
             HttpController.httpPut(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contract?datastoreKey=" + PropertiesController.getProperty().getDatastore(), jsonString);
 
@@ -117,7 +113,7 @@ public class ContractResource {
             history.setAttribute_id(contract.getId());
             history.setAction(Action.UPDATE);
             history.setDescription(String.valueOf(desc));
-            history.setActor("Temp");
+            history.setActor(name);
 
             jsonString = mapper.writeValueAsString(history);
             HttpController.httpPost("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api" + "/history", jsonString);
@@ -130,16 +126,17 @@ public class ContractResource {
      * @param contract is immediately parsed back into a json string and send forward to the datastoreService.
      */
     @POST
+    @Path("/{name}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public String createContract(Contract contract) throws IOException {
+    public String createContract(Contract contract,@PathParam("name")String name) throws IOException {
 
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         //Converting the Object to JSONString
         String jsonString = mapper.writeValueAsString(contract);
-        System.out.println(jsonString);
+        //System.out.println(jsonString);
 
         String ID = HttpController.httpPost(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contract?datastoreKey=" + PropertiesController.getProperty().getDatastore(), jsonString);
 
@@ -147,7 +144,7 @@ public class ContractResource {
         history.setAttribute("contract");
         history.setAttribute_id(Long.parseLong(ID));
         history.setAction(Action.CREATE);
-        history.setActor("Temp");
+        history.setActor(name);
 
         jsonString = mapper.writeValueAsString(history);
         HttpController.httpPost("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api" + "/history", jsonString);

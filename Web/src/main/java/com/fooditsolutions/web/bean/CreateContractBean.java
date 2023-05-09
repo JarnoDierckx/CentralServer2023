@@ -33,6 +33,7 @@ public class CreateContractBean implements Serializable {
     private Contract[] allContracts;
     private String contract_numberWarning="";
     private String server_IDWarning="";
+    private boolean isDisabled=false;
 
     private int quantity;
 
@@ -49,6 +50,7 @@ public class CreateContractBean implements Serializable {
             String serverID= (String) session.getAttribute("serverID");
             newContract.setServer_ID(serverID);
             updateClient();
+            newContract.setContract_number(newContract.getServer_ID()+"-IT");
         }
     }
 
@@ -147,6 +149,7 @@ public class CreateContractBean implements Serializable {
      * Autofills the client based on the server id, and marks the contract as a central server contract.
      */
     public void updateClient(){
+        newContract.setContract_number(newContract.getServer_ID()+"-IT");
         for (Server server:servers){
             if (server.getID().equals(newContract.getServer_ID())){
                 newContract.client_id=server.getCLIENT_DBB_ID();
@@ -174,16 +177,16 @@ public class CreateContractBean implements Serializable {
         for (Contract contract: allContracts){
             if (contract.getContract_number().equals(newContract.getContract_number())){
                 contract_numberWarning="This contract number already exists";
+                isDisabled=true;
                 break;
             }else {
                 contract_numberWarning="";
+                isDisabled=false;
             }
         }
     }
 
-    public void placebo(){
-
-    }
+    public void placebo(){}
 
 
     public Contract getNewContract() {
@@ -240,5 +243,13 @@ public class CreateContractBean implements Serializable {
 
     public String getServer_IDWarning() {
         return server_IDWarning;
+    }
+
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        isDisabled = disabled;
     }
 }

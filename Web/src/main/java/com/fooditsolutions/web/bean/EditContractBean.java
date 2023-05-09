@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -132,7 +133,20 @@ public class EditContractBean implements Serializable {
                 updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_not_indexed()));
             }
         }
-        updateContract();
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String name = "";
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().contains("LOGINCENTRALSERVER2023")) {
+                    name=cookie.getName();
+                    name=name.substring(22);
+                    break;
+                }
+            }
+        }
+        updateContract(name);
         if (isAfterCreate){
             updateAll();
         }
@@ -178,15 +192,29 @@ public class EditContractBean implements Serializable {
     }
 
     public void updateAll() throws IOException {
-        updateContract();
-        UpdateContractDetails();
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String name = "";
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().contains("LOGINCENTRALSERVER2023")) {
+                    name=cookie.getName();
+                    name=name.substring(22);
+                    break;
+                }
+            }
+        }
+
+        updateContract(name);
+        UpdateContractDetails(name);
     }
 
     /**
      * Takes updatingContract and parses it into a json string after updating the total price.
      * An api call is then made to CentralServer2023API with the json string, so it can update the original Contract.
      */
-    public void updateContract() throws IOException {
+    public void updateContract(String name) throws IOException {
         updatingContract.setTotal_price(BigDecimal.valueOf(0));
         for (ContractDetail detail:updatingContractDetailsList){
             if (detail.getJgr_indexed() != null){
@@ -202,7 +230,7 @@ public class EditContractBean implements Serializable {
         //Converting the Object to JSONString
         String jsonString = mapper.writeValueAsString(updatingContract);
 
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract", jsonString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/"+name, jsonString);
     }
 
     /**
@@ -210,7 +238,7 @@ public class EditContractBean implements Serializable {
      * An api call is then made to CentralServer2023API with the json string, so it can update the original contract details.
      * All "whatToDo" values are reset, so it doesn't interfere with any sequential updates.
      */
-    public void UpdateContractDetails() throws IOException {
+    public void UpdateContractDetails( String name) throws IOException {
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -220,7 +248,7 @@ public class EditContractBean implements Serializable {
         System.out.println("update: " + jsonString);
         //System.out.println(detailString);
 
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/detail", jsonString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/detail/"+name, jsonString);
         for (ContractDetail contractDetail : updatingContractDetailsList) {
             contractDetail.setWhatToDo("");
         }

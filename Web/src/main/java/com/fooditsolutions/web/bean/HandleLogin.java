@@ -1,8 +1,10 @@
 package com.fooditsolutions.web.bean;
 
+import javax.annotation.PostConstruct;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,6 +30,30 @@ public class HandleLogin {
     private String source;
     private String invoice_frequency;
     private String index_frequency;
+    private boolean LoggedIn;
+
+    @PostConstruct
+    public void init() throws IOException {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String name = "";
+        String key="";
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().contains("LOGINCENTRALSERVER2023")) {
+                    LoggedIn=true;
+                    name=cookie.getName();
+                    name=name.substring(22);
+                    key=cookie.getValue();
+                    break;
+                }
+            }
+        }
+        if (LoggedIn){
+            redirect();
+        }
+    }
 
     /**
     *This function takes the credentials and puts them in a json string. That string gets send to CentralServer2023API, and after that PassCredentials recieves the session key provided the
@@ -69,7 +95,7 @@ public class HandleLogin {
                 in.close();
 
                 if (!apiResponse.contains("Error")){
-                    String name="Login";
+                    String name="LOGINCENTRALSERVER2023"+email;
                     //System.out.println(response);
                     Cookie cookie=new Cookie(name, apiResponse);
                     cookie.setDomain("localhost");
@@ -77,8 +103,7 @@ public class HandleLogin {
                     System.out.println("Cookie " + cookie);
                     response.addCookie(cookie);
                     responseString=connection.getResponseMessage();
-                    ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-                    externalContext.redirect(externalContext.getRequestContextPath() + "/homePage.xhtml?faces-redirect=true");
+                    redirect();
 
                 }else{
                     errorCount++;
@@ -97,6 +122,11 @@ public class HandleLogin {
                 responseString=connection.getResponseMessage();
             }
         }
+    }
+
+    public void redirect() throws IOException {
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        externalContext.redirect(externalContext.getRequestContextPath() + "/homePage.xhtml?faces-redirect=true");
     }
 
 

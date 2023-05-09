@@ -38,14 +38,13 @@ public class ContractResource {
      * The recieved value is then returned back.
      */
     @GET
-    @Path("/")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
     public List<Contract> getContracts() throws IOException, ServletException {
         String response = "";
         //System.out.println("Starting read in ContractResource");
 
-        response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice() + "/contract");
+        response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice() + "/contract/");
         //System.out.println("getContracts: "+response);
 
         byte[] jsonData = response.getBytes();
@@ -135,9 +134,10 @@ public class ContractResource {
      * @param contract is immediately parsed to a json string and send forward to the contract service.
      */
     @PUT
+    @Path("/{name}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public void updateContract(Contract contract) throws IOException {
+    public void updateContract(Contract contract, @PathParam("name") String name) throws IOException {
 
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
@@ -145,7 +145,7 @@ public class ContractResource {
         //Converting the Object to JSONString
         String jsonString = mapper.writeValueAsString(contract);
 
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice() + "/contract", jsonString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice() + "/contract/"+name, jsonString);
     }
 
     /**
@@ -156,8 +156,8 @@ public class ContractResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    @Path("/detail")
-    public void updateContractDetails(ContractDetail[] contractDetails) throws IOException {
+    @Path("/detail/{name}")
+    public void updateContractDetails(ContractDetail[] contractDetails,@PathParam("name") String name) throws IOException {
 
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
@@ -166,7 +166,7 @@ public class ContractResource {
         String jsonString = mapper.writeValueAsString(contractDetails);
         //System.out.println(jsonString);
 
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail?datastoreKey=", jsonString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail/"+ name +"?datastoreKey=", jsonString);
     }
 
     /**
@@ -175,9 +175,10 @@ public class ContractResource {
      * @param contract is immediately parsed back into a json string and send forward to the datastoreService.
      */
     @POST
+    @Path("/{name}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public String createContract(Contract contract) throws IOException {
+    public String createContract(Contract contract,@PathParam("name") String name) throws IOException {
 
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
@@ -185,16 +186,16 @@ public class ContractResource {
         //Converting the Object to JSONString
         String jsonString = mapper.writeValueAsString(contract);
 
-        return HttpController.httpPost(PropertiesController.getProperty().getBase_url_contractservice() + "/contract", jsonString);
+        return HttpController.httpPost(PropertiesController.getProperty().getBase_url_contractservice() + "/contract/"+name, jsonString);
     }
 
     /**
      */
-    @Path("/detail")
+    @Path("/detail/{name}")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public void createContractDetails(ContractDetail[] contractDetails) throws IOException {
+    public void createContractDetails(ContractDetail[] contractDetails,@PathParam("name") String name) throws IOException {
 
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
@@ -203,7 +204,7 @@ public class ContractResource {
         String jsonString = mapper.writeValueAsString(contractDetails);
         //.out.println(jsonString);
 
-        HttpController.httpPost(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail", jsonString);
+        HttpController.httpPost(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail/"+name, jsonString);
     }
 
 

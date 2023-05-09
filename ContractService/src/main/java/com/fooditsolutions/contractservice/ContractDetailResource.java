@@ -75,9 +75,10 @@ public class ContractDetailResource {
      * Those with whatToDo set to 'C' are sent to the POST endpoint in this class.
      */
     @PUT
+    @Path("/{name}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public void updateContractDetails(ContractDetail[] contractDetails) throws IOException, IllegalAccessException {
+    public void updateContractDetails(ContractDetail[] contractDetails,@PathParam("name") String name) throws IOException, IllegalAccessException {
         List<ContractDetail> detailsToUpdate = new ArrayList<>();
         List<ContractDetail> detailsToCreate = new ArrayList<>();
         for (int i = 0; i < contractDetails.length; i++) {
@@ -93,7 +94,7 @@ public class ContractDetailResource {
         }
         if (detailsToCreate.size() > 0) {
             ContractDetail[] detailsToCreateArray = new ContractDetail[detailsToCreate.size()];
-            createContractDetails(detailsToCreate.toArray(detailsToCreateArray));
+            createContractDetails(detailsToCreate.toArray(detailsToCreateArray),name);
         }
 
         if (detailsToUpdate.size() > 0) {
@@ -167,7 +168,7 @@ public class ContractDetailResource {
                 history.setAttribute_id(notNullDifferences.get(i).getID());
                 history.setAction(Action.UPDATE);
                 history.setDescription(String.valueOf(historyDesc.get(i)));
-                history.setActor("Temp");
+                history.setActor(name);
 
                 jsonString = mapper.writeValueAsString(history);
                 HttpController.httpPost("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api" + "/history", jsonString);
@@ -181,9 +182,10 @@ public class ContractDetailResource {
      * @param contractDetails array of ContractDetails objects that are send to the POST endpoint in the datastore service
      */
     @POST
+    @Path("/{name}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
-    public void createContractDetails(ContractDetail[] contractDetails) throws IOException {
+    public void createContractDetails(ContractDetail[] contractDetails,@PathParam("name") String name) throws IOException {
 
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
@@ -201,7 +203,7 @@ public class ContractDetailResource {
             history.setAttribute("contractDetail");
             history.setAttribute_id(j);
             history.setAction(Action.CREATE);
-            history.setActor("Temp");
+            history.setActor(name);
 
             jsonString = mapper.writeValueAsString(history);
             HttpController.httpPost("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api" + "/history", jsonString);
