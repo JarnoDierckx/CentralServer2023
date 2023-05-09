@@ -12,6 +12,8 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.Serializable;
@@ -69,6 +71,19 @@ public class CreateContractBean implements Serializable {
      * The user is redirected to the edit contract page
      */
     public String createContract() throws IOException {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String name = "";
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().contains("LOGINCENTRALSERVER2023")) {
+                    name=cookie.getName();
+                    name=name.substring(22);
+                    break;
+                }
+            }
+        }
         if (newContract.getServer_ID() == null){
             newContract.source="M";
         }else {
@@ -81,7 +96,7 @@ public class CreateContractBean implements Serializable {
         String jsonString = mapper.writeValueAsString(newContract);
 
         System.out.println("Create: "+jsonString);
-        String ID =HttpController.httpPost(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract", jsonString);
+        String ID =HttpController.httpPost(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crudContract/"+name, jsonString);
 
         HttpSession session= (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         if (session.getAttribute("EditContractBean")!=null){

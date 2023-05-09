@@ -26,4 +26,6 @@ public class ContractDetail {
     private BigDecimal jgr_indexed;
     private String whatToDo;
     private String source;
+    private boolean is_active;
+    private Date end_date;
 }

@@ -38,6 +38,7 @@ public class EditContractBean implements Serializable {
     //updatingContractDetails is the one that goes to the webpage
     private ContractDetail[] updatingContractDetails;
     private List<ContractDetail> updatingContractDetailsList = new ArrayList<>();
+    private List<ContractDetail> filteredDetails=new ArrayList<>();
     private ModuleId[] moduleIds;
     private int counter;
     private int counterWhatToDo = 0;
@@ -45,10 +46,10 @@ public class EditContractBean implements Serializable {
     private List<SortMeta> sortBy;
     private Client[] clients;
     private Index[] cpis;
-
     private boolean isAfterCreate;
     private int IDNewContract;
     private int quantity;
+    private boolean inActiveFilter = false;
 
 
     /**
@@ -118,6 +119,9 @@ public class EditContractBean implements Serializable {
                     detail.setWhatToDo("C");
                 }
             }
+            if (detail.is_active()){
+                filteredDetails.add(detail);
+            }
         }
         updatingContractDetailsList = Arrays.asList(updatingContractDetails);
         moduleIds = retrieveModuleIds();
@@ -127,9 +131,9 @@ public class EditContractBean implements Serializable {
 
         updatingContract.setTotal_price(BigDecimal.valueOf(0));
         for (ContractDetail detail:updatingContractDetailsList){
-            if (detail.getJgr_indexed() != null){
+            if (detail.getJgr_indexed() != null && detail.is_active()){
                 updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_indexed()));
-            }else if(detail.getJgr_not_indexed() != null){
+            }else if(detail.getJgr_not_indexed() != null && detail.is_active()){
                 updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_not_indexed()));
             }
         }
@@ -252,9 +256,14 @@ public class EditContractBean implements Serializable {
         for (ContractDetail contractDetail : updatingContractDetailsList) {
             contractDetail.setWhatToDo("");
         }
+        ManageContractBean manageContractBean = new ManageContractBean();
+        //get the details for this contract
+        updatingContractDetails = manageContractBean.getContractDetails(updatingContract.getId(), true);
+        updatingContractDetailsList= Arrays.asList(updatingContractDetails);
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         session.removeAttribute("EditContractBean");
         session.setAttribute("contract", updatingContract);
+
         ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
         ec.redirect(((HttpServletRequest) ec.getRequest()).getRequestURI());
     }
@@ -352,7 +361,28 @@ public class EditContractBean implements Serializable {
                 }
             }
         }
+        updateActiveFilterDetails();
         System.out.println(newValue);
+    }
+
+    public void updateActiveFilterDetails(){
+        if (!inActiveFilter) {
+            filteredDetails = new ArrayList<>();
+            for (ContractDetail contractDetail : updatingContractDetailsList) {
+                if (contractDetail.is_active()) {
+                    filteredDetails.add(contractDetail);
+                }
+
+            }
+        } else {
+            filteredDetails = new ArrayList<>();
+            for (ContractDetail contractDetail : updatingContractDetailsList) {
+                if (!contractDetail.is_active()) {
+                    filteredDetails.add(contractDetail);
+
+                }
+            }
+        }
     }
 
     /**
@@ -523,5 +553,21 @@ public class EditContractBean implements Serializable {
 
     public void setClients(Client[] clients) {
         this.clients = clients;
+    }
+
+    public boolean isInActiveFilter() {
+        return inActiveFilter;
+    }
+
+    public void setInActiveFilter(boolean inActiveFilter) {
+        this.inActiveFilter = inActiveFilter;
+    }
+
+    public List<ContractDetail> getFilteredDetails() {
+        return filteredDetails;
+    }
+
+    public void setFilteredDetails(List<ContractDetail> filteredDetails) {
+        this.filteredDetails = filteredDetails;
     }
 }

@@ -43,9 +43,19 @@ public class ContractDetailController {
         ContractDetails2= mapper.readValue(jsonContractDetails,ContractDetail[].class);
         for(int i=0; i < ContractDetails2.length; i++){
 
+            ContractDetails2[i].set_active(true);
+
             ModuleId moduleId = Moduleids.get(ContractDetails2[i].getModule_DBB_ID());
             ContractDetails2[i].setModuleId(moduleId);
             contractsDetails.add(ContractDetails2[i]);
+
+
+            if (ContractDetails2[i].getEnd_date()!=null){
+                Date currentDate=new Date();
+                if (ContractDetails2[i].getEnd_date().before(currentDate)){
+                    ContractDetails2[i].set_active(false);
+                }
+            }
 
         }
         return  contractsDetails;

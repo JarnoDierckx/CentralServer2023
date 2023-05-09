@@ -36,8 +36,10 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     private Contract updatedContract;
     private ContractDetail[] details;
     private List<ContractDetail> detailList;
+    private List<ContractDetail> filteredDetailList;
     private List<SortMeta> sortBy;
     private boolean inActiveFilter = false;
+    private boolean inActiveFilterDetails = false;
     private History[] allHistory;
     private List<History> selectedHistory;
     private Client[] clients;
@@ -183,6 +185,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         detailList = new ArrayList<>();
         details = getContractDetails(selectedItem.id, false);
         detailList = Arrays.asList(details);
+        updateActiveFilterDetails();
         //selectedHistory = addSelectedHistory(allHistory);
         return "contractDetails.xhtml?faces-redirect=true&includeViewParams=true";
     }
@@ -232,10 +235,14 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     public void HistoryForDetail() throws JsonProcessingException {
         History[] detailHistory=retrieveHistoryID("contractDetail", selectedDetail.getID());
         selectedHistory= Arrays.asList(detailHistory);
+        HistorySorter.sortByTimestamp(selectedHistory);
+        Collections.reverse(selectedHistory);
     }
     public void HistoryForContract() throws JsonProcessingException {
         History[] detailHistory=retrieveHistoryID("contract", selectedItem.getId());
         selectedHistory= Arrays.asList(detailHistory);
+        HistorySorter.sortByTimestamp(selectedHistory);
+        Collections.reverse(selectedHistory);
     }
 
     /**
@@ -382,6 +389,26 @@ public class ManageContractBean extends HttpServlet implements Serializable {
                 yearlyShownCustomers=yearlyShownCustomers.add(contract.getTotal_price());
             }else if (contract.getInvoice_frequency().equals("M") && contract.getTotal_price()!=null){
                 monthlyShownCustomers=monthlyShownCustomers.add(contract.getTotal_price());
+            }
+        }
+    }
+
+    public void updateActiveFilterDetails(){
+        if (!inActiveFilterDetails) {
+            filteredDetailList = new ArrayList<>();
+            for (ContractDetail contractDetail : detailList) {
+                if (contractDetail.is_active()) {
+                    filteredDetailList.add(contractDetail);
+                }
+
+            }
+        } else {
+            filteredDetailList = new ArrayList<>();
+            for (ContractDetail contractDetail : detailList) {
+                if (!contractDetail.is_active()) {
+                    filteredDetailList.add(contractDetail);
+
+                }
             }
         }
     }
@@ -564,5 +591,21 @@ public class ManageContractBean extends HttpServlet implements Serializable {
 
     public void setSelectedDetail(ContractDetail selectedDetail) {
         this.selectedDetail = selectedDetail;
+    }
+
+    public boolean isInActiveFilterDetails() {
+        return inActiveFilterDetails;
+    }
+
+    public void setInActiveFilterDetails(boolean inActiveFilterDetails) {
+        this.inActiveFilterDetails = inActiveFilterDetails;
+    }
+
+    public List<ContractDetail> getFilteredDetailList() {
+        return filteredDetailList;
+    }
+
+    public void setFilteredDetailList(List<ContractDetail> filteredDetailList) {
+        this.filteredDetailList = filteredDetailList;
     }
 }

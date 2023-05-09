@@ -261,8 +261,15 @@
 
 
       <div class="card">
-        <p:dataTable id="detailsTable" widgetVar="detailsTableWidget" var="detail" value="#{EditContractBean.updatingContractDetailsList}" paginator="true" paginatorPosition="both"
+        <p:dataTable id="detailsTable" widgetVar="detailsTableWidget" var="detail" value="#{EditContractBean.filteredDetails}" paginator="true" paginatorPosition="both"
                      paginatorTemplate="{addRow} {Warning}" editable="true" editMode="cell" sortMode="single">
+
+          <f:facet name="header">
+            <p:outputLabel value="show inactive modules:"/>
+            <p:selectBooleanCheckbox value="#{EditContractBean.inActiveFilter}">
+              <p:ajax update="detailsTable" listener="#{EditContractBean.updateActiveFilterDetails()}" />
+            </p:selectBooleanCheckbox>
+          </f:facet>
 
           <p:ajax event="cellEdit" listener="#{EditContractBean.onCellEdit}" update="detailsTable"/>
 
@@ -292,7 +299,7 @@
             </p:cellEditor>
           </p:column>
 
-          <p:column headerText="Purchase date" sortBy="#{detail.purchase_Date}">
+          <p:column headerText="Contract date" sortBy="#{detail.purchase_Date}">
             <p:cellEditor>
               <f:facet name="output">
                 <h:outputText value="#{detail.purchase_Date}">
@@ -303,6 +310,21 @@
                 <p:calendar  value="#{detail.purchase_Date}" pattern="yyyy-MM-dd">
                   <p:ajax event="dateSelect" listener="#{EditContractBean.updateCPIContractDetail(detail.ID)}" update="detailIndexStart"/>
                   <p:ajax event="change" listener="#{EditContractBean.updateCPIContractDetail(detail.ID)}" update="detailIndexStart"/>
+                  <f:convertDateTime pattern = "yyyy-MM-dd" />
+                </p:calendar>
+              </f:facet>
+            </p:cellEditor>
+          </p:column>
+
+          <p:column headerText="End date" sortBy="#{detail.end_date}">
+            <p:cellEditor>
+              <f:facet name="output">
+                <h:outputText value="#{detail.end_date}">
+                  <f:convertDateTime pattern = "yyyy-MM-dd" />
+                </h:outputText>
+              </f:facet>
+              <f:facet name="input">
+                <p:calendar  value="#{detail.end_date}" pattern="yyyy-MM-dd">
                   <f:convertDateTime pattern = "yyyy-MM-dd" />
                 </p:calendar>
               </f:facet>

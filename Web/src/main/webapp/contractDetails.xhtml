@@ -88,12 +88,23 @@
         </div>
 
         <div class="card">
-            <p:dataTable var="detail" value="#{ManageContractBean.detailList}" sortMode="single">
+            <p:dataTable id="detailsTable" var="detail" value="#{ManageContractBean.filteredDetailList}" sortMode="single">
+                <f:facet name="header">
+                    <p:outputLabel value="show inactive modules:"/>
+                    <p:selectBooleanCheckbox value="#{ManageContractBean.inActiveFilterDetails}">
+                        <p:ajax update="detailsTable" listener="#{ManageContractBean.updateActiveFilterDetails()}" />
+                    </p:selectBooleanCheckbox>
+                </f:facet>
                 <p:column headerText="Module id" sortBy="#{detail.moduleId.name}">
                     #{detail.moduleId.name}
                 </p:column>
                 <p:column headerText="purchase date" sortBy="#{detail.purchase_Date}">
                     <h:outputText value="#{detail.purchase_Date}">
+                        <f:convertDateTime pattern = "yyyy-MM-dd" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="end date">
+                    <h:outputText value="#{detail.end_date}">
                         <f:convertDateTime pattern = "yyyy-MM-dd" />
                     </h:outputText>
                 </p:column>

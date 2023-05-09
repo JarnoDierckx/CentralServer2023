@@ -182,6 +182,10 @@ public class ContractDetailResource {
             contractDetail.setJgr_not_indexed((BigDecimal) jsonContracts.getJSONObject(i).opt("JGR_NOT_INDEXED"));
             contractDetail.setJgr_indexed((BigDecimal) jsonContracts.getJSONObject(i).opt("JGR_INDEXED"));
             contractDetail.setSource((String) jsonContracts.getJSONObject(i).opt("SOURCE"));
+            if (jsonContracts.getJSONObject(i).opt("IS_ACTIVE") != null) {
+                contractDetail.set_active((boolean) jsonContracts.getJSONObject(i).opt("IS_ACTIVE"));
+            }
+            contractDetail.setEnd_date((Date) jsonContracts.getJSONObject(i).opt("END_DATE"));
 
             contractDetails.add(contractDetail);
         }

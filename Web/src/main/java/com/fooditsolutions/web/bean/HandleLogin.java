@@ -99,7 +99,7 @@ public class HandleLogin {
                     //System.out.println(response);
                     Cookie cookie=new Cookie(name, apiResponse);
                     cookie.setDomain("localhost");
-                    cookie.setMaxAge(60*60);
+                    cookie.setMaxAge(60*60*12);
                     System.out.println("Cookie " + cookie);
                     response.addCookie(cookie);
                     responseString=connection.getResponseMessage();
