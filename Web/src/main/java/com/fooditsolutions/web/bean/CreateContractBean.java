@@ -181,6 +181,10 @@ public class CreateContractBean implements Serializable {
         }
     }
 
+    public void placebo(){
+
+    }
+
 
     public Contract getNewContract() {
         return newContract;

@@ -66,6 +66,7 @@ public class EditContractBean implements Serializable {
         if (session != null) {
             if (session.getAttribute("contract") != null) {
                 selectedContract = (Contract) session.getAttribute("contract");
+                session.removeAttribute("contract");
             } else {
                 isAfterCreate = true;
                 if (session.getAttribute("ID") != null) {
@@ -132,6 +133,9 @@ public class EditContractBean implements Serializable {
             }
         }
         updateContract();
+        if (isAfterCreate){
+            updateAll();
+        }
     }
 
     /**
@@ -287,6 +291,7 @@ public class EditContractBean implements Serializable {
                     for (ContractDetail detail : updatingContractDetailsList) {
                         if (detail.getID() == editedDetail.getID()) {
                             detail.setModuleId(moduleId);
+                            detail.setModule_DBB_ID(editedDetail.getModule_DBB_ID());
                             if (detail.getID() == 0) {
                                 counter--;
                                 detail.setID(counter);
