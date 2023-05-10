@@ -233,11 +233,11 @@ public class ContractResource {
 
     }
 
-    /*@DELETE
-    @Path("/{ContractId}")
-    public void deleteContract(@PathParam("ContractId") int contractID) throws IOException {
-        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_contractservice()+"/contract/"+ contractID);
-    }*/
+    @DELETE
+    @Path("/{name}/{ContractId}")
+    public void deleteContract(@PathParam("ContractId") int contractID,@PathParam("name") String name) throws IOException {
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_contractservice()+"/contract/"+name+"/"+ contractID);
+    }
 
     @DELETE
     @Path("/detail/{id}")

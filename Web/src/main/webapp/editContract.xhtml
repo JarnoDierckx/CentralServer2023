@@ -268,7 +268,8 @@
             <p:outputLabel value="show inactive modules:"/>
             <p:selectBooleanCheckbox value="#{EditContractBean.inActiveFilter}">
               <p:ajax update="detailsTable" listener="#{EditContractBean.updateActiveFilterDetails()}" />
-            </p:selectBooleanCheckbox>
+            </p:selectBooleanCheckbox><br/>
+            <p:commandButton value="Delete contract" onclick="jsf.ajax.request(this, event, {execute: '@all', onevent: showConfirmation()})" />
           </f:facet>
 
           <p:ajax event="cellEdit" listener="#{EditContractBean.onCellEdit}" update="detailsTable"/>

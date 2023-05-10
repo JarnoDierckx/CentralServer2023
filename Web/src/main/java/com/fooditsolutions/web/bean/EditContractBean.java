@@ -50,6 +50,7 @@ public class EditContractBean implements Serializable {
     private int IDNewContract;
     private int quantity;
     private boolean inActiveFilter = false;
+    private String userName;
 
 
     /**
@@ -138,19 +139,19 @@ public class EditContractBean implements Serializable {
             }
         }
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String name = "";
+        userName = "";
 
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().contains("LOGINCENTRALSERVER2023")) {
-                    name=cookie.getName();
-                    name=name.substring(22);
+                    userName=cookie.getName();
+                    userName=userName.substring(22);
                     break;
                 }
             }
         }
-        updateContract(name);
+        updateContract(userName);
         if (isAfterCreate){
             updateAll();
         }
@@ -196,22 +197,8 @@ public class EditContractBean implements Serializable {
     }
 
     public void updateAll() throws IOException {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String name = "";
-
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().contains("LOGINCENTRALSERVER2023")) {
-                    name=cookie.getName();
-                    name=name.substring(22);
-                    break;
-                }
-            }
-        }
-
-        updateContract(name);
-        UpdateContractDetails(name);
+        updateContract(userName);
+        UpdateContractDetails(userName);
     }
 
     /**
@@ -242,7 +229,7 @@ public class EditContractBean implements Serializable {
      * An api call is then made to CentralServer2023API with the json string, so it can update the original contract details.
      * All "whatToDo" values are reset, so it doesn't interfere with any sequential updates.
      */
-    public void UpdateContractDetails( String name) throws IOException {
+    public void UpdateContractDetails(String name) throws IOException {
         //Creating the ObjectMapper object
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -480,7 +467,7 @@ public class EditContractBean implements Serializable {
      * sends a request with a contract id to delete the associated contract
      */
     public void deleteContract() throws IOException {
-        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/" + updatingContract.id);
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/"+ userName + updatingContract.id);
     }
 
     public void useless() {

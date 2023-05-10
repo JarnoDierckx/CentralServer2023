@@ -9,12 +9,14 @@ import com.fooditsolutions.util.model.ContractDetail;
 import com.fooditsolutions.util.controller.HttpController;
 import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.util.model.History;
+import com.fooditsolutions.util.model.ModuleId;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Path("/contractDetail")
@@ -226,5 +228,25 @@ public class ContractDetailResource {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         String jsonString = mapper.writeValueAsString(history);
         HttpController.httpPost("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api" + "/history", jsonString);
+    }
+
+    @DELETE
+    @Path("/all/{id}")
+    public void deleteAllDetails(@PathParam("id") int contractID) throws IOException {
+        String response=getContractDetailsNoCalculate(String.valueOf(contractID));
+        ContractDetail[] details;
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        details = mapper.readValue(response, ContractDetail[].class);
+
+        for (ContractDetail detail:details){
+            deleteContractDetailsNoHistory(detail.getID());
+        }
+    }
+
+    @DELETE
+    @Path("/noHistory/{id}")
+    public void deleteContractDetailsNoHistory(@PathParam("id") int id) throws IOException {
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contractDetail/" + id + "?datastoreKey=" + PropertiesController.getProperty().getDatastore());
     }
 }

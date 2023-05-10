@@ -152,11 +152,25 @@ public class ContractResource {
         return ID;
     }
 
-    /*@DELETE
-    @Path("/{ContractId}")
-    public void deleteContract(@PathParam("ContractId") int contractID) throws IOException {
+    @DELETE
+    @Path("/{name}/{ContractId}")
+    public void deleteContract(@PathParam("ContractId") int contractID,@PathParam("name") String name) throws IOException {
+        Contract contract= getContract(contractID);
         HttpController.httpDelete(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract/"+ contractID +"?datastoreKey="+ PropertiesController.getProperty().getDatastore());
-    }*/
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_contractservice()+"/contractDetail/all/"+contractID);
+
+        History history =new History();
+        history.setAttribute("contract");
+        history.setAttribute_id(contractID);
+        history.setAction(Action.DELETE);
+        history.setActor(name);
+        history.setDescription("Server ID:"+contract.getServer_ID()+", contract number: "+contract.getContract_number()+", client:"+contract.getClient().getName());
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        String jsonString = mapper.writeValueAsString(history);
+        HttpController.httpPost("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api" + "/history", jsonString);
+    }
 
     private boolean isNullOrZero(Object obj) {
         if (obj == null) {
