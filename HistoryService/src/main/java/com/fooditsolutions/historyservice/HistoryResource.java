@@ -88,4 +88,11 @@ public class HistoryResource {
 
     }
 
+    @DELETE
+    @Consumes("application/json")
+    @Path("/{id}")
+    public void deleteAllAssociatedHistory(@PathParam("id")int id) throws IOException {
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_datastoreservice()+"/history/"+id+"?datastoreKey="+PropertiesController.getProperty().getDatastore());
+    }
+
 }

@@ -122,7 +122,7 @@ public class ContractResource {
      * @param datastoreKey is to specify which database to query.
      * @param contractID is to specify which contract needs to be deleted.
      */
-    /*@DELETE
+    @DELETE
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{ContractId}")
     public void deleteContract(@QueryParam("datastoreKey")String datastoreKey, @PathParam("ContractId") int contractID){
@@ -135,7 +135,7 @@ public class ContractResource {
                 System.out.println("Delete successfull");
             }
         }
-    }*/
+    }
 
     /**
      * Takes a array of contracts in json format and one by one enters the contracts values into proper contract objects.

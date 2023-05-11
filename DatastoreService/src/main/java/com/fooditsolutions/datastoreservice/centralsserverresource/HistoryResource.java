@@ -69,7 +69,21 @@ public class HistoryResource {
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
                 DBFirebird.executeSQLInsert(ds, sql);
-                System.out.println("Insert successfull");
+                System.out.println("Insert successful");
+            }
+        }
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public void deleteAssociatedHistory(@QueryParam("datastoreKey") String datastoreKey,@PathParam("id") int id){
+         String sql="DELETE FROM HISTORY WHERE ATTRIBUTE_ID="+id;
+
+        for (DatastoreObject ds : Datastores.getDatastores()) {
+            if (datastoreKey.equals(ds.getKey())) {
+                //Insert also works for delete
+                DBFirebird.executeSQLInsert(ds, sql);
+                System.out.println("Delete successful");
             }
         }
     }

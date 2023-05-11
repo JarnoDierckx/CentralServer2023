@@ -156,8 +156,9 @@ public class ContractResource {
     @Path("/{name}/{ContractId}")
     public void deleteContract(@PathParam("ContractId") int contractID,@PathParam("name") String name) throws IOException {
         Contract contract= getContract(contractID);
-        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract/"+ contractID +"?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         HttpController.httpDelete(PropertiesController.getProperty().getBase_url_contractservice()+"/contractDetail/all/"+contractID);
+
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract/"+ contractID +"?datastoreKey="+ PropertiesController.getProperty().getDatastore());
 
         History history =new History();
         history.setAttribute("contract");

@@ -9,20 +9,11 @@
 <h:head>
     <title>Edit</title>
 </h:head>
-<script type="text/javascript">
-  function showConfirmation() {
-    var result = confirm("Are you sure you want to delete this item?");
-    if (result) {
-      jsf.ajax.request("#{EditContractBean.deleteContract()}")
-    } else {
-      // User clicked Cancel, do nothing
-    }
-  }
-</script>
 
 <h:body>
   <h:outputStylesheet library="css" name="editPageStyle.css"/>
   <ui:include src="header.xhtml"/>
+
 
   <h:form>
     <div class="card">
@@ -269,7 +260,16 @@
             <p:selectBooleanCheckbox value="#{EditContractBean.inActiveFilter}">
               <p:ajax update="detailsTable" listener="#{EditContractBean.updateActiveFilterDetails()}" />
             </p:selectBooleanCheckbox><br/>
-            <p:commandButton value="Delete contract" onclick="jsf.ajax.request(this, event, {execute: '@all', onevent: showConfirmation()})" />
+            <p:commandButton value="Delete" update="confirmationDialog" oncomplete="PF('confirmationDlg').show()" />
+            <p:dialog id="confirmationDialog" header="Confirmation" widgetVar="confirmationDlg" modal="true" resizable="false">
+              <p>Are you sure you want to delete this item?</p>
+              <p>Please type 'Delete' to confirm</p>
+              <p:inputText value="#{EditContractBean.delete}" placeholder="Delete">
+                <p:ajax event="change" update="yesButton"/>
+              </p:inputText>
+              <p:commandButton value="Yes" id="yesButton" action="#{EditContractBean.deleteContract}" oncomplete="PF('confirmationDlg').hide()" disabled="#{EditContractBean.delete ne 'Delete'}"/>
+              <p:commandButton value="No" onclick="PF('confirmationDlg').hide()" />
+            </p:dialog>
           </f:facet>
 
           <p:ajax event="cellEdit" listener="#{EditContractBean.onCellEdit}" update="detailsTable"/>
@@ -410,7 +410,7 @@
           </p:column>
 
           <p:column style="width: min-content">
-            <p:commandButton value="#{(detail.whatToDo.contains('D')) ? 'Undo' : 'Delete'}" rendered="#{detail.whatToDo.contains('N') || detail.source == 'M'}"
+            <p:commandButton value="#{(detail.whatToDo.contains('D')) ? 'Undo' : 'Delete'}" rendered="#{detail.whatToDo.contains('N') || detail.ID gt 0}"
                              styleClass="#{(detail.whatToDo.contains('D')) ? 'ui-button-secondary' : 'ui-button-danger'}">
               <p:ajax listener="#{EditContractBean.pressDelete()}" update="detailsTable"/>
             </p:commandButton>

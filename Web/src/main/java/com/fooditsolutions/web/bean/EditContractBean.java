@@ -38,7 +38,7 @@ public class EditContractBean implements Serializable {
     //updatingContractDetails is the one that goes to the webpage
     private ContractDetail[] updatingContractDetails;
     private List<ContractDetail> updatingContractDetailsList = new ArrayList<>();
-    private List<ContractDetail> filteredDetails=new ArrayList<>();
+    private List<ContractDetail> filteredDetails = new ArrayList<>();
     private ModuleId[] moduleIds;
     private int counter;
     private int counterWhatToDo = 0;
@@ -51,6 +51,7 @@ public class EditContractBean implements Serializable {
     private int quantity;
     private boolean inActiveFilter = false;
     private String userName;
+    private String delete;
 
 
     /**
@@ -120,7 +121,7 @@ public class EditContractBean implements Serializable {
                     detail.setWhatToDo("C");
                 }
             }
-            if (detail.is_active()){
+            if (detail.is_active()) {
                 filteredDetails.add(detail);
             }
         }
@@ -131,10 +132,10 @@ public class EditContractBean implements Serializable {
         cpis = retrieveIndex();
 
         updatingContract.setTotal_price(BigDecimal.valueOf(0));
-        for (ContractDetail detail:updatingContractDetailsList){
-            if (detail.getJgr_indexed() != null && detail.is_active()){
+        for (ContractDetail detail : updatingContractDetailsList) {
+            if (detail.getJgr_indexed() != null && detail.is_active()) {
                 updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_indexed()));
-            }else if(detail.getJgr_not_indexed() != null && detail.is_active()){
+            } else if (detail.getJgr_not_indexed() != null && detail.is_active()) {
                 updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_not_indexed()));
             }
         }
@@ -145,14 +146,14 @@ public class EditContractBean implements Serializable {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().contains("LOGINCENTRALSERVER2023")) {
-                    userName=cookie.getName();
-                    userName=userName.substring(22);
+                    userName = cookie.getName();
+                    userName = userName.substring(22);
                     break;
                 }
             }
         }
         updateContract(userName);
-        if (isAfterCreate){
+        if (isAfterCreate) {
             updateAll();
         }
     }
@@ -207,10 +208,10 @@ public class EditContractBean implements Serializable {
      */
     public void updateContract(String name) throws IOException {
         updatingContract.setTotal_price(BigDecimal.valueOf(0));
-        for (ContractDetail detail:updatingContractDetailsList){
-            if (detail.getJgr_indexed() != null){
+        for (ContractDetail detail : updatingContractDetailsList) {
+            if (detail.getJgr_indexed() != null) {
                 updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_indexed()));
-            }else if(detail.getJgr_not_indexed() != null){
+            } else if (detail.getJgr_not_indexed() != null) {
                 updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_not_indexed()));
             }
         }
@@ -221,7 +222,7 @@ public class EditContractBean implements Serializable {
         //Converting the Object to JSONString
         String jsonString = mapper.writeValueAsString(updatingContract);
 
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/"+name, jsonString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/" + name, jsonString);
     }
 
     /**
@@ -239,14 +240,14 @@ public class EditContractBean implements Serializable {
         System.out.println("update: " + jsonString);
         //System.out.println(detailString);
 
-        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/detail/"+name, jsonString);
+        HttpController.httpPut(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/detail/" + name, jsonString);
         for (ContractDetail contractDetail : updatingContractDetailsList) {
             contractDetail.setWhatToDo("");
         }
         ManageContractBean manageContractBean = new ManageContractBean();
         //get the details for this contract
         updatingContractDetails = manageContractBean.getContractDetails(updatingContract.getId(), true);
-        updatingContractDetailsList= Arrays.asList(updatingContractDetails);
+        updatingContractDetailsList = Arrays.asList(updatingContractDetails);
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         session.removeAttribute("EditContractBean");
         session.setAttribute("contract", updatingContract);
@@ -352,7 +353,7 @@ public class EditContractBean implements Serializable {
         System.out.println(newValue);
     }
 
-    public void updateActiveFilterDetails(){
+    public void updateActiveFilterDetails() {
         if (!inActiveFilter) {
             filteredDetails = new ArrayList<>();
             for (ContractDetail contractDetail : updatingContractDetailsList) {
@@ -410,7 +411,7 @@ public class EditContractBean implements Serializable {
     }
 
     /**
-     *removes the detail from the list of details
+     * removes the detail from the list of details
      */
     public void removeRow() {
         FacesContext context = FacesContext.getCurrentInstance();
@@ -428,7 +429,7 @@ public class EditContractBean implements Serializable {
      */
     public void updateCPILastInvoice() {
         if (updatingContract.getLast_invoice_date() != null && updatingContract.getBase_index_year() > 0) {
-            updatingContract.setIndex_last_invoice(updateCPI(updatingContract.getLast_invoice_date(),updatingContract.getBase_index_year()));
+            updatingContract.setIndex_last_invoice(updateCPI(updatingContract.getLast_invoice_date(), updatingContract.getBase_index_year()));
         }
     }
 
@@ -436,9 +437,9 @@ public class EditContractBean implements Serializable {
      * updates the starting index value of a specific detail object.
      */
     public void updateCPIContractDetail(int id) {
-        for (ContractDetail detail: updatingContractDetailsList){
-            if (detail.getID()==id){
-                detail.setIndex_Start(updateCPI(detail.getPurchase_Date(),updatingContract.getBase_index_year()));
+        for (ContractDetail detail : updatingContractDetailsList) {
+            if (detail.getID() == id) {
+                detail.setIndex_Start(updateCPI(detail.getPurchase_Date(), updatingContract.getBase_index_year()));
             }
         }
     }
@@ -466,12 +467,13 @@ public class EditContractBean implements Serializable {
     /**
      * sends a request with a contract id to delete the associated contract
      */
-    public void deleteContract() throws IOException {
-        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/"+ userName + updatingContract.id);
-    }
-
-    public void useless() {
-
+    public String deleteContract() throws IOException {
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/crudContract/" + userName + "/" + updatingContract.id);
+        HttpSession session= (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        if (session.getAttribute("ManageContractBean")!=null){
+            session.removeAttribute("ManageContractBean");
+        }
+        return "generalContracts.xhtml?faces-redirect=true";
     }
 
     public Contract getSelectedContract() {
@@ -556,5 +558,13 @@ public class EditContractBean implements Serializable {
 
     public void setFilteredDetails(List<ContractDetail> filteredDetails) {
         this.filteredDetails = filteredDetails;
+    }
+
+    public String getDelete() {
+        return delete;
+    }
+
+    public void setDelete(String delete) {
+        this.delete = delete;
     }
 }

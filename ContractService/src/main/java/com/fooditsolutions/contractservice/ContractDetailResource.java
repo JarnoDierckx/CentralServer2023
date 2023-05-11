@@ -90,7 +90,7 @@ public class ContractDetailResource {
                 } else if (contractDetails[i].getWhatToDo().contains("C")) {
                     detailsToCreate.add(contractDetails[i]);
                 } else if (contractDetails[i].getWhatToDo().contains("D")) {
-                    deleteContractDetails(contractDetails[i].getID());
+                    deleteContractDetails(contractDetails[i].getID(),name);
                 }
             }
         }
@@ -214,15 +214,17 @@ public class ContractDetailResource {
     }
 
     @DELETE
-    @Path("/{id}")
-    public void deleteContractDetails(@PathParam("id") int id) throws IOException {
+    @Path("/{id}/{name}")
+    public void deleteContractDetails(@PathParam("id") int id,@PathParam("name") String name) throws IOException {
+        ContractDetail detail=getContractDetail(id);
         HttpController.httpDelete(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contractDetail/" + id + "?datastoreKey=" + PropertiesController.getProperty().getDatastore());
 
         History history = new History();
         history.setAttribute("contractDetail");
-        history.setAttribute_id(id);
+        history.setAttribute_id(detail.getContract_ID());
         history.setAction(Action.DELETE);
-        history.setActor("Temp");
+        history.setActor(name);
+        history.setDescription("Name module:"+detail.getModuleId().getName());
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -248,5 +250,6 @@ public class ContractDetailResource {
     @Path("/noHistory/{id}")
     public void deleteContractDetailsNoHistory(@PathParam("id") int id) throws IOException {
         HttpController.httpDelete(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contractDetail/" + id + "?datastoreKey=" + PropertiesController.getProperty().getDatastore());
+        HttpController.httpDelete("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api"+"/history"+id);
     }
 }
