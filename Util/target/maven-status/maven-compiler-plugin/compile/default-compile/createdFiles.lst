@@ -3,6 +3,7 @@ com\fooditsolutions\util\model\Index.class
 com\fooditsolutions\util\model\Server.class
 com\fooditsolutions\util\controller\HttpController.class
 com\fooditsolutions\util\model\Contract.class
+com\fooditsolutions\util\enums\ModuleSyncType.class
 com\fooditsolutions\util\model\User.class
 com\fooditsolutions\util\model\Client.class
 com\fooditsolutions\util\model\ContractDetail.class

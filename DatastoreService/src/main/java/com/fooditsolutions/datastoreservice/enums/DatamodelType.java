@@ -1,4 +1,4 @@
-package com.fooditsolutions.datastoreservice.emum;
+package com.fooditsolutions.datastoreservice.enums;
 
 public enum DatamodelType {
     DATABASE,

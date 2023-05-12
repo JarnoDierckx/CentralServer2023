@@ -93,35 +93,35 @@ public class ContractDetailResource {
             sql[i]=contractDetails[i].getInsertStatement();
         }
         List<String> sqlRead=new ArrayList<>();
-        for (ContractDetail contractDetail : contractDetails) {
-            String contractID = "SELECT ID FROM CONTRACT_DETAIL WHERE CONTRACT_ID = '" + contractDetail.getContract_ID();
+        for (ContractDetail contractDetail : contractDetails) {//NEEDS TO BE REVISITED, REDUNDANT LINES
+            String contractID = "SELECT ID FROM CONTRACT_DETAIL WHERE CONTRACT_ID = '" + contractDetail.getContract_ID()+"'";
             String moduleDBBID;
             String purchaseDate;
             String purchasePrice;
             String freeLine;
             if (contractDetail.getModule_DBB_ID() != null){
-                moduleDBBID="' AND MODULE_DBB_ID = " + contractDetail.getModule_DBB_ID();
+                moduleDBBID=" AND MODULE_DBB_ID = '" + contractDetail.getModule_DBB_ID()+"'";
             }else {
-                moduleDBBID="' AND MODULE_DBB_ID is null";
+                moduleDBBID=" AND MODULE_DBB_ID is null";
             }
             if (contractDetail.isHasFreeLine()){
-                freeLine="' AND FREELINE = " + contractDetail.getFreeLine();
+                freeLine=" AND FREELINE = '" + contractDetail.getFreeLine()+"'";
             }else {
-                freeLine="' AND FREELINE is null";
+                freeLine=" AND FREELINE is null";
             }
             if (contractDetail.getPurchase_Date() != null){
                 SimpleDateFormat sdf = new SimpleDateFormat(
                         "dd.MM.yyyy");
-                purchaseDate=" AND PURCHASE_DATE = '" + sdf.format(contractDetail.getPurchase_Date());
+                purchaseDate=" AND PURCHASE_DATE = '" + sdf.format(contractDetail.getPurchase_Date())+"'";
             }else {
                 purchaseDate=" AND PURCHASE_DATE is null";
             }
-            if (contractDetail.getPurchase_price() !=null && contractDetail.getPurchase_Date() != null){//dates need to be surrounded by ''
-                purchasePrice= "' AND PURCHASE_PRICE = " + contractDetail.getPurchase_price();
+            if (contractDetail.getPurchase_price() !=null && contractDetail.getPurchase_Date() != null){
+                purchasePrice= " AND PURCHASE_PRICE = " + contractDetail.getPurchase_price();
             }else if(contractDetail.getPurchase_price() !=null && contractDetail.getPurchase_Date() == null){
                 purchasePrice= " AND PURCHASE_PRICE = " + contractDetail.getPurchase_price();
             } else if (contractDetail.getPurchase_price() ==null && contractDetail.getPurchase_Date() != null) {
-                purchasePrice= "' AND PURCHASE_PRICE IS NULL";
+                purchasePrice= " AND PURCHASE_PRICE IS NULL";
             } else {
                 purchasePrice= " AND PURCHASE_PRICE IS NULL";
             }

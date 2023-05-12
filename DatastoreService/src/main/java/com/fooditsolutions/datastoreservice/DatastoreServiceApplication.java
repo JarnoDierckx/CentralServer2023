@@ -1,7 +1,7 @@
 package com.fooditsolutions.datastoreservice;
 
 import com.fooditsolutions.datastoreservice.controller.Datastores;
-import com.fooditsolutions.datastoreservice.emum.DatamodelType;
+import com.fooditsolutions.datastoreservice.enums.DatamodelType;
 import com.fooditsolutions.datastoreservice.model.DatastoreObject;
 
 import javax.ws.rs.ApplicationPath;

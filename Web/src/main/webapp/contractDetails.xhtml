@@ -96,7 +96,8 @@
                     </p:selectBooleanCheckbox>
                 </f:facet>
                 <p:column headerText="Module id" sortBy="#{detail.moduleId.name}">
-                    #{detail.moduleId.name}
+                    <h:outputText value="#{detail.moduleId.name}" rendered="#{!detail.hasFreeLine}"/>
+                    <h:outputText value="#{detail.freeLine}" rendered="#{detail.hasFreeLine}"/>
                 </p:column>
                 <p:column headerText="purchase date" sortBy="#{detail.purchase_Date}">
                     <h:outputText value="#{detail.purchase_Date}">

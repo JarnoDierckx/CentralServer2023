@@ -1,6 +1,7 @@
 package com.fooditsolutions.datastoreservice.model.centralserver;
 
 import com.fooditsolutions.datastoreservice.model.Sqlmodel;
+import com.fooditsolutions.util.enums.ModuleSyncType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -39,7 +40,5 @@ public class Contract extends Sqlmodel {
     public String server_ID;
     public BigDecimal total_price;
     private boolean hasEmptyModule;
-
-
-
+    private ModuleSyncType syncType;
 }

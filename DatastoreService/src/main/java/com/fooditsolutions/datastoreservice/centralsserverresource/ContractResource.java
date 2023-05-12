@@ -13,6 +13,7 @@ import com.fooditsolutions.datastoreservice.model.centralserver.Client;
 import com.fooditsolutions.datastoreservice.model.centralserver.Contract;
 import com.fooditsolutions.datastoreservice.model.DatastoreObject;
 import com.fooditsolutions.datastoreservice.model.centralserver.ContractDetail;
+import com.fooditsolutions.util.enums.ModuleSyncType;
 import org.json.JSONArray;
 
 import javax.annotation.PostConstruct;
@@ -187,6 +188,8 @@ public class ContractResource {
             }
             contract.setServer_ID((String) jsonContracts.getJSONObject(i).opt("SERVER_ID"));
             contract.setTotal_price((BigDecimal) jsonContracts.getJSONObject(i).opt("TOTAL_PRICE"));
+            contract.setSyncType((ModuleSyncType) jsonContracts.getJSONObject(i).opt("SYNCTYPE"));
+
             contracts.add(contract);
         }
 

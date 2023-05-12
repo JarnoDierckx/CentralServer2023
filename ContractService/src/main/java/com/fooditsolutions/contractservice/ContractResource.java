@@ -160,6 +160,8 @@ public class ContractResource {
 
         HttpController.httpDelete(PropertiesController.getProperty().getBase_url_datastoreservice()+"/contract/"+ contractID +"?datastoreKey="+ PropertiesController.getProperty().getDatastore());
 
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_historyservice()+"/history/"+contractID);
+
         History history =new History();
         history.setAttribute("contract");
         history.setAttribute_id(contractID);

@@ -344,12 +344,16 @@ public class EditContractBean implements Serializable {
             if (editedDetail.getID() > 0) {
                 for (ContractDetail detail : updatingContractDetailsList) {
                     if (detail.getID() == editedDetail.getID()) {
-                        detail.setWhatToDo("U");
+                        if (detail.getWhatToDo() != null && detail.getWhatToDo().equals("D")){
+                            break;
+                        }else {
+                            detail.setWhatToDo("U");
+                        }
                     }
                 }
             } else if (editedDetail.getID() < 0) {
                 for (ContractDetail detail : updatingContractDetailsList) {
-                    if (detail.getID() == editedDetail.getID()) {
+                    if (detail.getID() == editedDetail.getID() && !detail.getWhatToDo().contains("C")) {
                         detail.setWhatToDo(detail.getWhatToDo() + "C");
                     }
                 }
@@ -450,7 +454,7 @@ public class EditContractBean implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         ContractDetail editedDetail = context.getApplication().evaluateExpressionGet(context, "#{detail}", ContractDetail.class);
         for (ContractDetail detail : updatingContractDetailsList) {
-            if (detail.getWhatToDo().equals(editedDetail.getWhatToDo())) {
+            if (detail.getWhatToDo()!=null && detail.getWhatToDo().equals(editedDetail.getWhatToDo())) {
                 updatingContractDetailsList.remove(detail);
                 break;
             }

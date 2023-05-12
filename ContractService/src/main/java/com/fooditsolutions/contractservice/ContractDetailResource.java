@@ -95,8 +95,8 @@ public class ContractDetailResource {
             }
         }
         if (detailsToCreate.size() > 0) {
-            ContractDetail[] detailsToCreateArray = new ContractDetail[detailsToCreate.size()];
-            createContractDetails(detailsToCreate.toArray(detailsToCreateArray),name);
+            ContractDetail[] detailsToCreateArray = detailsToCreate.toArray(new ContractDetail[0]);
+            createContractDetails(detailsToCreateArray,name);
         }
 
         if (detailsToUpdate.size() > 0) {
@@ -219,15 +219,17 @@ public class ContractDetailResource {
         ContractDetail detail=getContractDetail(id);
         HttpController.httpDelete(PropertiesController.getProperty().getBase_url_datastoreservice() + "/contractDetail/" + id + "?datastoreKey=" + PropertiesController.getProperty().getDatastore());
 
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_historyservice()+"/history"+id);
+
         History history = new History();
         history.setAttribute("contractDetail");
         history.setAttribute_id(detail.getContract_ID());
         history.setAction(Action.DELETE);
         history.setActor(name);
         if (!detail.isHasFreeLine()){
-            history.setDescription("Name module:"+detail.getModuleId().getName());
+            history.setDescription("Name module: "+detail.getModuleId().getName());
         }else{
-            history.setDescription("Free line"+detail.getFreeLine());
+            history.setDescription("Free line: "+detail.getFreeLine());
         }
 
 

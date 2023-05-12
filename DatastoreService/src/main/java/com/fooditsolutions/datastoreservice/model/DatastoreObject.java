@@ -1,7 +1,7 @@
 package com.fooditsolutions.datastoreservice.model;
 
 
-import com.fooditsolutions.datastoreservice.emum.DatamodelType;
+import com.fooditsolutions.datastoreservice.enums.DatamodelType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
