@@ -14,8 +14,10 @@
 <h:body>
     <ui:include src="header.xhtml"/>
 
-
     <h:form>
+        <p:commandButton value="History deleted contracts" action="#{ManageContractBean.historyDeletedContracts()}">
+            <p:ajax update="historyTable" delay="500"/>
+        </p:commandButton>
         <div class="card">
             <section>
                 <p:outputLabel value="show filters:"/>
@@ -146,6 +148,25 @@
                     </h:panelGroup>
                 </p:column>
 
+            </p:dataTable>
+        </div>
+        <div>
+            <p:dataTable id="historyTable" var="history" value="#{ManageContractBean.selectedHistory}">
+                <p:column headerText="attribute id">
+                    #{history.attribute_id}
+                </p:column>
+                <p:column headerText="Action:">
+                    #{history.action}
+                </p:column>
+                <p:column headerText="Actor:">
+                    #{history.actor}
+                </p:column>
+                <p:column headerText="Timestamp">
+                    #{history.ts}
+                </p:column>
+                <p:column headerText="Description:">
+                    #{history.description}
+                </p:column>
             </p:dataTable>
         </div>
     </h:form>

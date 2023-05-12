@@ -45,10 +45,15 @@ public class ContractDetailController {
 
             ContractDetails2[i].set_active(true);
 
-            ModuleId moduleId = Moduleids.get(ContractDetails2[i].getModule_DBB_ID());
-            ContractDetails2[i].setModuleId(moduleId);
-            contractsDetails.add(ContractDetails2[i]);
-
+            if (ContractDetails2[i].getFreeLine()!=null){
+                ContractDetails2[i].setHasFreeLine(true);
+                contractsDetails.add(ContractDetails2[i]);
+            }else{
+                ContractDetails2[i].setHasFreeLine(false);
+                ModuleId moduleId = Moduleids.get(ContractDetails2[i].getModule_DBB_ID());
+                ContractDetails2[i].setModuleId(moduleId);
+                contractsDetails.add(ContractDetails2[i]);
+            }
 
             if (ContractDetails2[i].getEnd_date()!=null){
                 Date currentDate=new Date();

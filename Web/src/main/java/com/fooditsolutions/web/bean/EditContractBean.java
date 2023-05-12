@@ -35,7 +35,6 @@ public class EditContractBean implements Serializable {
     //updatingContract is the one that goes to the webpage
     private Contract updatingContract;
     private ContractDetail[] selectedContractDetails;
-    //updatingContractDetails is the one that goes to the webpage
     private ContractDetail[] updatingContractDetails;
     private List<ContractDetail> updatingContractDetailsList = new ArrayList<>();
     private List<ContractDetail> filteredDetails = new ArrayList<>();
@@ -298,33 +297,50 @@ public class EditContractBean implements Serializable {
         if (newValue.getClass().equals(ArrayList.class)) {
             List<java.lang.Object> newValueList;
             newValueList = (List<Object>) newValue;
-            newValue = newValueList.get(0);
+            for (Object o : newValueList) {
+                if (o != null) {
+                    newValue = o;
+                    break;
+                }
+            }
         }
         warningModule = "";
 
         FacesContext context = FacesContext.getCurrentInstance();
         ContractDetail editedDetail = context.getApplication().evaluateExpressionGet(context, "#{detail}", ContractDetail.class);
         if (editedDetail != null) {
-            for (ContractDetail detail : updatingContractDetailsList) {
-                if (newValue.equals(detail.getModule_DBB_ID()) && editedDetail.getID() != detail.getID()) {
-                    System.out.println("This contract already has this module.");
-                    warningModule = " This contract already has this module.";
+            if (!editedDetail.isHasFreeLine()){
+                for (ContractDetail detail : updatingContractDetailsList) {
+                    if (newValue.equals(detail.getModule_DBB_ID()) && editedDetail.getID() != detail.getID()) {
+                        System.out.println("This contract already has this module.");
+                        warningModule = " This contract already has this module.";
+                    }
                 }
-            }
-            for (ModuleId moduleId : moduleIds) {
-                if (moduleId.getDbb_id().equals(newValue)) {
-                    for (ContractDetail detail : updatingContractDetailsList) {
-                        if (detail.getID() == editedDetail.getID()) {
-                            detail.setModuleId(moduleId);
-                            detail.setModule_DBB_ID(editedDetail.getModule_DBB_ID());
-                            if (detail.getID() == 0) {
-                                counter--;
-                                detail.setID(counter);
+                for (ModuleId moduleId : moduleIds) {
+                    if (moduleId.getDbb_id().equals(newValue)) {
+                        for (ContractDetail detail : updatingContractDetailsList) {
+                            if (detail.getID() == editedDetail.getID()) {
+                                detail.setModuleId(moduleId);
+                                detail.setModule_DBB_ID(editedDetail.getModule_DBB_ID());
+                                if (detail.getID() == 0) {
+                                    counter--;
+                                    detail.setID(counter);
+                                }
                             }
                         }
                     }
                 }
+            }else {
+                for (ContractDetail detail : updatingContractDetailsList) {
+                    if (detail.getID() == editedDetail.getID()) {
+                        if (detail.getID() == 0) {
+                            counter--;
+                            detail.setID(counter);
+                        }
+                    }
+                }
             }
+
             if (editedDetail.getID() > 0) {
                 for (ContractDetail detail : updatingContractDetailsList) {
                     if (detail.getID() == editedDetail.getID()) {
@@ -381,11 +397,28 @@ public class EditContractBean implements Serializable {
         detail.setContract_ID(updatingContract.id);
         detail.setWhatToDo("N" + counterWhatToDo);
         detail.setSource("M");
+        detail.set_active(true);
         counterWhatToDo++;
         List<ContractDetail> newList = new ArrayList<>(updatingContractDetailsList);
         newList.add(0, detail);
         updatingContractDetailsList = newList;
+        updateActiveFilterDetails();
     }
+
+    public void addRowFreeLine() {
+        ContractDetail detail = new ContractDetail();
+        detail.setHasFreeLine(true);
+        detail.setContract_ID(updatingContract.id);
+        detail.setWhatToDo("N" + counterWhatToDo);
+        detail.setSource("M");
+        detail.set_active(true);
+        counterWhatToDo++;
+        List<ContractDetail> newList = new ArrayList<>(updatingContractDetailsList);
+        newList.add(0, detail);
+        updatingContractDetailsList = newList;
+        updateActiveFilterDetails();
+    }
+
 
     /**
      * if a user presses on the delete button next to a module and it is an empty detail, the row is removed.

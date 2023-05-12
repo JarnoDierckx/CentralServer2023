@@ -29,6 +29,19 @@ public class HistoryResource {
         }
     }
     @GET
+    @Path("/deleted")
+    @Produces("application/json")
+    public List<History> getHistoryDeletedContracts(@QueryParam("full") boolean full) throws IOException {
+
+        String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/history/deleted?datastoreKey="+ PropertiesController.getProperty().getDatastore());
+        System.out.println("HistoryService: "+responseString);
+        List<History> result = new ArrayList<>();
+        result = HistoryController.createHistoryInformation(responseString);
+        result = HistoryController.getFull(full,result);
+        return result;
+    }
+
+    @GET
     @Produces("application/json")
     public List<History> getHistory(@QueryParam("full") boolean full) throws IOException {
 

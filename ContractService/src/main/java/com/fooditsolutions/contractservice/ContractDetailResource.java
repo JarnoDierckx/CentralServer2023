@@ -224,7 +224,12 @@ public class ContractDetailResource {
         history.setAttribute_id(detail.getContract_ID());
         history.setAction(Action.DELETE);
         history.setActor(name);
-        history.setDescription("Name module:"+detail.getModuleId().getName());
+        if (!detail.isHasFreeLine()){
+            history.setDescription("Name module:"+detail.getModuleId().getName());
+        }else{
+            history.setDescription("Free line"+detail.getFreeLine());
+        }
+
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

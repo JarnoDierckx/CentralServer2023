@@ -98,10 +98,16 @@ public class ContractDetailResource {
             String moduleDBBID;
             String purchaseDate;
             String purchasePrice;
+            String freeLine;
             if (contractDetail.getModule_DBB_ID() != null){
                 moduleDBBID="' AND MODULE_DBB_ID = " + contractDetail.getModule_DBB_ID();
             }else {
                 moduleDBBID="' AND MODULE_DBB_ID is null";
+            }
+            if (contractDetail.isHasFreeLine()){
+                freeLine="' AND FREELINE = " + contractDetail.getFreeLine();
+            }else {
+                freeLine="' AND FREELINE is null";
             }
             if (contractDetail.getPurchase_Date() != null){
                 SimpleDateFormat sdf = new SimpleDateFormat(
@@ -120,7 +126,7 @@ public class ContractDetailResource {
                 purchasePrice= " AND PURCHASE_PRICE IS NULL";
             }
 
-            sqlRead.add(contractID + moduleDBBID + purchaseDate + purchasePrice);
+            sqlRead.add(contractID + moduleDBBID+ freeLine + purchaseDate + purchasePrice);
         }
         int[] ID=new int[sqlRead.size()];
         JSONArray[] JSONID = new JSONArray[sqlRead.size()];
@@ -186,6 +192,7 @@ public class ContractDetailResource {
                 contractDetail.set_active((boolean) jsonContracts.getJSONObject(i).opt("IS_ACTIVE"));
             }
             contractDetail.setEnd_date((Date) jsonContracts.getJSONObject(i).opt("END_DATE"));
+            contractDetail.setFreeLine((String) jsonContracts.getJSONObject(i).opt("FREELINE"));
 
             contractDetails.add(contractDetail);
         }

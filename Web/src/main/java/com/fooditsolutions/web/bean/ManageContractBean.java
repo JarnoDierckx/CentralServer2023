@@ -224,6 +224,14 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return mapper.readValue(response, History[].class);
     }
 
+    public History[] retrieveHistoryDeletedContracts() throws JsonProcessingException {
+        String response =HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/history/deleted?full=true");
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.readValue(response, History[].class);
+    }
+
     public Server[] retrieveServers() throws JsonProcessingException {
         String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/server");
 
@@ -238,9 +246,26 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         HistorySorter.sortByTimestamp(selectedHistory);
         Collections.reverse(selectedHistory);
     }
+
     public void HistoryForContract() throws JsonProcessingException {
-        History[] detailHistory=retrieveHistoryID("contract", selectedItem.getId());
-        selectedHistory= Arrays.asList(detailHistory);
+        History[] contractHistory=retrieveHistoryID("contract", selectedItem.getId());
+        History[] deleteHistory=retrieveHistoryID("contractDetail",selectedItem.getId());
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        String jsonString = mapper.writeValueAsString(contractHistory);
+        String jsonString2 = mapper.writeValueAsString(deleteHistory);
+        jsonString=jsonString.substring(0,jsonString.length()-1);
+        jsonString2=jsonString2.substring(1);
+        jsonString+=","+jsonString2;
+        selectedHistory=Arrays.asList(mapper.readValue(jsonString, History[].class));
+        HistorySorter.sortByTimestamp(selectedHistory);
+        Collections.reverse(selectedHistory);
+    }
+
+    public void historyDeletedContracts() throws JsonProcessingException {
+        History[] deleteHistory=retrieveHistoryDeletedContracts();
+        selectedHistory= Arrays.asList(deleteHistory);
         HistorySorter.sortByTimestamp(selectedHistory);
         Collections.reverse(selectedHistory);
     }

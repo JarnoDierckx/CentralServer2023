@@ -31,6 +31,19 @@ public class HistoryResource {
      }
 
      @GET
+     @Path("/deleted")
+     @Produces("application/json")
+     public List<History> getHistoryDeletedContracts(@QueryParam("datastoreKey") String datastoreKey) {
+         JSONArray jsonHistory = new JSONArray();
+         for (DatastoreObject ds : Datastores.getDatastores()) {
+             if (datastoreKey.equals(ds.getKey())) {
+                 jsonHistory = DBFirebird.executeSQL(ds, "SELECT * FROM HISTORY WHERE ATTRIBUTE = 'contract' AND H_ACTION = 'DELETE'");
+             }
+         }
+         return JsonToHistory(jsonHistory);
+     }
+
+     @GET
      @Produces("application/json")
      @Path("/{ATTRIBUTE}")
      public List<History> getHistory(@PathParam("ATTRIBUTE") String attribute,

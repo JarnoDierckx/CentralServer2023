@@ -15,7 +15,7 @@
   <ui:include src="header.xhtml"/>
 
 
-  <h:form>
+  <h:form id="editForm">
     <div class="card">
       <p:dataTable id="contractTable" var="edit" value="#{EditContractBean.updatingContract}" paginator="true" paginatorTemplate="{Save} {delete}" paginatorPosition="bottom" editable="true" editMode="cell">
 
@@ -253,7 +253,7 @@
 
       <div class="card">
         <p:dataTable id="detailsTable" widgetVar="detailsTableWidget" var="detail" value="#{EditContractBean.filteredDetails}" paginator="true" paginatorPosition="both"
-                     paginatorTemplate="{addRow} {Warning}" editable="true" editMode="cell" sortMode="single">
+                     paginatorTemplate="{addRow1} {addRow2} {Warning}" editable="true" editMode="cell" sortMode="single">
 
           <f:facet name="header">
             <p:outputLabel value="show inactive modules:"/>
@@ -274,8 +274,11 @@
 
           <p:ajax event="cellEdit" listener="#{EditContractBean.onCellEdit}" update="detailsTable"/>
 
-          <f:facet name="{addRow}">
-            <p:commandButton value="Add new detail" action="#{EditContractBean.addRow}" update="detailsTable"/>
+          <f:facet name="{addRow1}">
+            <p:commandButton value="Add new module" action="#{EditContractBean.addRow}" update="detailsTable"/>
+          </f:facet>
+          <f:facet name="{addRow2}">
+            <p:commandButton value="Add free line" action="#{EditContractBean.addRowFreeLine}" update="detailsTable"/>
           </f:facet>
 
           <f:facet name="{Warning}">
@@ -285,17 +288,20 @@
           <p:column headerText="Module" sortBy="#{detail.moduleId.name}">
             <p:cellEditor>
               <f:facet name="output">
-                <h:outputText value="#{detail.moduleId.name}" style="#{detail.ID lt 0 ? 'color: red;' : 'color: black;'}" rendered="#{detail.ID!=0}"/>
-                <h:outputText value="Click to choose a module" style="color: mediumseagreen" rendered="#{detail.ID==0}"/>
+                <h:outputText value="#{detail.moduleId.name}" style="#{detail.ID lt 0 ? 'color: red;' : 'color: black;'}" rendered="#{detail.ID!=0 and !detail.hasFreeLine}"/>
+                <h:outputText value="#{detail.freeLine}" style="#{detail.ID lt 0 ? 'color: red;' : 'color: black;'}" rendered="#{detail.ID!=0 and detail.hasFreeLine}"/>
+                <h:outputText value="Click to choose a module" style="color: mediumseagreen" rendered="#{detail.ID==0 and !detail.hasFreeLine}"/>
+                <h:outputText value="Click to enter text" style="color: mediumseagreen" rendered="#{detail.ID==0 and detail.hasFreeLine}"/>
 
               </f:facet>
               <f:facet name="input">
-                  <p:selectOneMenu value="#{detail.module_DBB_ID}" rendered="#{detail.ID==0}" immediate="true">
+                  <p:selectOneMenu value="#{detail.module_DBB_ID}" rendered="#{detail.ID==0 and !detail.hasFreeLine}" immediate="true">
                     <f:selectItem itemLabel="select a module" itemValue="" noSelectionOption="true" />
                     <f:selectItems value="#{EditContractBean.moduleIds}" var="M" itemLabel="#{M.name}" itemValue="#{M.dbb_id}"/>
                     <p:ajax update="@this" />
                   </p:selectOneMenu>
                 <h:outputText value="#{detail.moduleId.name}" rendered="#{detail.ID!=0}" style="#{detail.ID lt 0 ? 'color: red;' : 'color: black;'}"/>
+                <p:inputText value="#{detail.freeLine}" rendered="#{detail.ID==0 and detail.hasFreeLine}"/>
               </f:facet>
             </p:cellEditor>
           </p:column>
