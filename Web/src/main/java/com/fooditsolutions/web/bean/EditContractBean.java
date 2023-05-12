@@ -34,7 +34,6 @@ public class EditContractBean implements Serializable {
     private Contract selectedContract;
     //updatingContract is the one that goes to the webpage
     private Contract updatingContract;
-    private ContractDetail[] selectedContractDetails;
     private ContractDetail[] updatingContractDetails;
     private List<ContractDetail> updatingContractDetailsList = new ArrayList<>();
     private List<ContractDetail> filteredDetails = new ArrayList<>();
@@ -105,8 +104,10 @@ public class EditContractBean implements Serializable {
                     if (updatingContract.getStart_date() != null) {
                         detail.setPurchase_Date(updatingContract.getStart_date());
                     }
-                    if (quantity != 0) {
-                        detail.setAmount(quantity);
+                    if (updatingContract.getSource().equals("CS")){
+                        if (quantity != 0) {
+                            detail.setAmount(quantity);
+                        }
                     }
                     if (updatingContract.getIndex_start() != null) {
                         detail.setIndex_Start(updatingContract.getIndex_start());
@@ -353,7 +354,7 @@ public class EditContractBean implements Serializable {
                 }
             } else if (editedDetail.getID() < 0) {
                 for (ContractDetail detail : updatingContractDetailsList) {
-                    if (detail.getID() == editedDetail.getID() && !detail.getWhatToDo().contains("C")) {
+                    if (detail.getID() == editedDetail.getID() && (detail.getWhatToDo()==null || !detail.getWhatToDo().contains("C"))) {
                         detail.setWhatToDo(detail.getWhatToDo() + "C");
                     }
                 }
@@ -527,14 +528,6 @@ public class EditContractBean implements Serializable {
 
     public void setUpdatingContract(Contract updatingContract) {
         this.updatingContract = updatingContract;
-    }
-
-    public ContractDetail[] getSelectedContractDetails() {
-        return selectedContractDetails;
-    }
-
-    public void setSelectedContractDetails(ContractDetail[] selectedContractDetails) {
-        this.selectedContractDetails = selectedContractDetails;
     }
 
     public ContractDetail[] getUpdatingContractDetails() {

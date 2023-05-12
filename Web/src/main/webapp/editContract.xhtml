@@ -302,7 +302,7 @@
                     <f:selectItems value="#{EditContractBean.moduleIds}" var="M" itemLabel="#{M.name}" itemValue="#{M.dbb_id}"/>
                     <p:ajax update="editForm" />
                   </p:selectOneMenu>
-                <h:outputText value="#{detail.moduleId.name}" rendered="#{detail.ID!=0}" style="#{detail.ID lt 0 ? 'color: red;' : 'color: black;'}#{detail.whatToDo.contains('N') ? 'color: blue;' : 'color:black'}"/>
+                <h:outputText value="#{detail.moduleId.name}" rendered="#{detail.ID!=0}" style="#{detail.ID lt 0 ? 'color: red;' : 'color: black;'}"/>
                 <p:inputText value="#{detail.freeLine}" rendered="#{detail.ID==0 and detail.hasFreeLine}"/>
                 <h:outputText value="#{detail.freeLine}" rendered="#{detail.ID!=0 and detail.hasFreeLine}"/>
               </f:facet>

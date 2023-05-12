@@ -1,30 +1,20 @@
 package com.fooditsolutions.datastoreservice.centralsserverresource;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fooditsolutions.datastoreservice.controller.DBFirebird;
 import com.fooditsolutions.datastoreservice.controller.Datastores;
 import com.fooditsolutions.datastoreservice.controller.Util;
-import com.fooditsolutions.datastoreservice.model.centralserver.History;
-import com.fooditsolutions.util.controller.HttpController;
-import com.fooditsolutions.util.controller.PropertiesController;
-import com.fooditsolutions.datastoreservice.model.centralserver.Client;
 import com.fooditsolutions.datastoreservice.model.centralserver.Contract;
 import com.fooditsolutions.datastoreservice.model.DatastoreObject;
-import com.fooditsolutions.datastoreservice.model.centralserver.ContractDetail;
-import com.fooditsolutions.util.enums.ModuleSyncType;
 import org.json.JSONArray;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 @Path("/contract")
 public class ContractResource {
@@ -188,7 +178,6 @@ public class ContractResource {
             }
             contract.setServer_ID((String) jsonContracts.getJSONObject(i).opt("SERVER_ID"));
             contract.setTotal_price((BigDecimal) jsonContracts.getJSONObject(i).opt("TOTAL_PRICE"));
-            contract.setSyncType((ModuleSyncType) jsonContracts.getJSONObject(i).opt("SYNCTYPE"));
 
             contracts.add(contract);
         }

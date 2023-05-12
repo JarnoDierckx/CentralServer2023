@@ -59,7 +59,7 @@ public class ContractResource {
         allServers=Arrays.asList(mapper.readValue(serverResponse, Server[].class));
 
         for (Contract contract : contracts) {
-            if (contract.getServer_ID()!=null){
+            if (contract.getServer_ID()!=null && contract.getSource().equals("CS")){
                 boolean hasEmpty = checkForEmptyModules(contract);
                 if (hasEmpty) {
                     contract.setHasEmptyModule(true);
@@ -122,9 +122,94 @@ public class ContractResource {
                     contractDetailList.add(contractDetail);
                 }
             }
+        }else if(contract.getSource().equals("MOB")){
+            String serverResponse=HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice()+"/server");
+            allServers=Arrays.asList(mapper.readValue(serverResponse, Server[].class));
+            for (Server server:allServers){
+                if (server.getID().equals(contract.getServer_ID())){
+                    boolean hasAM=false;
+                    boolean hasPM=false;
+                    boolean hasBS=false;
+                    boolean hasCP=false;
+                    boolean hasDS=false;
+                    boolean hasCA=false;
+                    for (ContractDetail detail: contractDetailList){
+                        if (detail.isHasFreeLine()&&detail.getFreeLine().contains("Mobile Devices NO AM")){
+                            hasAM=true;
+                        }
+                        if (detail.isHasFreeLine()&&detail.getFreeLine().contains("Mobile Devices NO PM")){
+                            hasPM=true;
+                        }
+                        if (detail.isHasFreeLine()&&detail.getFreeLine().contains("Mobile Devices NO BS")){
+                            hasBS=true;
+                        }
+                        if (detail.isHasFreeLine()&&detail.getFreeLine().contains("Mobile Devices NO CP")){
+                            hasCP=true;
+                        }
+                        if (detail.isHasFreeLine()&&detail.getFreeLine().contains("Mobile Devices NO DS")){
+                            hasDS=true;
+                        }
+                        if (detail.isHasFreeLine()&&detail.getFreeLine().contains("Mobile Devices NO CA")){
+                            hasCA=true;
+                        }
+                    }
+                    if (server.getMobileDevicesNOAM()>0 && !hasAM){
+                        ContractDetail contractDetail = new ContractDetail();
+                        contractDetail.setContract_ID(contract.id);
+                        contractDetail.setAmount(server.getMobileDevicesNOAM());
+                        contractDetail.setFreeLine("Mobile Devices NO AM");
+                        contractDetail.setHasFreeLine(true);
+                        contractDetail.set_active(true);
+                        contractDetailList.add(contractDetail);
+                    }
+                    if (server.getMobileDevicesNOPM()>0 && !hasPM){
+                        ContractDetail contractDetail = new ContractDetail();
+                        contractDetail.setContract_ID(contract.id);
+                        contractDetail.setAmount(server.getMobileDevicesNOPM());
+                        contractDetail.setFreeLine("Mobile Devices NO PM");
+                        contractDetail.setHasFreeLine(true);
+                        contractDetail.set_active(true);
+                        contractDetailList.add(contractDetail);
+                    }
+                    if (server.getMobileDevicesNOBS()>0 && !hasBS){
+                        ContractDetail contractDetail = new ContractDetail();
+                        contractDetail.setContract_ID(contract.id);
+                        contractDetail.setAmount(server.getMobileDevicesNOBS());
+                        contractDetail.setFreeLine("Mobile Devices NO BS");
+                        contractDetail.setHasFreeLine(true);
+                        contractDetail.set_active(true);
+                        contractDetailList.add(contractDetail);
+                    }
+                    if (server.getMobileDevicesNOCP()>0 && !hasCP){
+                        ContractDetail contractDetail = new ContractDetail();
+                        contractDetail.setContract_ID(contract.id);
+                        contractDetail.setAmount(server.getMobileDevicesNOCP());
+                        contractDetail.setFreeLine("Mobile Devices NO CP");
+                        contractDetail.setHasFreeLine(true);
+                        contractDetail.set_active(true);
+                        contractDetailList.add(contractDetail);
+                    }
+                    if (server.getMobileDevicesNODS()>0 && !hasDS){
+                        ContractDetail contractDetail = new ContractDetail();
+                        contractDetail.setContract_ID(contract.id);
+                        contractDetail.setAmount(server.getMobileDevicesNODS());
+                        contractDetail.setFreeLine("Mobile Devices NO DS");
+                        contractDetail.setHasFreeLine(true);
+                        contractDetail.set_active(true);
+                        contractDetailList.add(contractDetail);
+                    }
+                    if (server.getMobileDevicesNOCA()>0 && !hasCA){
+                        ContractDetail contractDetail = new ContractDetail();
+                        contractDetail.setContract_ID(contract.id);
+                        contractDetail.setAmount(server.getMobileDevicesNOCA());
+                        contractDetail.setFreeLine("Mobile Devices NO CA");
+                        contractDetail.setHasFreeLine(true);
+                        contractDetail.set_active(true);
+                        contractDetailList.add(contractDetail);
+                    }
+                }
+            }
         }
-
-
         return contractDetailList;
     }
 

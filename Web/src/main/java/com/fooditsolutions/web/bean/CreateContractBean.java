@@ -36,6 +36,7 @@ public class CreateContractBean implements Serializable {
     private String contract_numberWarning="";
     private String server_IDWarning="";
     private boolean isDisabled=false;
+    private String source;
 
     private int quantity;
 
@@ -89,6 +90,7 @@ public class CreateContractBean implements Serializable {
         }else {
             newContract.source="CS";
         }
+
         newContract.is_active=true;
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -201,6 +203,13 @@ public class CreateContractBean implements Serializable {
         }
     }
 
+    public void changeSource(){
+        if (newContract.source != null && newContract.source.equals("MOB")){
+            newContract.setInvoice_frequency("M");
+            newContract.setIndex_frequency("M");
+        }
+    }
+
     public void placebo(){}
 
 
@@ -266,5 +275,13 @@ public class CreateContractBean implements Serializable {
 
     public void setDisabled(boolean disabled) {
         isDisabled = disabled;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 }

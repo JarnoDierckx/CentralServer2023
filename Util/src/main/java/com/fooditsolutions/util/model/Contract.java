@@ -1,6 +1,5 @@
 package com.fooditsolutions.util.model;
 
-import com.fooditsolutions.util.enums.ModuleSyncType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +40,5 @@ public class Contract {
     public String server_ID;
     private BigDecimal total_price;
     private boolean hasEmptyModule;
-    private ModuleSyncType syncType;
 
 }

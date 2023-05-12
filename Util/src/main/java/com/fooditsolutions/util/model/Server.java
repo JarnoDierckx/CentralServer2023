@@ -20,5 +20,12 @@ public class Server {
     private BigDecimal DBB_ID = BigDecimal.valueOf(0);
     private String ID = "";
     private  BigDecimal CLIENT_DBB_ID = BigDecimal.valueOf(0);
+    private boolean isTrial;
+    private int MobileDevicesNOAM;
+    private int MobileDevicesNOPM;
+    private int MobileDevicesNOBS;
+    private int MobileDevicesNOCP;
+    private int MobileDevicesNODS;
+    private int MobileDevicesNOCA;
 
 }
