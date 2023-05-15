@@ -60,7 +60,6 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     /**
      * Executed when the page loads.
      * Calls for all the needed data and puts it in the correct variables.
-     * Also sorts between active and inactive contracts.
      */
     @PostConstruct
     public void init() {
@@ -138,7 +137,7 @@ public class ManageContractBean extends HttpServlet implements Serializable {
     }
 
     /**
-     * loops through the given list of servers and takes out those that aren't used in any contracts.
+     * loops through the given list of servers and puts the ones that aren't in use in a list;
      * @return A list of unused server objects
      */
     public List<Server> retrieveUnusedServers(List<Server> serverList) {
@@ -161,6 +160,9 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return unusedServers;
     }
 
+    /**
+     * puts any client that has a contract in listClientsWithContracts.
+     */
     public void onlyClientsWithContracts(){
         listClientsWithContracts=new ArrayList<>();
         for (Client client: clientList){
@@ -208,6 +210,10 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return mapper.readValue(responseContractDetails, ContractDetail[].class);
     }
 
+    /**
+     * retrieves all history objects in the database.
+     * @return the list of objects.
+     */
     public History[] retrieveHistory() throws JsonProcessingException {
         String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/history?full=true");
 
@@ -216,6 +222,12 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return mapper.readValue(response, History[].class);
     }
 
+    /**
+     * retrieves a list of history objects based on the given attribute and attributeid
+     * @param attribute the type of object the history objects refers to (like Contract/ContractDetail)
+     * @param attributeid the id of the object the history objects refer to.
+     * @return the list of objects
+     */
     public History[] retrieveHistoryID(String attribute, int attributeid) throws JsonProcessingException {
         String response =HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/history/"+attribute+"/"+attributeid+"?full=true");
 
@@ -224,6 +236,10 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return mapper.readValue(response, History[].class);
     }
 
+    /**
+     * retrieves every history object made when a contract is deleted.
+     * @return the list of objects.
+     */
     public History[] retrieveHistoryDeletedContracts() throws JsonProcessingException {
         String response =HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/history/deleted?full=true");
 
@@ -232,6 +248,9 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return mapper.readValue(response, History[].class);
     }
 
+    /**
+     * Retrieves a list of all server objects.
+     */
     public Server[] retrieveServers() throws JsonProcessingException {
         String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/server");
 
@@ -240,6 +259,10 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         return mapper.readValue(response, Server[].class);
     }
 
+    /**
+     * Calls for all history objects referring to a specific ContractDetail object.
+     * The list is then sorted and reversed so the newest object is displayed first and the oldest object is displayed last.
+     */
     public void HistoryForDetail() throws JsonProcessingException {
         History[] detailHistory=retrieveHistoryID("contractDetail", selectedDetail.getID());
         selectedHistory= Arrays.asList(detailHistory);
@@ -247,6 +270,11 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         Collections.reverse(selectedHistory);
     }
 
+    /**
+     * Calls for all history objects referring to a specific Contract object,
+     * along with all history objects created when one of this contracts' details where deleted.
+     * The list is then sorted and reversed so the newest object is displayed first and the oldest object is displayed last.
+     */
     public void HistoryForContract() throws JsonProcessingException {
         History[] contractHistory=retrieveHistoryID("contract", selectedItem.getId());
         History[] deleteHistory=retrieveHistoryID("contractDetail",selectedItem.getId());
@@ -265,6 +293,10 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         Collections.reverse(selectedHistory);
     }
 
+    /**
+     * Calls for all history objects referring to contracts that have been deleted.
+     * The list is then sorted and reversed so the newest object is displayed first and the oldest object is displayed last.
+     */
     public void historyDeletedContracts() throws JsonProcessingException {
         History[] deleteHistory=retrieveHistoryDeletedContracts();
         selectedHistory= Arrays.asList(deleteHistory);
@@ -404,19 +436,13 @@ public class ManageContractBean extends HttpServlet implements Serializable {
             }
             filteredContracts=filteredContracts2;
         }
-        //updateFacturationShownCustomers();
+        updateFacturationShownCustomers();
         onlyClientsWithContracts();
-        yearlyShownCustomers= BigDecimal.valueOf(0);
-        monthlyShownCustomers= BigDecimal.valueOf(0);
-        for (Contract contract:filteredContracts){
-            if (contract.getInvoice_frequency().equals("J") && contract.getTotal_price()!=null){
-                yearlyShownCustomers=yearlyShownCustomers.add(contract.getTotal_price());
-            }else if (contract.getInvoice_frequency().equals("M") && contract.getTotal_price()!=null){
-                monthlyShownCustomers=monthlyShownCustomers.add(contract.getTotal_price());
-            }
-        }
     }
 
+    /**
+     * Goes through all displayed contracts and adds the total pricee of each one to the correct variable.
+     */
     public void updateFacturationShownCustomers(){
         yearlyShownCustomers= BigDecimal.valueOf(0);
         monthlyShownCustomers= BigDecimal.valueOf(0);
@@ -429,6 +455,9 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         }
     }
 
+    /**
+     * filters trough active and inactive details and adds the correct ones to filteredDetailList so they can be displayed.
+     */
     public void updateActiveFilterDetails(){
         if (!inActiveFilterDetails) {
             filteredDetailList = new ArrayList<>();

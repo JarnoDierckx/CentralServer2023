@@ -125,6 +125,7 @@ public class EditContractBean implements Serializable {
                 filteredDetails.add(detail);
             }
         }
+        //retrieve all necessary data
         updatingContractDetailsList = Arrays.asList(updatingContractDetails);
         moduleIds = retrieveModuleIds();
         sortBy = new ArrayList<>();
@@ -139,6 +140,7 @@ public class EditContractBean implements Serializable {
                 updatingContract.setTotal_price(updatingContract.getTotal_price().add(detail.getJgr_not_indexed()));
             }
         }
+
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         userName = "";
 
@@ -259,20 +261,21 @@ public class EditContractBean implements Serializable {
     /**
      * Sends a request for all stored software modules.
      *
-     * @return an array of all modules
+     * @return an array of all modules.
      */
     public ModuleId[] retrieveModuleIds() throws JsonProcessingException {
         String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api() + "/module");
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         List<ModuleId> tempModuleList = Arrays.asList(mapper.readValue(response, ModuleId[].class));
-        /*ModuleId emptyModule=new ModuleId();
-        emptyModule.setName("Choose a module");
-        tempModuleList.add(emptyModule);*/
         ModuleId[] tempArray = tempModuleList.toArray(new ModuleId[0]);
         return tempArray;
     }
 
+    /**
+     * retrieves all index values.
+     * @return an array of index values.
+     */
     public Index[] retrieveIndex() throws JsonProcessingException {
         String response = HttpController.httpGet(PropertiesController.getProperty().getBase_url_indexservice() + "/index");
         ObjectMapper mapper = new ObjectMapper();
@@ -292,7 +295,7 @@ public class EditContractBean implements Serializable {
      * The new value is also printed onto the console.
      */
     public void onCellEdit(CellEditEvent event) {
-        //newvalue and oldvalue are somehow an array now with 2 items if you edit the module field, so I need to get the first one in order for the rest of the code to work.
+        //newvalue and oldvalue are somehow an array now with 2/3 items, so i need to get whichever has an actual value in it.
         Object oldValue = event.getOldValue();
         Object newValue = event.getNewValue();
         if (newValue.getClass().equals(ArrayList.class)) {
@@ -313,6 +316,7 @@ public class EditContractBean implements Serializable {
             if (!editedDetail.isHasFreeLine()){
                 for (ContractDetail detail : updatingContractDetailsList) {
                     if (newValue.equals(detail.getModule_DBB_ID()) && editedDetail.getID() != detail.getID()) {
+                        //if a module is already in use, add a warning.
                         System.out.println("This contract already has this module.");
                         warningModule = " This contract already has this module.";
                     }
