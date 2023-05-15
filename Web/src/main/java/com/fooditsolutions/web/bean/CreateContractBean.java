@@ -37,7 +37,6 @@ public class CreateContractBean implements Serializable {
     private String server_IDWarning="";
     private boolean isDisabled=false;
     private String source;
-
     private int quantity;
 
     @PostConstruct
@@ -87,8 +86,6 @@ public class CreateContractBean implements Serializable {
         }
         if (newContract.getServer_ID() == null){
             newContract.source="M";
-        }else {
-            newContract.source="CS";
         }
 
         newContract.is_active=true;
@@ -207,6 +204,9 @@ public class CreateContractBean implements Serializable {
         if (newContract.source != null && newContract.source.equals("MOB")){
             newContract.setInvoice_frequency("M");
             newContract.setIndex_frequency("M");
+        } else if(newContract.source != null && newContract.source.equals("CS")){
+            newContract.setInvoice_frequency("J");
+            newContract.setIndex_frequency("J");
         }
     }
 

@@ -254,10 +254,12 @@ public class ManageContractBean extends HttpServlet implements Serializable {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         String jsonString = mapper.writeValueAsString(contractHistory);
-        String jsonString2 = mapper.writeValueAsString(deleteHistory);
-        jsonString=jsonString.substring(0,jsonString.length()-1);
-        jsonString2=jsonString2.substring(1);
-        jsonString+=","+jsonString2;
+        if (deleteHistory.length>0){
+            String jsonString2 = mapper.writeValueAsString(deleteHistory);
+            jsonString=jsonString.substring(0,jsonString.length()-1);
+            jsonString2=jsonString2.substring(1);
+            jsonString+=","+jsonString2;
+        }
         selectedHistory=Arrays.asList(mapper.readValue(jsonString, History[].class));
         HistorySorter.sortByTimestamp(selectedHistory);
         Collections.reverse(selectedHistory);
@@ -402,8 +404,17 @@ public class ManageContractBean extends HttpServlet implements Serializable {
             }
             filteredContracts=filteredContracts2;
         }
-        updateFacturationShownCustomers();
+        //updateFacturationShownCustomers();
         onlyClientsWithContracts();
+        yearlyShownCustomers= BigDecimal.valueOf(0);
+        monthlyShownCustomers= BigDecimal.valueOf(0);
+        for (Contract contract:filteredContracts){
+            if (contract.getInvoice_frequency().equals("J") && contract.getTotal_price()!=null){
+                yearlyShownCustomers=yearlyShownCustomers.add(contract.getTotal_price());
+            }else if (contract.getInvoice_frequency().equals("M") && contract.getTotal_price()!=null){
+                monthlyShownCustomers=monthlyShownCustomers.add(contract.getTotal_price());
+            }
+        }
     }
 
     public void updateFacturationShownCustomers(){

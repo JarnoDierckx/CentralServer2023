@@ -37,7 +37,7 @@
 
                         <p:outputLabel value="show inactive contracts:"/>
                         <p:selectBooleanCheckbox value="#{ManageContractBean.inActiveFilter}">
-                            <p:ajax update="generalTable" listener="#{ManageContractBean.updateActiveFilter}" />
+                            <p:ajax update="generalTable amounts" listener="#{ManageContractBean.updateActiveFilter}" />
                         </p:selectBooleanCheckbox> <br/>
 
 
@@ -47,6 +47,7 @@
                             <p:selectManyMenu value="#{ManageContractBean.selectedClientList}" valueChangeListener="#{ManageContractBean.updateActiveFilter()}">
                                 <f:selectItem itemLabel="select client" itemValue="" noSelectionOption="true" />
                                 <f:selectItems var="client" value="#{ManageContractBean.listClientsWithContracts}"  itemValue="#{client.DBB_ID}" itemLabel="#{client.name}"/>
+                                <p:ajax event="change" update="amounts"/>
                             </p:selectManyMenu>
 
                             <p:commandButton value="Filter clients" action="#{ManageContractBean.updateActiveFilter()}" update="generalTable"/>
@@ -61,6 +62,17 @@
                             </p:selectOneMenu>
                             <p:commandButton value="create contract from server id" action="#{ManageContractBean.createContract()}" style="background-color: yellow; color: black"/>
                         </p:panel>
+                    </p:panel>
+                    <p:panel id="amounts">
+                        <h:outputLabel value="total facturation amount of all yearly contracts:"/>
+                        <h:outputText value="#{ManageContractBean.yearlyFacturationAmount}"/><br/>
+                        <h:outputLabel value="total facturation amount of all monthly contracts:"/>
+                        <h:outputText value="#{ManageContractBean.monthlyFacturationAmount}"/><br/><br/>
+
+                        <h:outputLabel value="Yearly facturation amount of shown contracts:"/>
+                        <h:outputText value="#{ManageContractBean.yearlyShownCustomers}"/><br/>
+                        <h:outputLabel value="Monthly facturation amount of shown contracts:"/>
+                        <h:outputText value="#{ManageContractBean.monthlyShownCustomers}"/><br/>
                     </p:panel>
                 </f:facet>
 
@@ -174,15 +186,5 @@
     <h:form>
         <p:commandButton title="Create new contract" action="#{ManageContractBean.createContract()}"/>
     </h:form>
-    <h:outputLabel value="total facturation amount of all yearly contracts:"/>
-    <h:outputText value="#{ManageContractBean.yearlyFacturationAmount}"/><br/>
-    <h:outputLabel value="total facturation amount of all monthly contracts:"/>
-    <h:outputText value="#{ManageContractBean.monthlyFacturationAmount}"/><br/>
-
-    <h:outputLabel value="Yearly facturation amount of shown contracts:"/>
-    <h:outputText value="#{ManageContractBean.yearlyShownCustomers}"/><br/>
-    <h:outputLabel value="Monthly facturation amount of shown contracts:"/>
-    <h:outputText value="#{ManageContractBean.monthlyShownCustomers}"/><br/>
-
 </h:body>
 </html>

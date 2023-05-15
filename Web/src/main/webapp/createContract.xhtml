@@ -79,7 +79,7 @@
             <section>
                 <h:outputText value="Base year index"/><br/>
                 <p:selectOneMenu value="#{createContractBean.newContract.base_index_year}">
-                    <f:selectItem itemValue="" itemLabel="" noSelectionOption="true"/>
+                    <f:selectItem itemLabel="select a year" itemValue="" noSelectionOption="true" />
                     <f:selectItem itemValue="1996" itemLabel="1996" />
                     <f:selectItem itemValue="1988" itemLabel="1988" />
                     <p:ajax event="change" listener="#{createContractBean.updateCPI()}" update="createForm"/>
@@ -101,21 +101,22 @@
             </section>
 
             <section>
+                <h:outputText value="Modules or mobile devices"/><br/>
+                <p:selectOneMenu value="#{createContractBean.newContract.source}" required="true">
+                    <p:ajax event="change" listener="#{createContractBean.changeSource()}" update="createForm"/>
+                    <f:selectItem itemLabel="select an option" itemValue="" noSelectionOption="true" />
+                    <f:selectItem itemValue="CS" itemLabel="Module" />
+                    <f:selectItem itemValue="MOB" itemLabel="Mobile" />
+                </p:selectOneMenu>
+            </section>
+
+            <section>
                 <h:outputText value="Base quantity for modules"/>
                 <p:inputText value="#{createContractBean.quantity}">
                     <p:ajax event="change" listener="#{createContractBean.placebo()}" update="createForm"/>
                 </p:inputText>
             </section>
 
-            <section>
-                <h:outputText value="Modules or mobile devices"/><br/>
-                <p:selectOneMenu value="#{CreateContractBean.newContract.source}">
-                        <f:selectItem itemValue="" itemLabel="" noSelectionOption="true"/>
-                        <f:selectItem itemValue="CS" itemLabel="Module" />
-                        <f:selectItem itemValue="MOB" itemLabel="Mobile" />
-                        <p:ajax event="change" listener="#{createContractBean.changeSource()}" update="createForm"/>
-                </p:selectOneMenu>
-            </section>
         </div>
         <p><h:commandButton value="Create" action="#{createContractBean.createContract}" disabled="#{createContractBean.disabled}"/></p>
     </h:form>

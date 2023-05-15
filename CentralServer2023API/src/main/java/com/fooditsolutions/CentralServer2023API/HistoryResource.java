@@ -12,7 +12,7 @@ public class HistoryResource {
     @GET
     @Produces("application/json")
     public String retrieveHistory(@QueryParam("full") boolean full){
-        String response= HttpController.httpGet("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api"+"/history?full="+full);
+        String response= HttpController.httpGet(PropertiesController.getProperty().getBase_url_historyservice()+"/history?full="+full);
         return response;
     }
 
@@ -29,7 +29,7 @@ public class HistoryResource {
     @Produces("application/json")
     public String retrieveHistoryAttributeID(@PathParam("ATTRIBUTE") String attribute,
                                              @PathParam("ATTRIBUTEID") String attributeid,@QueryParam("full") boolean full){
-        String response= HttpController.httpGet("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api"+"/history/"+attribute+"/"+ attributeid+"?full="+full);
+        String response= HttpController.httpGet(PropertiesController.getProperty().getBase_url_historyservice()+"/history/"+attribute+"/"+ attributeid+"?full="+full);
         return response;
     }
 
