@@ -281,29 +281,27 @@
           </f:facet>
 
           <f:facet name="{Warning}">
-            <br/><p:outputLabel id="warning" value="#{EditContractBean.warningModule}" style="color: blue">
-            <p:ajax listener="#{EditContractBean.warningModule}" update="warning" event="keypress"/>
-          </p:outputLabel>
+            <br/><p:outputLabel id="warning" value="#{EditContractBean.warningModule}" style="color: blue"/>
           </f:facet>
 
           <p:column headerText="Module" sortBy="#{detail.moduleId.name}">
             <p:cellEditor>
               <f:facet name="output">
-                <h:outputText value="#{detail.moduleId.name}" styleClass="#{detail.whatToDo.contains('C') ? 'red-text' : 'black-text'} #{detail.whatToDo.contains('N') ? 'blue-text' : ''}" rendered="#{detail.ID!=0 and !detail.hasFreeLine}"/>
-                <h:outputText value="#{detail.freeLine}" styleClass="#{detail.whatToDo.contains('C') ? 'red-text' : 'black-text'} #{detail.whatToDo.contains('N') ? 'blue-text' : ''}" rendered="#{detail.ID!=0 and detail.hasFreeLine}"/>
+                <h:outputText value="#{detail.moduleId.name}" styleClass="#{detail.ID lt 0 ? 'red-text' : ''} #{detail.ID eq 0 ? 'blue-text' : ''}" rendered="#{detail.ID!=0 and !detail.hasFreeLine}"/>
+                <h:outputText value="#{detail.freeLine}" styleClass="#{detail.whatToDo.contains('C') ? 'red-text' : ''} #{detail.whatToDo.contains('N') ? 'blue-text' : ''}" rendered="#{detail.ID!=0 and detail.hasFreeLine}"/>
                 <h:outputText value="Click to choose a module" style="color: mediumseagreen" rendered="#{detail.ID==0 and !detail.hasFreeLine}"/>
                 <h:outputText value="Click to enter text" style="color: mediumseagreen" rendered="#{detail.ID==0 and detail.hasFreeLine}"/>
 
               </f:facet>
               <f:facet name="input">
-                  <p:selectOneMenu value="#{detail.module_DBB_ID}" rendered="#{detail.ID==0 and !detail.hasFreeLine}" immediate="true">
+                  <p:selectOneMenu value="#{detail.module_DBB_ID}" rendered="#{detail.ID==0 and !detail.hasFreeLine or detail.ID lt 0 and !detail.hasFreeLine}" immediate="true">
                     <f:selectItem itemLabel="select a module" itemValue="" noSelectionOption="true" />
                     <f:selectItems value="#{EditContractBean.moduleIds}" var="M" itemLabel="#{M.name}" itemValue="#{M.dbb_id}"/>
-                    <p:ajax update="editForm" />
                   </p:selectOneMenu>
-                <h:outputText value="#{detail.moduleId.name}" rendered="#{detail.ID!=0}" styleClass="#{detail.ID lt 0 ? 'red-text' : ''}"/>
+                <h:outputText value="#{detail.moduleId.name}" rendered="#{detail.ID gt 0}" styleClass="#{detail.ID lt 0 ? 'red-text' : ''}"/>
+
                 <p:inputText value="#{detail.freeLine}" rendered="#{detail.ID==0 and detail.hasFreeLine}"/>
-                <h:outputText value="#{detail.freeLine}" rendered="#{detail.ID!=0 and detail.hasFreeLine}"/>
+                <h:outputText value="#{detail.freeLine}" styleClass="#{detail.whatToDo.contains('C') ? 'red-text' : ''} #{detail.whatToDo.contains('N') ? 'blue-text' : ''}" rendered="#{detail.ID!=0 and detail.hasFreeLine}"/>
               </f:facet>
             </p:cellEditor>
           </p:column>
