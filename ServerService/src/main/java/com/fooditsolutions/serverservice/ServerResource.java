@@ -15,6 +15,11 @@ import java.util.List;
 
 @Path("/server")
 public class ServerResource {
+
+    /**
+     * Retrieves all server objects stored in the database.
+     * @return A List of server objects.
+     */
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
@@ -28,6 +33,10 @@ public class ServerResource {
         return result;
     }
 
+    /**
+     * retrieves a single server.
+     * unfinished.
+     */
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")

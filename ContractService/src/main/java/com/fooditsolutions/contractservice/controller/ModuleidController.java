@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ModuleidController {
     /**
-     *
+     * turns a json object into a List of ModuleId objects.
      * @param JsonModuleIdr a json object containing ModuleId objects.
      * @return A List of ModuleId objects.
      */
@@ -27,6 +27,11 @@ public class ModuleidController {
         return moduleIds;
     }
 
+    /**
+     * turns a json object into a Dictionary of ModuleIds with a BigDecimal ID as key.
+     * @param JsonModuleId a json object containing the ModuleIds
+     * @return Dictionary of ModuleIds with a BigDecimal ID as key
+     */
     public static Dictionary<BigDecimal, ModuleId> getModuleIdDictionaryFromJson(String JsonModuleId){
         Dictionary<BigDecimal, ModuleId> ModuleIds = new Hashtable<>();
         JSONArray jsonArray = new JSONArray(JsonModuleId);

@@ -12,6 +12,10 @@ import java.util.List;
 @Path("/module")
 public class ModuleResource {
 
+    /**
+     * retrieves all stored ModuleId objects from the database.
+     * @return a json object containing ModuleId objects.
+     */
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")

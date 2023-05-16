@@ -11,9 +11,13 @@ import java.io.IOException;
 
 @Path("/clients")
 public class ClientResource {
+    /**
+     * Retrieves a list of all stored clients in the database.
+     * @return a json object containing all clients.
+     */
     @GET
     @Produces("application/json")
-    public String getContracts() throws IOException {
+    public String getContracts() {
         String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice()+"/clients");
         return responseString;
     }

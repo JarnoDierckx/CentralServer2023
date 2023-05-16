@@ -35,7 +35,7 @@ public class ContractResource {
     /**
      * sends forward GET request for all contracts.
      * Makes a call for all modules a servers and then checks for each contract if they have modules bound to them that don't yet have a contractDetail object.
-     * The recieved value is then returned back.
+     * hasEmptyModules is set to true if that is the case so that the front end knows an action is requirec.
      */
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
@@ -91,7 +91,8 @@ public class ContractResource {
     /**
      * sends forward GET request for the contract details of whatever ID is send along.
      * It then checks if the associated contract has modules that don't yet have a contractDetail object and adds them to the list.
-     * The list is then returned back.
+     * if the source of the contract is 'MOB', meaning it is a contract for mobile devices, a check is performed to see if the detail lines for those devices are already in the list
+     * and missing items are added.
      */
     @GET
     @Path("/{ContractID}/contractdetails")
@@ -275,6 +276,7 @@ public class ContractResource {
     }
 
     /**
+     * The endpoint to create several ContractDetail objects in the database.
      */
     @Path("/detail/{name}")
     @POST
@@ -292,7 +294,11 @@ public class ContractResource {
         HttpController.httpPost(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail/"+name, jsonString);
     }
 
-
+    /**
+     * Checks if there are any associated modules in the database that aren't yet ContractDetail objects.
+     * @param contractID the ID of the contract that needs to be checked.
+     * @return a List of CompareContractCS objects.
+     */
     @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("application/json")
@@ -318,16 +324,26 @@ public class ContractResource {
 
     }
 
+    /**
+     * Endpoint to delete a single contract.
+     * @param contractID the ID of the to be deleted contract.
+     * @param name the name of the user who initiated this process.
+     */
     @DELETE
     @Path("/{name}/{ContractId}")
     public void deleteContract(@PathParam("ContractId") int contractID,@PathParam("name") String name) throws IOException {
         HttpController.httpDelete(PropertiesController.getProperty().getBase_url_contractservice()+"/contract/"+name+"/"+ contractID);
     }
 
+    /**
+     * Endpoint to delete a single ContractDetail.
+     * @param id the ID of the to be deleted detail.
+     * @param name the name of the user who initiated this process.
+     */
     @DELETE
-    @Path("/detail/{id}")
-    public void deleteContractDetails(@PathParam("id") int id) throws IOException {
-        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail/" + id);
+    @Path("/detail/{id}/{name}")
+    public void deleteContractDetails(@PathParam("id") int id,@PathParam("name") String name) throws IOException {
+        HttpController.httpDelete(PropertiesController.getProperty().getBase_url_contractservice() + "/contractDetail/" + id+"/"+name);
     }
 
     /**
@@ -339,10 +355,6 @@ public class ContractResource {
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         List<ContractDetail> contractDetail = getContractDetailsWithContract(contract, false);
-
-        /*String responseModule = HttpController.httpGet(PropertiesController.getProperty().getBase_url_moduleservice() + "/module?client=" + contract.client.getDBB_ID());
-        byte[] jsonData3 = responseModule.getBytes();
-        Module[] modules = mapper.readValue(jsonData3, Module[].class);*/
         List<Module> modules=new ArrayList<>();
 
         Server contractServer = null;
@@ -363,9 +375,6 @@ public class ContractResource {
             return checkForEmptyModule(contractDetail, modules);
         }
         return false;
-
-
-
     }
 
     /**

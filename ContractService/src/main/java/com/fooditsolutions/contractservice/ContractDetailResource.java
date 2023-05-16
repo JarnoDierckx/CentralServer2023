@@ -26,7 +26,7 @@ public class ContractDetailResource {
     /**
      * The endpoint to get the details of a specific contract.
      *
-     * @param contractID is the ID of the contract in question and is sends forward along with the request in the url.
+     * @param contractID is the ID of the contract in question and is send forward along with the request in the url.
      * @return takes the received value from the datastoreService, turns it into more usable information and sends it back.
      */
     @GET
@@ -45,6 +45,13 @@ public class ContractDetailResource {
         }
         return newContractDetails;
     }
+
+    /**
+     * The endpoint to get the details of a specific contract.
+     *
+     * @param contractID is the ID of the contract in question and is send forward along with the request in the url.
+     * @return takes the received value from the datastoreService, turns it into more usable information and sends it back.
+     */
     @GET
     @Path("/noCalc/{ContractID}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -55,6 +62,12 @@ public class ContractDetailResource {
         return responseString;
     }
 
+    /**
+     * retrieves a single ContractDetail object based on the given ID
+     * @param contractDetailID the ID for the object.
+     * @return a single object.
+     * @throws IOException
+     */
     @GET
     @Path("/singleDetail/{ContractDetailID}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -73,8 +86,10 @@ public class ContractDetailResource {
 
     /**
      * Receives al ContractDetail objects from the edit page.
-     * Those with whatToDo set to 'U' are sent to the PUT endpoint in the datastore service.
      * Those with whatToDo set to 'C' are sent to the POST endpoint in this class.
+     * Those with whatToDo set to 'D' are sent to the DELETE endpoint in this class.
+     * Those with whatToDo set to 'U' have their new values filtered out and send to the PUT endpoint in the datastore service.
+     * A History object is also created for and send to the datastore service.
      */
     @PUT
     @Path("/{name}")
@@ -106,6 +121,7 @@ public class ContractDetailResource {
             String desc = "";
 
             for (int i = 0; i < detailsToUpdate.size(); i++) {
+                //get the original values to compare with
                 originalContractDetails[i] = getContractDetail(detailsToUpdate.get(i).getID());
             }
 
@@ -124,14 +140,17 @@ public class ContractDetailResource {
                             field.setAccessible(true);
                             Object value1 = field.get(originalContractDetail);
                             Object value2 = field.get(detailsToUpdate.get(i));
+                            //compare to original value with the value from the to be updated object.
                             if (value2 != null && !field.getName().equals("moduleId") && !field.getName().equals("whatToDo")) {
                                 if (value1 == null || !value1.equals(value2)) {
                                     counter++;
+                                    //put the new value into a different object to be sent to the db.
                                     if (newDetail) {
                                         field.set(detailDifferences[i], value2);
                                     } else {
                                         field.set(detailDifferences[i], value2);
                                     }
+                                    //set the description for the history object.
                                     desc += field.getName() + ": " + value1 + " to " + value2 + ", ";
                                 }
                             }
@@ -153,7 +172,6 @@ public class ContractDetailResource {
                     notNullDifferences.add(detailDifference);
                 }
             }
-
 
             //Creating the ObjectMapper object
             ObjectMapper mapper = new ObjectMapper();
@@ -213,6 +231,11 @@ public class ContractDetailResource {
 
     }
 
+    /**
+     * Deletes a single ContractDetail object and the associated History objects.
+     * @param id the id of the object
+     * @param name the name of the person who initiated the delete process.
+     */
     @DELETE
     @Path("/{id}/{name}")
     public void deleteContractDetails(@PathParam("id") int id,@PathParam("name") String name) throws IOException {
@@ -239,6 +262,10 @@ public class ContractDetailResource {
         HttpController.httpPost("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api" + "/history", jsonString);
     }
 
+    /**
+     * Deletes all details of a contract along with their History objects.
+     * @param contractID the ID of the contract where the details need to be deleted.
+     */
     @DELETE
     @Path("/all/{id}")
     public void deleteAllDetails(@PathParam("id") int contractID) throws IOException {
@@ -253,6 +280,10 @@ public class ContractDetailResource {
         }
     }
 
+    /**
+     * Deletes a single contractDetail object along with its history without creating a History object for it.
+     * @param id the id for the object
+     */
     @DELETE
     @Path("/noHistory/{id}")
     public void deleteContractDetailsNoHistory(@PathParam("id") int id) throws IOException {

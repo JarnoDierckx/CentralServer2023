@@ -13,7 +13,7 @@ public class ServerResource {
     @GET
     @Produces("application/json")
     public String getServers() {
-        String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_contractservice()+"/server");
+        String responseString = HttpController.httpGet(PropertiesController.getProperty().getBase_url_serverservice()+"/server");
         return responseString;
     }
 

@@ -10,9 +10,10 @@ import java.util.*;
 public class ContractController {
     /**
      * Compares a list of contractDetail and module objects connected to a certain Contract.
-     * All modules that aren't already a detail object are added to the list so they can be displayed as empty objects on the front end.
+     * All modules that aren't already a detail object are added to the list, so they can be displayed as empty objects on the front end.
      * @param contractDetails List of a contracts associated contractDetail objects.
      * @param modules List of modules bound to a contracts server
+     * @return a List of CompareContractCS objects.
      */
     public static List<CompareContractCS> checkContractCs(List<ContractDetail> contractDetails, List<Module> modules){
         HashMap<BigDecimal,ContractDetail> cContractDetail = new HashMap();

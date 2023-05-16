@@ -46,8 +46,9 @@ public class ContractResource {
     }
 
     /**
-     * Incomplete function. It is meant to receive and sends forward a request for a specific Contract depending on the id send with the request.
-     * It now instead returns "Hello world", acting as a placeholder.
+     * Retrieves a single Contract object and sends it back.
+     * @param contractId The id of the contract.
+     * @return a Contract object.
      */
     @GET
     @Produces("application/json")
@@ -62,8 +63,8 @@ public class ContractResource {
 
     /**
      * The endpoint to update the information of a contract.
-     *
-     * @param contract is immediately parsed back into a json string and send forward to the datastoreService.
+     * The new values are filtered out and send to the datastore service.
+     * A History object is created detailing what changed.
      */
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -122,7 +123,7 @@ public class ContractResource {
 
     /**
      * The endpoint to create a new contract.
-     *
+     * A history object is created to log this action.
      * @param contract is immediately parsed back into a json string and send forward to the datastoreService.
      */
     @POST
@@ -152,6 +153,13 @@ public class ContractResource {
         return ID;
     }
 
+    /**
+     * Endpoint to delete a single Contract object.
+     * All the associated ContractDetail objects and History objects are also deleted.
+     * A new History object with some details of the contract is afterwards created to log this action.
+     * @param contractID the ID of the to be deleted contract.
+     * @param name the name of the user who started this process.
+     */
     @DELETE
     @Path("/{name}/{ContractId}")
     public void deleteContract(@PathParam("ContractId") int contractID,@PathParam("name") String name) throws IOException {
@@ -175,6 +183,10 @@ public class ContractResource {
         HttpController.httpPost("http://localhost:8080/HistoryService-1.0-SNAPSHOT/api" + "/history", jsonString);
     }
 
+    /**
+     * Checks if the given object is null, 0, or ""
+     * @return true of false
+     */
     private boolean isNullOrZero(Object obj) {
         if (obj == null) {
             return true;

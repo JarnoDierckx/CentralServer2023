@@ -20,8 +20,6 @@ import java.sql.*;
  */
 @Path("auth")
 public class AuthenticationResource {
-    //User testUser = new User("Jarno", "jarno@mail.com", "ww");
-    //private List<User> users;
 
     @PostConstruct
     public void init() {
@@ -77,7 +75,7 @@ public class AuthenticationResource {
     }
 
     /**
-     * revieves a sessionkey to delete from the list of running sessions preventing a user from accessing any other pages unless they log back in.
+     * receives a sessionkey to delete from the list of running sessions preventing a user from accessing any other pages unless they log back in.
      */
     @DELETE
     @Path("/{sessionKey}")
