@@ -18,6 +18,13 @@ import java.util.List;
 
 @Path("/server")
 public class ServerResource{
+
+    /**
+     * Retrieves a list of all servers relating to a specific client.
+     * @param datastoreKey the key for the used database.
+     * @param clientId the client the servers belong to.
+     * @return List<Server>
+     */
     @GET
     @Produces("application/json")
     public List<Server> getServers(@QueryParam("datastoreKey") String datastoreKey,
@@ -67,7 +74,11 @@ public class ServerResource{
     }
 
 
-
+    /**
+     * retrieves all stored servers.
+     * @param datastoreKey the key for the used database.
+     * @return List<Server>
+     */
     @GET
     @Produces("application/json")
     @Path("/all")
@@ -111,6 +122,12 @@ public class ServerResource{
         return objectList;
     }
 
+    /**
+     * retrieves a specific server based on the given ID.
+     * @param objectId the id for the server
+     * @param datastoreKey the key for the used database.
+     * @return the requested server.
+     */
     @GET
     @Produces("application/json")
     @Path("/{serverId}")

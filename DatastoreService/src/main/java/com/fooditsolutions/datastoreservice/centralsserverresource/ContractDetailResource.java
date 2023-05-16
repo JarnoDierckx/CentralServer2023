@@ -34,6 +34,11 @@ public class ContractDetailResource {
         return JsonToContractDetail(jsonContracts);
     }
 
+    /**
+     * retrieves a single contractDetail object from the database with the given ID.
+     * @param contractDetailID the ID of the object.
+     * @return A List with the object as its only value.
+     */
     @GET
     @Path("/singleDetail/{ContractDetailID}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -150,6 +155,11 @@ public class ContractDetailResource {
         return ID;
     }
 
+    /**
+     * Deletes a contractDetail object form the database using the given ID.
+     * @param datastoreKey the key for the used database.
+     * @param id the ID of the to be deleted object.
+     */
     @DELETE
     @Path("/{id}")
     public void deleteContractDetails(@QueryParam("datastoreKey") String datastoreKey, @PathParam("id") int id){

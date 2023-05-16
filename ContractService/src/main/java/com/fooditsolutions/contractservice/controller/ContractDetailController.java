@@ -21,13 +21,21 @@ import java.util.Dictionary;
 import java.util.List;
 
 public class ContractDetailController {
+    /**
+     * turns the received json object into a List of ContractDetail objects.
+     * if the detail has a getModule_DBB_ID variable, it is given a ModuleId.
+     * if it otherwise has a free line of text the boolean HasFreeLine is set to true.
+     * if the end date has passed the detail is set to inactive.
+     * @param jsonContractDetails a json object containing the ContractDetail objects.
+     * @return a List of ContractDetail objects with the correct information.
+     */
     public static List<ContractDetail> createContractDetailInformation(String jsonContractDetails) throws JsonProcessingException {
         List<ContractDetail> contractsDetails = new ArrayList<>();
         ContractDetail[] ContractDetails2;
         String jsonModuleid = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/moduleid?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         Dictionary<BigDecimal, ModuleId> Moduleids = ModuleidController.getModuleIdDictionaryFromJson(jsonModuleid);
 
-        /* had to add the GsonBuilder() as there was an issue wiht the epoch date conversion
+        /* had to add the GsonBuilder() as there was an issue with the epoch date conversion
          * https://itecnote.com/tecnote/java-convert-string-date-to-object-yields-invalid-time-zone-indicator-0/
          */
         Gson gson = new GsonBuilder()
@@ -66,6 +74,11 @@ public class ContractDetailController {
         return  contractsDetails;
     }
 
+    /**
+     *  Calculates the Jgr_not_indexed and Jgr_indexed values of the given object.
+     * @param contractDetail the to be calculated object.
+     * @return an object with both values calculated if the required variables aren't empty.
+     */
     public static ContractDetail calculate(ContractDetail contractDetail) throws IOException {
         if (contractDetail.getPurchase_price() != null && contractDetail.getJgr() > 0){
             BigDecimal calculation1=(BigDecimal.valueOf(contractDetail.getJgr()).divide(BigDecimal.valueOf(100),2, RoundingMode.HALF_UP));

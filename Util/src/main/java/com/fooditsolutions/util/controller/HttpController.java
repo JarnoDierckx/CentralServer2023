@@ -8,6 +8,11 @@ import java.net.URL;
 
 public class HttpController {
 
+    /**
+     * processes get requests between services.
+     * @param urlString the url the request gets send to.
+     * @return The received object.
+     */
     public static String httpGet(String urlString){
         String result = "";
         try{
@@ -35,6 +40,12 @@ public class HttpController {
         return result;
     }
 
+    /**
+     * processes post request between services.
+     * @param urlString the url the request gets send to.
+     * @param json the object to be send, in json format.
+     * @return the received return value as a string.
+     */
     public static String httpPost(String urlString, String json) {
         String result = "";
         try {
@@ -76,6 +87,11 @@ public class HttpController {
         return result;
     }
 
+    /**
+     * processes put requests between services.
+     * @param urlString the url the request gets send to.
+     * @param json the object to be send, in json format.
+     */
     public static void httpPut(String urlString, String json) throws IOException {
         URL url = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -91,6 +107,11 @@ public class HttpController {
         System.out.println("POST Response Code :  " + connection.getResponseCode());
         System.out.println("POST Response Message : " + connection.getResponseMessage());
     }
+
+    /**
+     * precesses delete requests between services, requires an ID in the path to work
+     * @param urlString the url the request gets send to.
+     */
     public static void httpDelete(String urlString) throws IOException{
         URL url = new URL(urlString);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();

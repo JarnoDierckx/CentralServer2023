@@ -15,8 +15,8 @@ import java.util.*;
 public class ContractController {
 
     /**
-     * Gives all received contracts the bjr and client variables they can't directly get through the database.
-     * It also checks if there is still a server object stored with the same server_DBB_ID, if not they are set to inactive.
+     * Gives all received contracts the server and client variables they can't directly get through the database.
+     * any contracts that are past their end date are set to inactive
      * @param jsonContracts A json string containing a list of Contract objects.
      * @return A list of contracts with the needed information.
      */
@@ -60,8 +60,7 @@ public class ContractController {
     }
 
     /**
-     * Gives the received contract the bjr and client variables it can't directly get through the database.
-     * It also checks if there is still a server object stored with the same server_DBB_ID, if not it is set to inactive.
+     * Gives the received contract the server and client variables it can't directly get through the database.
      * @param jsonContract a json string containing a single Contract object
      * @return a single Contract object with a client and bjr variable
      */

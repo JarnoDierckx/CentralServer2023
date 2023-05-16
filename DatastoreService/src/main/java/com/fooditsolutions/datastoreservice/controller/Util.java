@@ -3,6 +3,12 @@ package com.fooditsolutions.datastoreservice.controller;
 import java.text.SimpleDateFormat;
 
 public class Util {
+
+    /**
+     * Generates a structured SQL representation of the given object.
+     * @param o the object to be converted to SQL structure.
+     * @return a string representing the structured SQL value of the object.
+     */
     public static String structureSQL(Object o){
         String result = "";
         String className = o.getClass().getName();

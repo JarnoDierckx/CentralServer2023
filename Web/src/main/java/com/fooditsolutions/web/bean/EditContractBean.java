@@ -328,6 +328,7 @@ public class EditContractBean implements Serializable {
                                 detail.setModuleId(moduleId);
                                 detail.setModule_DBB_ID(editedDetail.getModule_DBB_ID());
                                 if (detail.getID() == 0) {
+                                    //give a negative id to details not already in the database when they are edited
                                     counter--;
                                     detail.setID(counter);
                                 }
@@ -339,6 +340,7 @@ public class EditContractBean implements Serializable {
                 for (ContractDetail detail : updatingContractDetailsList) {
                     if (detail.getID() == editedDetail.getID()) {
                         if (detail.getID() == 0) {
+                            //give a negative id to details not already in the database when they are edited
                             counter--;
                             detail.setID(counter);
                         }
@@ -352,6 +354,7 @@ public class EditContractBean implements Serializable {
                         if (detail.getWhatToDo() != null && detail.getWhatToDo().equals("D")){
                             break;
                         }else {
+                            // 'U' means it has to be updated when passed to the contractservice
                             detail.setWhatToDo("U");
                         }
                     }
@@ -359,6 +362,7 @@ public class EditContractBean implements Serializable {
             } else if (editedDetail.getID() < 0) {
                 for (ContractDetail detail : updatingContractDetailsList) {
                     if (detail.getID() == editedDetail.getID() && (detail.getWhatToDo()==null || !detail.getWhatToDo().contains("C"))) {
+                        // 'C' means it has to be inserted into the DB when passed to the contractservice
                         detail.setWhatToDo(detail.getWhatToDo() + "C");
                     }
                 }
@@ -369,6 +373,7 @@ public class EditContractBean implements Serializable {
         if (editedContract != null) {
             for (Client client : clients) {
                 if (client.getDBB_ID().equals(newValue)) {
+                    //When a module is chosen for a new detail line, add the correct client and client ID
                     updatingContract.client = client;
                     updatingContract.client_id = client.getDBB_ID();
                 }
@@ -378,6 +383,9 @@ public class EditContractBean implements Serializable {
         System.out.println(newValue);
     }
 
+    /**
+     * filter between active and inactive details
+     */
     public void updateActiveFilterDetails() {
         if (!inActiveFilter) {
             filteredDetails = new ArrayList<>();
@@ -399,7 +407,7 @@ public class EditContractBean implements Serializable {
     }
 
     /**
-     * Adds a new detail object to the list used in the datatable.
+     * Adds a new detail object wth a module to the list used in the datatable.
      */
     public void addRow() {
         ContractDetail detail = new ContractDetail();
@@ -414,6 +422,9 @@ public class EditContractBean implements Serializable {
         updateActiveFilterDetails();
     }
 
+    /**
+     * Adds a new detail object wth a free line to the list used in the datatable.
+     */
     public void addRowFreeLine() {
         ContractDetail detail = new ContractDetail();
         detail.setHasFreeLine(true);
@@ -442,6 +453,7 @@ public class EditContractBean implements Serializable {
             for (ContractDetail detail : updatingContractDetailsList) {
                 if (detail.getID() == editedDetail.getID()) {
                     if (detail.getWhatToDo() == null || detail.getWhatToDo().equals("")) {
+                        // 'D' means it has to be deleted when passed to the contractService
                         detail.setWhatToDo("D");
                     } else {
                         detail.setWhatToDo("");

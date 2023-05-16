@@ -18,6 +18,10 @@
  @Path("/history")
 public class HistoryResource {
 
+     /**
+      * retrieves and returns all History objects stored in the database.
+      * @return a List of History objects.
+      */
      @GET
      @Produces("application/json")
      public List<History> getHistory(@QueryParam("datastoreKey") String datastoreKey) {
@@ -30,6 +34,10 @@ public class HistoryResource {
          return JsonToHistory(jsonHistory);
      }
 
+     /**
+      * Retrieves and returns all History objects stored in the database where the action is 'DELETE'
+      * @return a List of History objects.
+      */
      @GET
      @Path("/deleted")
      @Produces("application/json")
@@ -43,6 +51,10 @@ public class HistoryResource {
          return JsonToHistory(jsonHistory);
      }
 
+     /**
+      * Retrieves and returns all History objects with the given attribute (contract and contractDetail)
+      * @return a List of History objects.
+      */
      @GET
      @Produces("application/json")
      @Path("/{ATTRIBUTE}")
@@ -58,6 +70,12 @@ public class HistoryResource {
          return JsonToHistory(jsonHistory);
      }
 
+     /**
+      * Retrieves all History objects corresponding to the given ID and attribute.
+      * @param attribute contract or ContractDetail.
+      * @param attribute_id the ID of the corresponding object.
+      * @return a List of History objects.
+      */
      @GET
      @Produces("application/json")
      @Path("/{ATTRIBUTE}/{ATTRIBUTE_ID}")
@@ -73,6 +91,11 @@ public class HistoryResource {
          }
          return JsonToHistory(jsonHistory);
      }
+
+     /**
+      * Inserts a given History object into the database.
+      * @param history the object that needs to be inserted.
+      */
     @POST
     @Consumes("application/json")
     @Produces("application/json")
@@ -87,6 +110,11 @@ public class HistoryResource {
         }
     }
 
+     /**
+      * Deletes all History objects in the database relating to the given ID.
+      * @param datastoreKey the key for the used database.
+      * @param id the attribute ID of all objects that need to be deleted.
+      */
     @DELETE
     @Path("/{id}")
     public void deleteAssociatedHistory(@QueryParam("datastoreKey") String datastoreKey,@PathParam("id") int id){
@@ -101,6 +129,11 @@ public class HistoryResource {
         }
     }
 
+     /**
+      * Goes over every object in jsonHistorys and maps its values onto History objects that are then returned in a List
+      * @param jsonHistorys a JSONArray with all objects received from the database.
+      * @return List<History>
+      */
      public List<History> JsonToHistory(JSONArray jsonHistorys) {
          List<History> historys = new ArrayList<>();
          for (int i = 0; i < jsonHistorys.length(); i++) {

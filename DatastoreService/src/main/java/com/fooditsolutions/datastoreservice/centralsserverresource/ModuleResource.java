@@ -17,6 +17,14 @@ import java.util.List;
 
 @Path("/module")
 public class ModuleResource {
+
+    /**
+     * Retrieves and returns all Modules related to a specific server and client.
+     * @param datastoreKey the key of the used database.
+     * @param serverId the server ID used for filtering the modules by server
+     * @param clientId the client ID used for filtering the modules by client
+     * @return List<Module>
+     */
     @GET
     @Produces("application/json")
     public List<Module> getModuleIds(@QueryParam("datastoreKey") String datastoreKey,
@@ -59,6 +67,12 @@ public class ModuleResource {
         return moduleList;
     }
 
+    /**
+     * Retrieves a single Module objects from the database.
+     * @param moduleId the ID for the module
+     * @param datastoreKey the key for the used database.
+     * @return a single Module.
+     */
     @GET
     @Produces("application/json")
     @Path("/{moduleId}")
@@ -92,6 +106,11 @@ public class ModuleResource {
         return moduleList.get(0);
     }
 
+    /**
+     * retrieves and returns a List of all Modules stored in the database that have a server ID.
+     * @param datastoreKey the key for the used database.
+     * @return List<Module>
+     */
     @GET
     @Produces("application/json")
     @Path("/all")

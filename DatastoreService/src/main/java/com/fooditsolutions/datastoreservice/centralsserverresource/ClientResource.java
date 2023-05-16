@@ -17,6 +17,11 @@ import java.util.List;
 @Path("/client")
 public class ClientResource {
 
+    /**
+     * retrieves all clients from the database and turns them into Client objects.
+     * @param datastoreKey the key for the database used.
+     * @return a List of Client objects.
+     */
     @GET
     @Produces("application/json")
     public List<Client> getClients(@QueryParam("datastoreKey") String datastoreKey) {
@@ -63,10 +68,16 @@ public class ClientResource {
 
     }
 
+    /**
+     * retrieves the client in the database that corresponds to the given ID and turns it into a Client object.
+     * @param clientId the ID of the client
+     * @param datastoreKey
+     * @return the Client object
+     */
     @GET
     @Produces("application/json")
-    @Path("/{custimerId}")
-    public Client getClient(@PathParam("custimerId") String clientId, @QueryParam("datastoreKey") String datastoreKey) throws JsonProcessingException {
+    @Path("/{customerId}")
+    public Client getClient(@PathParam("customerId") String clientId, @QueryParam("datastoreKey") String datastoreKey) {
         JSONArray jsonClients = new JSONArray();
 
         for (DatastoreObject ds : Datastores.getDatastores()) {

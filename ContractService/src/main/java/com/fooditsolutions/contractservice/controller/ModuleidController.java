@@ -10,9 +10,14 @@ import java.util.Hashtable;
 import java.util.List;
 
 public class ModuleidController {
-    public static List<ModuleId> getModeuleIdListFromJson(String JsonModeuleIdr){
+    /**
+     *
+     * @param JsonModuleIdr a json object containing ModuleId objects.
+     * @return A List of ModuleId objects.
+     */
+    public static List<ModuleId> getModuleIdListFromJson(String JsonModuleIdr){
         List<ModuleId> moduleIds = new ArrayList<>();
-        JSONArray jsonArray = new JSONArray(JsonModeuleIdr);
+        JSONArray jsonArray = new JSONArray(JsonModuleIdr);
         for(int i=0; i <= jsonArray.length(); i++){
             ModuleId moduleId = new ModuleId();
             moduleId.setDbb_id((BigDecimal) jsonArray.getJSONObject(i).get("dbb_id"));

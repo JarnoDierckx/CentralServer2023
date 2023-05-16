@@ -13,6 +13,12 @@ import java.util.List;
 
 @Path("/moduleid")
 public class ModuleIdResource {
+
+    /**
+     * Retrieves and returns all ModuleId objects in the database.
+     * @param datastoreKey the key for the used database.
+     * @return List<ModuleId>
+     */
     @GET
     @Produces("application/json")
     public List<ModuleId> getModuleIds(@QueryParam("datastoreKey") String datastoreKey) {
@@ -34,6 +40,13 @@ public class ModuleIdResource {
         return moduleIdList;
     }
 
+
+    /**
+     * Retrieves and returns a single ModuleId object from the database.
+     * @param moduleidId the ID of the to be retrieved object.
+     * @param datastoreKey the key of the used database.
+     * @return A ModuleId object.
+     */
     @GET
     @Produces("application/json")
     @Path("/{moduleidId}")

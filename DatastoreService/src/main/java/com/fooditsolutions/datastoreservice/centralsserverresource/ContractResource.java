@@ -43,6 +43,9 @@ public class ContractResource {
         return JsonToContract(jsonContracts);
     }
 
+    /**
+     * retrieves and returns a single Contract object based on the given ID.
+     */
     @GET
     @Produces("application/json")
     @Path("/{ContractId}")
@@ -109,7 +112,6 @@ public class ContractResource {
 
     /**
      * Creates a sql statement based on the given contract id and executes it to delete the contract.
-     * unfinished
      * @param datastoreKey is to specify which database to query.
      * @param contractID is to specify which contract needs to be deleted.
      */

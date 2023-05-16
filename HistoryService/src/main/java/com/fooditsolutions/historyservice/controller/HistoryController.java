@@ -16,6 +16,12 @@ public class HistoryController {
 
     }
 
+    /**
+     * turns a bunch of History objects in json format into a List of History objects.
+     * @param jsonHistories History objects in json format, send as a String.
+     * @return A List of history objects.
+     * @throws IOException
+     */
     public static List<History> createHistoryInformation(String jsonHistories) throws IOException {
         List<History> histories = new ArrayList<>();
         History[] histories2;
@@ -28,12 +34,18 @@ public class HistoryController {
         return histories;
     }
 
+    /**
+     * Goes through a List of History objects, any create or delete actions are returned by default but only the latest update action is returned with the list if 'full' isn't true.
+     * @param full a boolean deciding whether all objects need to be returned of if only the newest of the update objects need to be included.
+     * @param historyList The List that needs to potentially be sorted out
+     * @return the filtered list of history objects.
+     */
     public static List<History> getFull(boolean full, List<History> historyList) {
         if (!full) {
             List<History> histories = new ArrayList<>();
             History hUpdate = new History();
             for (History h : historyList) {
-                if (h.getAction().equals(Action.CREATE)) {
+                if (h.getAction().equals(Action.CREATE) || h.getAction().equals(Action.DELETE)) {
                     histories.add(h);
                 } else if (h.getAction().equals(Action.UPDATE)) {
                     if (hUpdate.getTs() == null) {

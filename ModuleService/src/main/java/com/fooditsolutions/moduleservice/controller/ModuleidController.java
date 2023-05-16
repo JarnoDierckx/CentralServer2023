@@ -10,9 +10,14 @@ import java.util.Hashtable;
 import java.util.List;
 
 public class ModuleidController {
-    public static List<ModuleId> getModeuleIdListFromJson(String JsonModeuleIdr){
+    /**
+     * receives a list of ModuleIds in json format and turns them into a List of ModuleIds.
+     * @param JsonModuleId A list of moduleIds in json format, given as a string
+     * @return a List of ModuleIds
+     */
+    public static List<ModuleId> getModuleIdListFromJson(String JsonModuleId){
         List<ModuleId> moduleIds = new ArrayList<>();
-        JSONArray jsonArray = new JSONArray(JsonModeuleIdr);
+        JSONArray jsonArray = new JSONArray(JsonModuleId);
         for(int i=0; i <= jsonArray.length(); i++){
             ModuleId moduleId = new ModuleId();
             moduleId.setDbb_id((BigDecimal) jsonArray.getJSONObject(i).get("dbb_id"));
@@ -22,6 +27,11 @@ public class ModuleidController {
         return moduleIds;
     }
 
+    /**
+     * receives a list of ModuleIds in json format and turns them into a dictionary of Strings with the modules names and proper ModuleId objects.
+     * @param JsonModuleId A list of moduleIds in json format, given as a string
+     * @return the Dictionary list Dictionary<String, ModuleId>
+     */
     public static Dictionary<String, ModuleId> getModuleIdDictionaryFromJson(String JsonModuleId){
         Dictionary<String, ModuleId> ModuleIds = new Hashtable<>();
         JSONArray jsonArray = new JSONArray(JsonModuleId);

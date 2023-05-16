@@ -28,6 +28,11 @@ public class HistoryResource {
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * sends a request forward for all History objects made when a contract has been deleted.
+     * @param full a boolean deciding whether only the newest update action needs to be returned with the list.
+     */
     @GET
     @Path("/deleted")
     @Produces("application/json")
@@ -41,6 +46,10 @@ public class HistoryResource {
         return result;
     }
 
+    /**
+     * sends a request forward for all stored history objects.
+     * @param full a boolean deciding whether only the newest update action needs to be returned with the list.
+     */
     @GET
     @Produces("application/json")
     public List<History> getHistory(@QueryParam("full") boolean full) throws IOException {
@@ -53,6 +62,11 @@ public class HistoryResource {
         return result;
     }
 
+    /**
+     * sends a request forward for all stored history objects with the given attribute.
+     * @param full a boolean deciding whether only the newest update action needs to be returned with the list.
+     * @param attribute contract or contractDetail.
+     */
     @GET
     @Produces("application/json")
     @Path("/{ATTRIBUTE}")
@@ -67,7 +81,12 @@ public class HistoryResource {
     }
 
 
-
+    /**
+     * sends a request forward for all stored history objects with the given attribute and attribute id.
+     * @param attribute contract or contractDetail.
+     * @param attributeid the id of the object the History objects are referring to.
+     * @param full a boolean deciding whether only the newest update action needs to be returned with the list.
+     */
     @GET
     @Produces("application/json")
     @Path("/{ATTRIBUTE}/{ATTRIBUTEID}")
@@ -83,6 +102,11 @@ public class HistoryResource {
         return result;
     }
 
+    /**
+     * sends forward a POST request to store the given history object.
+     * @param history the object to be stored.
+     * @throws JsonProcessingException
+     */
     @POST
     @Consumes("application/json")
     @Produces("application/json")
@@ -101,6 +125,10 @@ public class HistoryResource {
 
     }
 
+    /**
+     * sends forward a request to delete the object based on the given id.
+     * @param id the id of the object that needs to be deleted.
+     */
     @DELETE
     @Consumes("application/json")
     @Path("/{id}")

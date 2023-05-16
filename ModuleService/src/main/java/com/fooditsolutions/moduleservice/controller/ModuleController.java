@@ -15,6 +15,10 @@ import java.util.Dictionary;
 import java.util.List;
 
 public class ModuleController {
+
+    /**
+     *Goes through a list of given modules and gives each object the correct Server and ModuleID as variable.
+     */
     public static List<Module> createModuleInformation(String jsonContracts) throws IOException {
         List<Module> contracts = new ArrayList<>();
         Module[] contracts2;
@@ -32,7 +36,6 @@ public class ModuleController {
         for(int i=0; i < contracts2.length; i++){
             contracts2[i].setServer(servers.get(contracts2[i].getSERVER_DBB_ID()));
             contracts2[i].setModuleid(moduleids.get(contracts2[i].getName()));
-            //contract.setName((String) jsonArray.getJSONObject(i).get("name"));
             contracts.add(contracts2[i]);
         }
         return contracts;

@@ -47,6 +47,7 @@ public class CreateContractBean implements Serializable {
         newContract=new Contract();
         client=new Client();
 
+        //use variables from generalContracts to fill fields
         PrepareCreateContract();
         if (session.getAttribute("serverID")!=null) {
             String serverID= (String) session.getAttribute("serverID");
@@ -56,9 +57,6 @@ public class CreateContractBean implements Serializable {
         }
     }
 
-    /**
-     * Retrieves all clients for later use.
-     */
     public void PrepareCreateContract() throws JsonProcessingException {
         clients=retrieveClients();
         cpis=retrieveIndex();
@@ -67,8 +65,8 @@ public class CreateContractBean implements Serializable {
 
     /**
      * Maps all values of newContract to a json object in a String and sends it to centralServerAPI.
-     * purchaseDate, quantity and startIndex are stored in the session, so they can be used as base values for the contracts modules.
-     * The user is redirected to the edit contract page
+     * quantity and ID stored in the session. ID is stored so the contract can be retrieved in the edit screen and quantity is stored to be used as a base value for the details.
+     * The user is then redirected to the edit contract page
      */
     public String createContract() throws IOException {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
@@ -84,6 +82,7 @@ public class CreateContractBean implements Serializable {
                 }
             }
         }
+        //set source to manual if there is no server ID
         if (newContract.getServer_ID() == null){
             newContract.source="M";
         }
@@ -122,6 +121,9 @@ public class CreateContractBean implements Serializable {
         return mapper.readValue(response, Client[].class);
     }
 
+    /**
+     * retrieves all consumer price index values
+     */
     public Index[] retrieveIndex() throws JsonProcessingException {
         String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_indexservice()+"/index");
         ObjectMapper mapper = new ObjectMapper();
@@ -129,6 +131,9 @@ public class CreateContractBean implements Serializable {
         return mapper.readValue(response, Index[].class);
     }
 
+    /**
+     * retrieves all stored server objects
+     */
     public Server[] retrieveServers() throws JsonProcessingException {
         String response=HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/server");
         ObjectMapper mapper = new ObjectMapper();
@@ -200,6 +205,9 @@ public class CreateContractBean implements Serializable {
         }
     }
 
+    /**
+     * mobile devices are monthly, the rest are yearly
+     */
     public void changeSource(){
         if (newContract.source != null && newContract.source.equals("MOB")){
             newContract.setInvoice_frequency("M");
@@ -210,6 +218,9 @@ public class CreateContractBean implements Serializable {
         }
     }
 
+    /**
+     * fields without ajax lose their values when other fields are updated, so just giving them an empty function prevents that.
+     */
     public void placebo(){}
 
 

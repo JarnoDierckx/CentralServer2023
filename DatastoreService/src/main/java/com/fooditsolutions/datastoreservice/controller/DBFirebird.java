@@ -12,6 +12,12 @@ import java.util.stream.IntStream;
 
 public class DBFirebird {
 
+    /**
+     * Function to execute update queries.
+     * @param ds is the object containing the info needed to connect to the database.
+     * @param query is the query that will be executed by stmt.executeUpdate().
+     * @return a JSONArray with the results of the query
+     */
     public static JSONArray executeSQL(DatastoreObject ds, String query){
         JSONArray jsonResult = new JSONArray();
         try {
@@ -71,6 +77,11 @@ public class DBFirebird {
         return jsonResult;
     }
 
+    /**
+     * Function to execute update queries.
+     * @param ds is the object containing the info needed to connect to the database.
+     * @param query is the query that will be executed by stmt.executeUpdate().
+     */
     public static void executeSQLUpdate(DatastoreObject ds, String query){
         try {
             Class.forName("org.firebirdsql.jdbc.FBDriver");
