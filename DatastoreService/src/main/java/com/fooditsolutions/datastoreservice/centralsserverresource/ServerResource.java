@@ -26,9 +26,10 @@ public class ServerResource{
      * @return List<Server>
      */
     @GET
+    @Path("/{clientID}")
     @Produces("application/json")
     public List<Server> getServers(@QueryParam("datastoreKey") String datastoreKey,
-                                   @QueryParam("client") String clientId) {
+                                   @PathParam("clientID") String clientId) {
         JSONArray jsonValues = new JSONArray();
 
         for (DatastoreObject ds : Datastores.getDatastores()) {
@@ -147,6 +148,24 @@ public class ServerResource{
             object.setDBB_ID((BigDecimal) jsonValues.getJSONObject(i).get("DBB_ID"));
             object.setID((String) jsonValues.getJSONObject(i).get("ID"));
             object.setCLIENT_DBB_ID((BigDecimal) jsonValues.getJSONObject(i).get("CLIENT_DBB_ID"));
+            if (jsonValues.getJSONObject(i).opt("MOBILEDEVICESNOAM") != null){
+                object.setMobileDevicesNOAM((int) jsonValues.getJSONObject(i).opt("MOBILEDEVICESNOAM"));
+            }
+            if (jsonValues.getJSONObject(i).opt("MOBILEDEVICESNOPM") != null){
+                object.setMobileDevicesNOPM((int) jsonValues.getJSONObject(i).opt("MOBILEDEVICESNOPM"));
+            }
+            if (jsonValues.getJSONObject(i).opt("MOBILEDEVICESNOBS") != null){
+                object.setMobileDevicesNOBS((int) jsonValues.getJSONObject(i).opt("MOBILEDEVICESNOBS"));
+            }
+            if (jsonValues.getJSONObject(i).opt("MOBILEDEVICESNOCP") != null){
+                object.setMobileDevicesNOCP((int) jsonValues.getJSONObject(i).opt("MOBILEDEVICESNOCP"));
+            }
+            if (jsonValues.getJSONObject(i).opt("MOBILEDEVICESNODS") != null){
+                object.setMobileDevicesNODS((int) jsonValues.getJSONObject(i).opt("MOBILEDEVICESNODS"));
+            }
+            if (jsonValues.getJSONObject(i).opt("MOBILEDEVICESNOCA") != null){
+                object.setMobileDevicesNOCA((int) jsonValues.getJSONObject(i).opt("MOBILEDEVICESNOCA"));
+            }
             objectList.add(object);
         }
 

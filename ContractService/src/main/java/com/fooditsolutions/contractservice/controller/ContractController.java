@@ -36,15 +36,7 @@ public class ContractController {
 
         //JSONArray jsonArray = new JSONArray(jsonContracts);
         for (Contract contract : contracts2) {
-            contract.is_active = false;
-            if (contract.server_ID != null) {
-                for (Server server : servers) {
-                    if (Objects.equals(contract.server_ID, server.getID())) {
-                        contract.is_active = true;
-                        break;
-                    }
-                }
-            }else if (Objects.equals(contract.getSource(), "M"))contract.is_active=true;
+            contract.is_active = true;
             if (contract.getEnd_date()!=null){
                 Date currentDate=new Date();
                 if (contract.getEnd_date().before(currentDate)){

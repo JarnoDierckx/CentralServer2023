@@ -51,6 +51,7 @@ public class CreateContractBean implements Serializable {
         PrepareCreateContract();
         if (session.getAttribute("serverID")!=null) {
             String serverID= (String) session.getAttribute("serverID");
+            session.removeAttribute("serverID");
             newContract.setServer_ID(serverID);
             updateClient();
             newContract.setContract_number(newContract.getServer_ID()+"-IT");
@@ -99,6 +100,9 @@ public class CreateContractBean implements Serializable {
         HttpSession session= (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         if (session.getAttribute("EditContractBean")!=null){
             session.removeAttribute("EditContractBean");
+        }
+        if (session.getAttribute("contract") != null) {
+            session.removeAttribute("contract");
         }
         session.setAttribute("ID",ID);
         session.setAttribute("quantity", quantity);

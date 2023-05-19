@@ -22,7 +22,7 @@ public class ModuleController {
     public static List<Module> createModuleInformation(String jsonContracts) throws IOException {
         List<Module> contracts = new ArrayList<>();
         Module[] contracts2;
-        String jsonServer = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/server?datastoreKey="+ PropertiesController.getProperty().getDatastore());
+        String jsonServer = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/server/all?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         Dictionary<BigDecimal, Server> servers = ServerController.getServerDictionaryFromJson(jsonServer);
         String jsonModuleId = HttpController.httpGet(PropertiesController.getProperty().getBase_url_datastoreservice()+"/moduleid?datastoreKey="+ PropertiesController.getProperty().getDatastore());
         Dictionary<String, ModuleId> moduleids = ModuleidController.getModuleIdDictionaryFromJson(jsonModuleId);
