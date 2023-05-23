@@ -19,12 +19,9 @@ public class SessionResource {
     }
 
     @GET
-    @Path("/{sessionKey}/validate")
+    @Path("/{sessionKey}")
     @Produces(MediaType.APPLICATION_JSON)
-    public String ValidateSession(@PathParam("sessionKey") String sessionKey){
-        if(SessionController.Validate(sessionKey)){
-            return "{'valid':'true'}";
-        }
-        return "{'valid':'false'}";
+    public boolean ValidateSession(@PathParam("sessionKey") String sessionKey){
+        return SessionController.Validate(sessionKey);
     }
 }

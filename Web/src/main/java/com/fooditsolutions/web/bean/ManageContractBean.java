@@ -12,10 +12,13 @@ import org.primefaces.util.LangUtils;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.Serializable;
@@ -63,6 +66,27 @@ public class ManageContractBean extends HttpServlet implements Serializable {
      */
     @PostConstruct
     public void init() {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        Cookie[] cookies = request.getCookies();
+        boolean loggedin=false;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().contains("LOGINCENTRALSERVER2023")) {
+                    String sessionkey=cookie.getValue();
+                    String response= HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/"+sessionkey);
+                    if (Boolean.getBoolean(response)){
+                        loggedin=true;
+                    }
+                }
+            }
+            if (!loggedin){
+                try {
+                    toLogin();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         try {
             PropertiesController.init();
             retrieveContracts();
@@ -86,6 +110,11 @@ public class ManageContractBean extends HttpServlet implements Serializable {
                 MonthlyFacturationAmount = MonthlyFacturationAmount.add(contract.getTotal_price());
             }
         }
+    }
+
+    public void toLogin() throws IOException {
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        externalContext.redirect(externalContext.getRequestContextPath() + "/index.xhtml?faces-redirect=true");
     }
 
     /**

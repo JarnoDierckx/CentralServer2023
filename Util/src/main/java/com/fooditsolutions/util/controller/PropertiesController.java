@@ -32,6 +32,7 @@ public class PropertiesController {
             property.setBase_url_indexservice(prop.getProperty("BASE_URL_INDEXSERVICE"));
             property.setBase_url_historyservice(prop.getProperty("BASE_URL_HISTORYSERVICE"));
             property.setBase_url_serverservice(prop.getProperty("BASE_URL_SERVERSERVICE"));
+            property.setBase_url_authenticationservice(prop.getProperty("BASE_URL_AUTHENTICATIONSERVICE"));
 
         }catch (Exception ex){
             System.out.println("Exception: " + ex);

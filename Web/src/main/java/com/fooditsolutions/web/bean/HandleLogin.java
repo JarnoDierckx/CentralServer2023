@@ -1,5 +1,8 @@
 package com.fooditsolutions.web.bean;
 
+import com.fooditsolutions.util.controller.HttpController;
+import com.fooditsolutions.util.controller.PropertiesController;
+
 import javax.annotation.PostConstruct;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -42,10 +45,13 @@ public class HandleLogin {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().contains("LOGINCENTRALSERVER2023")) {
-                    LoggedIn=true;
                     name=cookie.getName();
                     name=name.substring(22);
                     key=cookie.getValue();
+                    String response= HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crud"+key);
+                    if (Boolean.getBoolean(response)){
+                        LoggedIn=true;
+                    }
                     break;
                 }
             }
@@ -72,7 +78,7 @@ public class HandleLogin {
 
             String POST_PARAMS = String.format("{\"email\": \"%s\",\"password\": \"%s\"}", email, password);
 
-            URL url=new URL("http://localhost:8080/CentralServer2023API-1.0-SNAPSHOT/api/crud/");
+            URL url=new URL(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crud");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");

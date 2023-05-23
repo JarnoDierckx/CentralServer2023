@@ -131,15 +131,14 @@ public class ServerResource{
      */
     @GET
     @Produces("application/json")
-    @Path("/{serverId}")
     public Server getServerId(
-            @PathParam("serverId") String objectId,
-            @QueryParam("datastoreKey") String datastoreKey) {
+            @QueryParam("datastoreKey") String datastoreKey,
+            @QueryParam("serverId") String objectId){
         JSONArray jsonValues = new JSONArray();
 
         for (DatastoreObject ds : Datastores.getDatastores()) {
             if (datastoreKey.equals(ds.getKey())) {
-                jsonValues = DBFirebird.executeSQL(ds, "SELECT * FROM MODULE WHERE DBB_ID="+objectId);
+                jsonValues = DBFirebird.executeSQL(ds, "SELECT * FROM SERVER WHERE DBB_ID="+objectId);
             }
         }
         List<Server> objectList = new ArrayList<>();

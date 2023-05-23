@@ -1,5 +1,7 @@
 package com.fooditsolutions.CentralServer2023API;
 
+import com.fooditsolutions.util.controller.HttpController;
+import com.fooditsolutions.util.controller.PropertiesController;
 import com.fooditsolutions.util.model.User;
 
 import javax.annotation.PostConstruct;
@@ -83,6 +85,12 @@ public class LoginResource {
         System.out.println("Delete" + responseCode);
     }
 
-
+    @GET
+    @Path("/{sessionKey}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean authenticate(@PathParam("sessionKey")String sessionKey){
+        String response= HttpController.httpGet(PropertiesController.getProperty().getBase_url_authenticationservice()+"/"+sessionKey);
+        return Boolean.parseBoolean(response);
+    }
 
 }

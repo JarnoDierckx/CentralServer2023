@@ -60,6 +60,27 @@ public class EditContractBean implements Serializable {
      */
     @PostConstruct
     public void Init() throws IOException {
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        Cookie[] cookies = request.getCookies();
+        boolean loggedin=false;
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().contains("LOGINCENTRALSERVER2023")) {
+                    String sessionkey=cookie.getValue();
+                    String response= HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/"+sessionkey);
+                    if (Boolean.getBoolean(response)){
+                        loggedin=true;
+                    }
+                }
+            }
+            if (!loggedin){
+                try {
+                    toLogin();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         System.out.println("Edit contract");
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance()
                 .getExternalContext().getSession(false);
@@ -141,10 +162,10 @@ public class EditContractBean implements Serializable {
             }
         }
 
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         userName = "";
 
-        Cookie[] cookies = request.getCookies();
+        cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().contains("LOGINCENTRALSERVER2023")) {
@@ -158,6 +179,11 @@ public class EditContractBean implements Serializable {
         if (isAfterCreate) {
             updateAll();
         }
+    }
+
+    public void toLogin() throws IOException {
+        ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+        externalContext.redirect(externalContext.getRequestContextPath() + "/index.xhtml?faces-redirect=true");
     }
 
     /**
@@ -612,5 +638,13 @@ public class EditContractBean implements Serializable {
 
     public void setDelete(String delete) {
         this.delete = delete;
+    }
+
+    public Index[] getCpis() {
+        return cpis;
+    }
+
+    public void setCpis(Index[] cpis) {
+        this.cpis = cpis;
     }
 }
