@@ -300,8 +300,8 @@
                   </p:selectOneMenu>
                 <h:outputText value="#{detail.moduleId.name}" rendered="#{detail.ID gt 0}" styleClass="#{detail.ID lt 0 ? 'red-text' : ''}"/>
 
-                <p:inputText value="#{detail.freeLine}" rendered="#{detail.ID==0 and detail.hasFreeLine}" immediate="true"/>
-                <h:outputText value="#{detail.freeLine}" styleClass="#{detail.whatToDo.contains('C') ? 'red-text' : ''} #{detail.whatToDo.contains('N') ? 'blue-text' : ''}" rendered="#{detail.ID!=0 and detail.hasFreeLine}"/>
+                <p:inputText value="#{detail.freeLine}" rendered="#{detail.ID lt 1 and detail.hasFreeLine}" immediate="true"/>
+                <h:outputText value="#{detail.freeLine}" styleClass="#{detail.whatToDo.contains('C') ? 'red-text' : ''} #{detail.whatToDo.contains('N') ? 'blue-text' : ''}" rendered="#{detail.ID gt 0 and detail.hasFreeLine}"/>
               </f:facet>
             </p:cellEditor>
           </p:column>
