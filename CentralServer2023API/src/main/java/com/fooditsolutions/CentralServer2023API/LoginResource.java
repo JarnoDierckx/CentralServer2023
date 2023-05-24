@@ -88,9 +88,9 @@ public class LoginResource {
     @GET
     @Path("/{sessionKey}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean authenticate(@PathParam("sessionKey")String sessionKey){
-        String response= HttpController.httpGet(PropertiesController.getProperty().getBase_url_authenticationservice()+"/"+sessionKey);
-        return Boolean.parseBoolean(response);
+    public String authenticate(@PathParam("sessionKey")String sessionKey){
+        String response= HttpController.httpGet(PropertiesController.getProperty().getBase_url_authenticationservice()+"/session/"+sessionKey);
+        return response;
     }
 
 }

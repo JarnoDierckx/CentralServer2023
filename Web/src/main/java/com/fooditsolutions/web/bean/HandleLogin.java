@@ -37,6 +37,7 @@ public class HandleLogin {
 
     @PostConstruct
     public void init() throws IOException {
+        PropertiesController.init();
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String name = "";
         String key="";
@@ -48,8 +49,8 @@ public class HandleLogin {
                     name=cookie.getName();
                     name=name.substring(22);
                     key=cookie.getValue();
-                    String response= HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crud"+key);
-                    if (Boolean.getBoolean(response)){
+                    String response= HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crud/"+key);
+                    if (response.equals("true")){
                         LoggedIn=true;
                     }
                     break;

@@ -23,6 +23,7 @@ public class Security {
         Key key = keyGen.generateKey();
         byte[] rawData = key.getEncoded();
         String encodedKey = Base64.getEncoder().encodeToString(rawData);
+        encodedKey=encodedKey.replace("/","");
 
         System.out.println("KEY: " +encodedKey);
         return encodedKey;

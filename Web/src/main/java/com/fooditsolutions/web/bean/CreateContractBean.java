@@ -42,6 +42,11 @@ public class CreateContractBean implements Serializable {
 
     @PostConstruct
     public void init() throws JsonProcessingException {
+        try {
+            PropertiesController.init();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         Cookie[] cookies = request.getCookies();
         boolean loggedin=false;
@@ -49,8 +54,8 @@ public class CreateContractBean implements Serializable {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().contains("LOGINCENTRALSERVER2023")) {
                     String sessionkey=cookie.getValue();
-                    String response= HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/"+sessionkey);
-                    if (Boolean.getBoolean(response)){
+                    String response= HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crud/"+sessionkey);
+                    if (response.equals("true")){
                         loggedin=true;
                     }
                 }

@@ -66,28 +66,29 @@ public class ManageContractBean extends HttpServlet implements Serializable {
      */
     @PostConstruct
     public void init() {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        Cookie[] cookies = request.getCookies();
-        boolean loggedin=false;
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().contains("LOGINCENTRALSERVER2023")) {
-                    String sessionkey=cookie.getValue();
-                    String response= HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/"+sessionkey);
-                    if (Boolean.getBoolean(response)){
-                        loggedin=true;
+        try {
+            PropertiesController.init();
+            HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+            Cookie[] cookies = request.getCookies();
+            boolean loggedin=false;
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().contains("LOGINCENTRALSERVER2023")) {
+                        String sessionkey=cookie.getValue();
+                        String response= HttpController.httpGet(PropertiesController.getProperty().getBase_url_centralserver2023api()+"/crud/"+sessionkey);
+                        if (response.equals("true")){
+                            loggedin=true;
+                        }
+                    }
+                }
+                if (!loggedin){
+                    try {
+                        toLogin();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
                     }
                 }
             }
-            if (!loggedin){
-                try {
-                    toLogin();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-        try {
             PropertiesController.init();
             retrieveContracts();
             clients = retrieveClients();
